@@ -1,6 +1,8 @@
 import React, {useState, useEffect} from 'react';
 import axios from 'axios';
-import { API } from '../../config/Api';import './pages.scss';
+import { API } from '../../config/Api';
+import './pages.scss';
+import { toast } from 'react-toastify';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faClose } from '@fortawesome/free-solid-svg-icons';
 import NoData from '../../assests/img/no-data.png';
@@ -12,6 +14,7 @@ function InfluencerSales() {
     const [matchingFullnames, setMatchingFullnames] = useState([]);
     const [transferShow, setTransferShow] = useState(false);
     const [selectedTransferIndex, setSelectedTransferIndex] = useState(null);
+    const [loading, setLoading] = useState(false);
     const token = localStorage.getItem("Token");
 
     useEffect(() => {
@@ -56,16 +59,24 @@ function InfluencerSales() {
         }
     }, [influList, influSales]);
 
-    const handleTransferShow = (e, index) => {
+    const handleTransferShow = (e, index, amount) => {
+        console.log("Amount", amount)
         e.preventDefault();
-        setTransferShow(true);
         setSelectedTransferIndex(index);
+        if(amount >= 50 ) {
+            setTransferShow(true);
+        }
+        else {
+            toast.warn("Amount should be more than 50", { autoClose: 1000 })
+        }
+        
     }
 
     const couponCross = () => {
         setTransferShow(false)
     }
     const handleTransferData = (e, account, amount, influencer) => {
+        setLoading(true);
         e.preventDefault();
         axios.post(API.BASE_URL + 'transfer_money/', {
             account_id: account,
@@ -78,11 +89,13 @@ function InfluencerSales() {
           },)
           .then(function (response) {
             console.log("Influencer List", response);
-            setInfluList(response.data.data)
+            toast.success("Money transfer Successfully");
         })
         .catch(function (error) {
             console.log(error);
+            toast.error("Error transferring Amount")
         })
+        .finally(() => setLoading(false));
     }
 
     console.log("matchingFullnames", matchingFullnames);
@@ -90,6 +103,7 @@ function InfluencerSales() {
 
   return (
     <div className='p-4 page'>
+        {loading && <div className='d-flex loader-container flex-column'><div className='loader'><span></span></div> <p className='text-white'>Processing...</p></div>}
         <div className="heading">
             <h2 className='mb-5'>Influencer Sales</h2>
         </div>
@@ -113,7 +127,7 @@ function InfluencerSales() {
                                     <td>{name.offer == 'commission' && '$'}{name.influener_fee}{name.offer == 'percentage' && '%'}</td>
                                     <td>{name.sales}</td>
                                     <td>{name.amount.toFixed(2)}</td>
-                                    <td><button type='button' onClick={(e) => {handleTransferShow(e, i)}}>Transfer</button></td>
+                                    <td><button type='button' onClick={(e) => {handleTransferShow(e, i, name.amount)}}>Transfer</button></td>
                                 </tr>
                                 {transferShow && selectedTransferIndex === i && (
                                     <div className="transfer-form">
@@ -132,7 +146,7 @@ function InfluencerSales() {
                                             </div>
                                             <div className="input-container">
                                                 <label htmlFor="">Amount</label>
-                                                <input type="number" value={name?.amount} disabled />
+                                                <input type="number" value={name?.amount.toFixed(2)} disabled />
                                              </div>
                                              <button type='button' className='button-black mt-4' onClick={(e) => {handleTransferData(e, name?.account, name?.amount, name?.influencer)}}>Submit</button>
                                         </form>
