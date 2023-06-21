@@ -441,7 +441,6 @@ const CreateInfluencer = () => {
                     );
                     setProductDetails(matchedProductDetails);
                   } else {
-                    // Show toast error here
                     toast.error("No matching rows found.");
                   }
                 })
