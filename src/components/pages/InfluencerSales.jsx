@@ -20,7 +20,7 @@ function InfluencerSales() {
     useEffect(() => {
         axios.get(API.BASE_URL + 'influencer/list/', {
             headers: {
-              Authorization: `Token ${token}`
+              Authorization: `Token 89038b244f66b5a3dc67566064be0709a098815a`
             }
           })
           .then(function (response) {
@@ -33,7 +33,7 @@ function InfluencerSales() {
 
         axios.get(API.BASE_URL + 'influecercamsale/',{
             headers: {
-                Authorization: `Token ${token}`
+                Authorization: `Token 89038b244f66b5a3dc67566064be0709a098815a`
             }
         })
         .then(function (response) {
@@ -84,7 +84,7 @@ function InfluencerSales() {
             influencer: influencer,
         },{
             headers: {
-              Authorization: `Token ${token}`
+              Authorization: `Token 89038b244f66b5a3dc67566064be0709a098815a`
             }
           },)
           .then(function (response) {

@@ -105,7 +105,7 @@ const CreateInfluencer = () => {
             axios.get(API.BASE_URL +  'single/' + id + '/', {
                 headers: {
  
-                    Authorization: `Token ${token}`
+                    Authorization: `Token 89038b244f66b5a3dc67566064be0709a098815a`
  
             }})
             .then(function (response) {
@@ -159,7 +159,7 @@ const CreateInfluencer = () => {
         axios.get(API.BASE_URL + 'product/list/',{
             headers: {
  
-                Authorization: `Token ${token}`
+                Authorization: `Token 89038b244f66b5a3dc67566064be0709a098815a`
  
             }
         })
@@ -174,7 +174,7 @@ const CreateInfluencer = () => {
         axios.get(API.BASE_URL + 'influencer/list/',{
             headers: {
  
-                Authorization: `Token ${token}`
+                Authorization: `Token 89038b244f66b5a3dc67566064be0709a098815a`
  
             }
         })
@@ -223,7 +223,7 @@ const CreateInfluencer = () => {
         }, {
             headers: {
  
-                Authorization: `Token ${token}`
+                Authorization: `Token 89038b244f66b5a3dc67566064be0709a098815a`
  
             }
         })
@@ -318,7 +318,7 @@ const CreateInfluencer = () => {
         }, {
             headers: {
  
-                Authorization: `Token ${token}`
+                Authorization: `Token 89038b244f66b5a3dc67566064be0709a098815a`
  
             }
         })
@@ -420,7 +420,7 @@ const CreateInfluencer = () => {
                   products: productIds.filter(Boolean).toString()
                 }, {
                   headers: {
-                    Authorization: `Token ${token}`,
+                    Authorization: `Token 89038b244f66b5a3dc67566064be0709a098815a`,
                   },
                 })
                 .then((response) => {
@@ -507,7 +507,7 @@ const CreateInfluencer = () => {
           },{
           headers: {
  
-            Authorization: `Token ${token}`
+            Authorization: `Token 89038b244f66b5a3dc67566064be0709a098815a`
  
           }
         })
@@ -553,7 +553,7 @@ const CreateInfluencer = () => {
           },{
           headers: {
  
-            Authorization: `Token ${token}`
+            Authorization: `Token 89038b244f66b5a3dc67566064be0709a098815a`
  
           }
         })
@@ -608,7 +608,7 @@ const CreateInfluencer = () => {
         if(id?.length != 0) {
             axios.get(API.BASE_URL +  'single/' + id + '/', {
                 headers: {
-                    Authorization: `Token ${token}`
+                    Authorization: `Token 89038b244f66b5a3dc67566064be0709a098815a`
             }})
             .then(function (response) {
                 console.log("Single Market Data" ,response.data.data);

@@ -57,7 +57,7 @@ const CouponList = () => {
     useEffect(() => {
         axios.get(API.SHOPIFY_URL +  'coupon/list/',{
             headers: {
-                Authorization: `Token ${token}`
+                Authorization: `Token 89038b244f66b5a3dc67566064be0709a098815a`
         }})
         .then(function (response) {
             console.log("Coupon List", response);
@@ -69,7 +69,7 @@ const CouponList = () => {
         axios.get(API.BASE_URL + 'influencer/list/',{
             headers: {
  
-                Authorization: `Token ${token}`
+                Authorization: `Token 89038b244f66b5a3dc67566064be0709a098815a`
             }
         })
         .then(function (response) {
@@ -107,7 +107,7 @@ const CouponList = () => {
 
         axios.get(API.BASE_URL + 'product/list/',{
             headers: {
-                Authorization: `Token ${token}`
+                Authorization: `Token 89038b244f66b5a3dc67566064be0709a098815a`
             }
         })
         .then(function (response) {
@@ -124,7 +124,7 @@ const CouponList = () => {
         setLoading(true);
         axios.get(API.SHOPIFY_URL +  'coupon/delete/?price=' + value,{
             headers: {
-                Authorization: `Token ${token}`
+                Authorization: `Token 89038b244f66b5a3dc67566064be0709a098815a`
         }})
         .then(function (response) {
             console.log("Coupon List", response);
@@ -147,7 +147,7 @@ const CouponList = () => {
             amount: couponAmount
         }, {
             headers: {
-                Authorization: `Token ${token}`
+                Authorization: `Token 89038b244f66b5a3dc67566064be0709a098815a`
         }})
         .then(function (response) {
             console.log("Coupon Created", response);
@@ -192,7 +192,7 @@ const CouponList = () => {
         }, {
             headers: {
  
-                Authorization: `Token ${token}`
+                Authorization: `Token 89038b244f66b5a3dc67566064be0709a098815a`
 
         }})
         .then(function (response) {
@@ -204,7 +204,7 @@ const CouponList = () => {
             axios.get(API.SHOPIFY_URL +  'coupon/list/',{
                 headers: {
  
-                    Authorization: `Token ${token}`
+                    Authorization: `Token 89038b244f66b5a3dc67566064be0709a098815a`
  
             }})
             .then(function (response) {
@@ -236,7 +236,7 @@ const CouponList = () => {
         }, {
             headers: {
  
-                Authorization: `Token ${token}`
+                Authorization: `Token 89038b244f66b5a3dc67566064be0709a098815a`
 
         }})
         .then(function (response) {
@@ -249,7 +249,7 @@ const CouponList = () => {
             axios.get(API.SHOPIFY_URL +  'coupon/list/',{
                 headers: {
  
-                    Authorization: `Token ${token}`
+                    Authorization: `Token 89038b244f66b5a3dc67566064be0709a098815a`
  
             }})
             .then(function (response) {
@@ -279,7 +279,7 @@ const CouponList = () => {
         setLoading(true);
         axios.get(API.SHOPIFY_URL + 'single/data/?price=' + value, {
           headers: {
-            Authorization: `Token ${token}`
+            Authorization: `Token 89038b244f66b5a3dc67566064be0709a098815a`
           }
         })
         .then(function (response) {
@@ -353,7 +353,7 @@ const CouponList = () => {
         }, {
             headers: {
  
-                Authorization: `Token ${token}`
+                Authorization: `Token 89038b244f66b5a3dc67566064be0709a098815a`
 
         }})
         .then(function (response) {
