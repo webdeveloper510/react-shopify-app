@@ -75,14 +75,15 @@ function InfluencerSales() {
     const couponCross = () => {
         setTransferShow(false)
     }
-    const handleTransferData = (e, account, amount, influencer, camp_detail) => {
+    const handleTransferData = (e, account, amount, influencer, camp_detail, sales) => {
         setLoading(true);
         e.preventDefault();
         axios.post(API.BASE_URL + 'transfer_money/', {
             account_id: account,
             amount: amount,
             influencer: influencer,
-            camp_id: camp_detail
+            camp_id: camp_detail,
+            sales: sales
         },{
             headers: {
               Authorization: `Token ${token}`
@@ -149,7 +150,7 @@ function InfluencerSales() {
                                                 <label htmlFor="">Amount</label>
                                                 <input type="number" value={name?.amount.toFixed(2)} disabled />
                                              </div>
-                                             <button type='button' className='button-black mt-4' onClick={(e) => {handleTransferData(e, name?.account, name?.amount, name?.influencer, name.campaign_detail)}}>Submit</button>
+                                             <button type='button' className='button-black mt-4' onClick={(e) => {handleTransferData(e, name?.account, name?.amount, name?.influencer, name.campaign_detail, name.sales)}}>Submit</button>
                                         </form>
                                     </div>
                                 )}
