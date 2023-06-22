@@ -20,7 +20,7 @@ function InfluencerSales() {
     useEffect(() => {
         axios.get(API.BASE_URL + 'influencer/list/', {
             headers: {
-              Authorization: `Token 89038b244f66b5a3dc67566064be0709a098815a`
+              Authorization: `Token ${token}`
             }
           })
           .then(function (response) {
@@ -33,7 +33,7 @@ function InfluencerSales() {
 
         axios.get(API.BASE_URL + 'influecercamsale/',{
             headers: {
-                Authorization: `Token 89038b244f66b5a3dc67566064be0709a098815a`
+                Authorization: `Token ${token}`
             }
         })
         .then(function (response) {
@@ -75,16 +75,17 @@ function InfluencerSales() {
     const couponCross = () => {
         setTransferShow(false)
     }
-    const handleTransferData = (e, account, amount, influencer) => {
+    const handleTransferData = (e, account, amount, influencer, camp_detail) => {
         setLoading(true);
         e.preventDefault();
         axios.post(API.BASE_URL + 'transfer_money/', {
             account_id: account,
             amount: amount,
             influencer: influencer,
+            camp_id: camp_detail
         },{
             headers: {
-              Authorization: `Token 89038b244f66b5a3dc67566064be0709a098815a`
+              Authorization: `Token ${token}`
             }
           },)
           .then(function (response) {
@@ -148,7 +149,7 @@ function InfluencerSales() {
                                                 <label htmlFor="">Amount</label>
                                                 <input type="number" value={name?.amount.toFixed(2)} disabled />
                                              </div>
-                                             <button type='button' className='button-black mt-4' onClick={(e) => {handleTransferData(e, name?.account, name?.amount, name?.influencer)}}>Submit</button>
+                                             <button type='button' className='button-black mt-4' onClick={(e) => {handleTransferData(e, name?.account, name?.amount, name?.influencer, name.campaign_detail)}}>Submit</button>
                                         </form>
                                     </div>
                                 )}
