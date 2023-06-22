@@ -41,7 +41,7 @@ function InfluencerSales() {
             setInfluSales(response.data.sale_details)
         })
         .catch(function (error) {
-            console.log(error);
+            console.log(error)
         })
         
     }, [])
