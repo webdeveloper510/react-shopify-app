@@ -118,6 +118,7 @@ function InfluencerSales() {
                         <th>Influencer Fee</th>
                         <th>Sales</th>
                         <th>Amount</th>
+                        <th>Amount Paid</th>
                         <th>Transfer</th>
                     </tr>
                         {influSales.map((name, i) => {
@@ -129,6 +130,7 @@ function InfluencerSales() {
                                     <td>{name.offer == 'commission' && '$'}{name.influener_fee}{name.offer == 'percentage' && '%'}</td>
                                     <td>{name.sales}</td>
                                     <td>{name.amount.toFixed(2)}</td>
+                                    <td>{name.amount_paid ? name.amount_paid : 0}</td>
                                     <td><button type='button' onClick={(e) => {handleTransferShow(e, i, name.amount)}}>Transfer</button></td>
                                 </tr>
                                 {transferShow && selectedTransferIndex === i && (
