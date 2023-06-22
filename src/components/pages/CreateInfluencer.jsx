@@ -411,44 +411,54 @@ const CreateInfluencer = () => {
     };
 
     useEffect(() => {
-        if (Array.isArray(productName)) {
+        if (Array.isArray(productName) && selectedRows.length > 0) {
           setLoading(true);
-          Promise.all(
-            productName?.map((product) => {
-              return axios
-                .post(API.BASE_URL + "product/url/", {
-                  products: productIds.filter(Boolean).toString()
-                }, {
-                  headers: {
-                    Authorization: `Token 89038b244f66b5a3dc67566064be0709a098815a`,
-                  },
-                })
-                .then((response) => {
-                  console.log("Response 1", response);
-                  const influencerIds = response.data.product_details.map(
-                    (product) => product.influencer_id
-                  );
-                  setProdInfluId(influencerIds);
-                  setProductUrl(response.data.product_url);
-                  const matchedRows = selectedRows.filter(
-                    (row) => influencerIds.includes(row.id)
-                  );
-      
-                  console.log("matchedRows", matchedRows)
-                  if (matchedRows.length > 0) {
-                    const matchedProductDetails = response.data.product_details.filter(
-                      (product) => matchedRows.some((row) => row.id === product.influencer_id)
-                    );
-                    setProductDetails(matchedProductDetails);
-                  } else {
-                    toast.error("No matching rows found.");
-                  }
-                })
-                .catch((error) => console.log(error));
+          const influencerIds = selectedRows.map(row => row.id);
+          const requests = productName.map(product =>
+            axios.post(API.BASE_URL + "product/url/", {
+              products: productIds.filter(Boolean).toString()
+            }, {
+              headers: {
+                Authorization: `Token 89038b244f66b5a3dc67566064be0709a098815a`,
+              },
             })
-          ).finally(() => setLoading(false));
+          );
+      
+          Promise.all(requests)
+            .then(responses => {
+              const productDetails = [];
+              const matchedRows = [];
+      
+              responses.forEach((response, index) => {
+                console.log("Response", index, response);
+                const currentProductDetails = response.data.product_details;
+                const matchingProductDetails = currentProductDetails.filter(product =>
+                  influencerIds.includes(product.influencer_id)
+                );
+      
+                if (matchingProductDetails.length > 0) {
+                  matchedRows.push(...matchingProductDetails);
+                  productDetails.push(...matchingProductDetails);
+                }
+              });
+      
+              if (matchedRows.length > 0) {
+                setProdInfluId(matchedRows.map(row => row.influencer_id));
+                setProductUrl(matchedRows[0].product_url);
+                setProductDetails(productDetails);
+              } else {
+                toast.error("No matching rows found.");
+              }
+            })
+            .catch(error => {
+              console.log(error);
+              toast.error("An error occurred while fetching data.");
+            })
+            .finally(() => setLoading(false));
         }
       }, [productName, selectedRows, token]);
+      
+      
       
 
     const handleCheckboxChange = (event, row, id) => {
