@@ -437,30 +437,11 @@ $blackColor: #000000;
                     font-style: italic;
                 }
             }
-            // .prod-discount {
-            //     position: relative;
-            //     &::before {
-            //         content: "%";
-            //         position: absolute;
-            //         right: 0;
-            //         bottom: 0;
-            //         display: flex;
-            //         margin: auto;
-            //         background-color: #cccccc;
-            //         height: 52px;
-            //         width: 4vw;
-            //         color: $blackColor;
-            //         font-size: 1.4vw;
-            //         border-radius: 0 4px 4px 0;
-            //         justify-content: center;
-            //         align-items: center;
-            //     }
-            // }
             .buttons {
                 width: 80%;
                 margin: 2rem auto 0;
                 button {
-                    width: 32%;
+                    width: 34%;
                     min-width: unset;
                 }
             }

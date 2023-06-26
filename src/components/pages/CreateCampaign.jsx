@@ -411,7 +411,7 @@ const CreateCampaign = () => {
             </Link>
             <h3 className='my-4 w-100'>{id?.length > 0 ? "Edit Campaign for Marketplace" : "Create Campaign for Marketplace"}</h3>
             
-            <form action="" className='d-flex flex-wrap justify-content-between mt-5'>
+            <form action="" className='d-flex flex-wrap justify-content-between mt-5 w-100'>
                 <div className="input-container d-flex flex-column mb-4">
                     <label className="mb-3">Campaign name</label>
                     <input type="text" maxLength='30' onChange={handleCampaignNameChange} value={campaignName} />

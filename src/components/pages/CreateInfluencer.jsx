@@ -727,7 +727,7 @@ const CreateInfluencer = () => {
                 </button>
                 <div className='w-100'>
                     {id?.length > 0 ? (<h3>Edit Campaign for Influencer</h3>) : <h3>Create Campaign for Influencer</h3>}
-                    <form action="" className='d-flex flex-wrap justify-content-between mt-5'>
+                    <form action="" className='d-flex flex-wrap justify-content-between mt-5 w-100'>
                         <div className="input-container d-flex flex-column mb-4">
                             <label className="mb-3">Campaign name</label>
                             <input type="text" maxLength='30' onChange={handleCampaignNameChange} value={campaignName} />
