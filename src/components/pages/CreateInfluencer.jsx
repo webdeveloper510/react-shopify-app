@@ -442,13 +442,11 @@ const CreateInfluencer = () => {
                       );
                       setProductDetails(matchedProductDetails);
       
-                      // Remove objects with unmatched product_ids from selectedCouponAmounts
                       const updatedSelectedCouponAmounts = selectedCouponAmounts.filter(
                         (couponAmount) => productIds.includes(couponAmount.product_id)
                       );
                       setSelectedCouponAmounts(updatedSelectedCouponAmounts);
                     } else {
-                      // Show toast error here
                       toast.error("No matching rows found.");
                     }
                   }
@@ -457,7 +455,7 @@ const CreateInfluencer = () => {
             })
           ).finally(() => setLoading(false));
         }
-      }, [productName, selectedRows, token]);
+    }, [productName, selectedRows, token]);
       
 
     const handleCheckboxChange = (event, row, id) => {
@@ -513,6 +511,7 @@ const CreateInfluencer = () => {
             influencer_name: selectedUsersId.toString(),
             date: selectedDate,
             product_name: productName,
+            end_date: endDate
           },{
           headers: {
  
@@ -559,6 +558,7 @@ const CreateInfluencer = () => {
             influencer_name: selectedUsersId.toString(),
             date: selectedDate,
             product_name: productName,
+            end_date: endDate
           },{
           headers: {
  
@@ -626,6 +626,7 @@ const CreateInfluencer = () => {
                 setInfluenceOffer(response.data.data[0].offer);
                 setInfluencerVisit(response.data.data[0].influencer_visit);
                 setUserData(response.data.data[0]);
+                setEndDate(response.data.data[0].end_data)
                 
                 const influencerNames = response.data.data[0].influencer_name;
                 console.log("influencerNamesssss", influencerNames);

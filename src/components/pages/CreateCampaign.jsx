@@ -14,6 +14,7 @@ const CreateCampaign = () => {
     const [influencerList, setInfluencerList] = useState([]);
     const [campaignName, setCampaignName] = useState('');
     const [selectedDate, setSelectedDate] = useState("");
+    const [endDate, setEndDate] = useState('');
     const [influencerVisit, setInfluencerVisit] = useState('');
     const [userData, setUserData] = useState([]);
     const [showList, setShowList] = useState(false);
@@ -60,6 +61,10 @@ const CreateCampaign = () => {
 
     const handleDateChange = (event) => {
         setSelectedDate(event.target.value);
+    }
+
+    const handleEndDate = (event) => {
+        setEndDate(event.target.value);
     }
 
     useEffect(() => {
@@ -119,7 +124,8 @@ const CreateCampaign = () => {
             product_discount: selectedCouponAmounts,
             influencer_visit: influencerVisit,
             influencer_fee: influenceFee,
-            description: campaignDesc
+            description: campaignDesc,
+            end_date: endDate
         }, {
             headers: {
                 Authorization: `Token ${token}`
@@ -191,7 +197,8 @@ const CreateCampaign = () => {
             product_name: productName,
             influencer_fee: influenceFee,
             influencer_visit: influencerVisit,
-            description: campaignDesc
+            description: campaignDesc,
+            end_date: endDate
         }, {
             headers: {
                 Authorization: `Token ${token}`
@@ -311,6 +318,7 @@ const CreateCampaign = () => {
             influencer_fee: influenceFee,
             date: selectedDate,
             product_name: productName,
+            end_date: endDate
           },{
           headers: {
             Authorization: `Token ${token}`
@@ -338,6 +346,7 @@ const CreateCampaign = () => {
                 console.log("Single Market Data" ,response.data.data);
                 setCampaignName(response.data.data[0].campaign_name);
                 setSelectedDate(response.data.data[0].date);
+                setEndDate(response.data.data[0].end_data)
                 setInfluenceOffer(response.data.data[0].offer);
                 setInfluencerVisit(response.data.data[0].influencer_visit);
                 const products = response.data.data[0].product;
@@ -424,8 +433,13 @@ const CreateCampaign = () => {
                 </div>
 
                 <div className="input-container d-flex flex-column mb-4">
-                    <label className="mb-3">Campaign date or range</label>
+                    <label className="mb-3">Campaign start date</label>
                     <input type="date" min={today} onChange={handleDateChange} value={selectedDate} />
+                </div>
+
+                <div className="input-container d-flex flex-column mb-4">
+                    <label className="mb-3">Campaign end date</label>
+                    <input type="date" min={selectedDate} onChange={handleEndDate} value={endDate} />
                 </div>
 
                 <div className="input-container d-flex flex-column mb-4">
