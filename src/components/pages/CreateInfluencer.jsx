@@ -435,23 +435,30 @@ const CreateInfluencer = () => {
                   );
       
                   console.log("matchedRows", matchedRows)
-                  if(showInfluList == false) {
+                  if (showInfluList === false) {
                     if (matchedRows.length > 0) {
-                        const matchedProductDetails = response.data.product_details.filter(
-                          (product) => matchedRows.some((row) => row.id === product.influencer_id)
-                        );
-                        setProductDetails(matchedProductDetails);
-                      } else {
-                        // Show toast error here
-                        toast.error("No matching rows found.");
-                      }
+                      const matchedProductDetails = response.data.product_details.filter(
+                        (product) => matchedRows.some((row) => row.id === product.influencer_id)
+                      );
+                      setProductDetails(matchedProductDetails);
+      
+                      // Remove objects with unmatched product_ids from selectedCouponAmounts
+                      const updatedSelectedCouponAmounts = selectedCouponAmounts.filter(
+                        (couponAmount) => productIds.includes(couponAmount.product_id)
+                      );
+                      setSelectedCouponAmounts(updatedSelectedCouponAmounts);
+                    } else {
+                      // Show toast error here
+                      toast.error("No matching rows found.");
+                    }
                   }
                 })
                 .catch((error) => console.log(error));
             })
           ).finally(() => setLoading(false));
         }
-    }, [productName, selectedRows, token]); 
+      }, [productName, selectedRows, token]);
+      
 
     const handleCheckboxChange = (event, row, id) => {
         const checked = event.target.checked;
