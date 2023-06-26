@@ -1,8 +1,7 @@
 $primarColor: #E6E6E6;
 $blackColor: #000000;
 .sidebar {
-    width: fit-content;
-    width: 25%;
+    width: 23%;
     .navbar {
         min-height: 100vh;
         align-items: flex-start;
@@ -48,7 +47,7 @@ $blackColor: #000000;
                         padding: 0.8rem 1rem !important;
                         margin-bottom: 1.2rem;
                         border-radius: 15px;
-                        font-size: 1.5vw;
+                        font-size: 1.3vw;
                         img {
                             filter: invert(1);
                         }

@@ -31,6 +31,7 @@ const CampaignManage = () => {
     const [pendingId, setPendingId] = useState([]);
     const [activeId, setActiveId] = useState([]);
     const [approvedList, setApprovedList] = useState([]);
+    const [expiredList, setExpiredList] = useState([])
     const [productNames, setProductNames] = useState([]);
     const [pendingNames, setPendingNames] = useState([]);
     const [activeNames, setActiveNames] = useState([]);
@@ -256,7 +257,18 @@ const CampaignManage = () => {
             console.log(error);
         })
 
-        
+        axios.get(API.BASE_URL + 'campaignexp/',{
+          headers: {
+              Authorization: `Token ${token}`
+          }
+        })
+        .then(function (response) {
+            console.log("Expired List",response.data.data);
+            setExpiredList(response.data.data);
+        })
+        .catch(function (error) {
+            console.log(error);
+        })
     }, [token])
 
     function deleteCampaign(value) {
@@ -635,6 +647,9 @@ const CampaignManage = () => {
                 <Nav.Item>
                     <Nav.Link eventKey="five">Declined Campaigns</Nav.Link>
                 </Nav.Item>
+                <Nav.Item>
+                    <Nav.Link eventKey="six">Expired Campaigns</Nav.Link>
+                </Nav.Item>
             </Nav>
             </Col>
             <Col sm={12}>
@@ -807,6 +822,41 @@ const CampaignManage = () => {
                     (
                         <>
                     <h5 className='mt-4 text-center'>No Campaigns in Draft right now</h5>
+                    <img src={NoData} alt='no-data' style={{width: '100%', maxHeight: 220, marginTop: '4rem', objectFit: 'contain'}} />
+                            <h3 className='text-center'>No Data Found</h3>
+                    </>
+                    )}
+                </Tab.Pane>
+                <Tab.Pane eventKey="six" className='campaign'>
+                    {expiredList?.length > 0 ? (
+                        <CampaignTable 
+                          campList={expiredList}
+                          getSingleMarket={getSingleMarket}
+                          declineInflu = {false}
+                          deleteConfirm={deleteConfirm}
+                          getDeleteConfirm={getDeleteConfirm}
+                          getMarket={getMarket}
+                          influencerSale = {true}
+                          couponCross={couponCross}
+                          getMarketInfo={getMarketInfo}
+                          handleProdDiscount={handleProdDiscount}
+                          prodDiscount={prodDiscount}
+                          handleInfluenceVisit={handleInfluenceVisit}
+                          influenceVisit={influenceVisit}
+                          approved={false}
+                          approvedButtons = {false}
+                          editCampaign={editCampaign}
+                          deleteCampaign={deleteCampaign}
+                          getId={getId}
+                          handleCampName={handleCampName}
+                          campName={campName}
+                          handleProdOffer={handleProdOffer}
+                      />
+                    ) 
+                    : 
+                    (
+                        <>
+                    <h5 className='mt-4 text-center'>No Expired Campaigns right now</h5>
                     <img src={NoData} alt='no-data' style={{width: '100%', maxHeight: 220, marginTop: '4rem', objectFit: 'contain'}} />
                             <h3 className='text-center'>No Data Found</h3>
                     </>

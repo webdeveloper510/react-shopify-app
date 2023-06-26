@@ -23,6 +23,7 @@ const CampaignMarket = () => {
     const [getMarketInfo, setGetMarketInfo] = useState([]);
     const [getMarket, setGetMarket] = useState(false);
     const [prodOffer, setProdOffer] = useState('');
+    const [campExpiredList, setCampExpiredList] = useState([]);
     const [loading, setLoading] = useState(false);
     const [campName, setCampName] = useState('');
     const [prodDiscount, setProdDiscount] = useState('');
@@ -68,6 +69,19 @@ const CampaignMarket = () => {
         })
         .then(function (response) {
             setProductNames(response.data.success.products);
+        })
+        .catch(function (error) {
+            console.log(error);
+        })
+
+        axios.get(API.BASE_URL + 'marketcampaignexp/',{
+            headers: {
+                Authorization: `Token ${token}`
+            }
+        })
+        .then(function (response) {
+            console.log("Market Expired List",response.data);
+            setCampExpiredList(response.data.data);
         })
         .catch(function (error) {
             console.log(error);
@@ -196,6 +210,9 @@ const CampaignMarket = () => {
                     <Nav.Item>
                         <Nav.Link eventKey="second">Draft Campaigns</Nav.Link>
                     </Nav.Item>
+                    <Nav.Item>
+                        <Nav.Link eventKey="third">Expired Campaigns</Nav.Link>
+                    </Nav.Item>
                 </Nav>
                 </Col>
                 <Col sm={12}>
@@ -233,6 +250,7 @@ const CampaignMarket = () => {
                             )
                         }
                     </Tab.Pane>
+
                     <Tab.Pane eventKey="second" className='campaign'>
                         {marketDraftList?.length > 0 ? (
                             <CampaignTable 
@@ -262,6 +280,41 @@ const CampaignMarket = () => {
                                     <h5 className='mt-4 text-center'>No Campaign</h5>
                                     <img src={NoData} alt='no-data' style={{width: '100%', maxHeight: 220, marginTop: '4rem', objectFit: 'contain'}} />
                             <h3 className='text-center'>No Data Found</h3>
+                                </>
+                            )
+                        }
+                    </Tab.Pane>
+
+                    <Tab.Pane eventKey="third">
+                        {campExpiredList?.length > 0 ? (
+                            <CampaignTable 
+                                campList={campExpiredList}
+                                declineInflu = {false}
+                                getSingleMarket={getSingleMarket}
+                                deleteConfirm={deleteConfirm}
+                                influencerSale = {true}
+                                getDeleteConfirm={getDeleteConfirm}
+                                getMarket={getMarket}
+                                couponCross={couponCross}
+                                getMarketInfo={getMarketInfo}
+                                handleProdDiscount={handleProdDiscount}
+                                prodDiscount={prodDiscount}
+                                handleInfluenceVisit={handleInfluenceVisit}
+                                influenceVisit={influenceVisit}
+                                deleteCampaign={deleteCampaign}
+                                getId={getId}
+                                approved={false}
+                                approvedButtons = {false}
+                                handleCampName={handleCampName}
+                                campName={campName}
+                                handleProdOffer={handleProdOffer}
+                            />
+                            ) :
+                            (
+                                <>
+                                    <h5 className='mt-4 text-center'>No Expired Campaign</h5>
+                                    <img src={NoData} alt='no-data' style={{width: '100%', maxHeight: 220, marginTop: '4rem', objectFit: 'contain'}} />
+                                    <h3 className='text-center'>No Data Found</h3>
                                 </>
                             )
                         }
