@@ -34,36 +34,36 @@ const SideBar = () => {
         setShowNotification(!shownotification);
     }
 
-    // useEffect(() => {
-    //     const intervalId = setInterval(() => {
-    //     axios.get(API.BASE_URL + 'notification/list/',{
-    //         headers: { 
-    //             Authorization: `Token ${localStorage.getItem("Token")}` 
-    //         }
-    //     })
-    //     .then(function (response) {
-    //         console.log("Notification", response.data)
-    //         setNotifications(response.data.data);
-    //     })
-    //     .catch(function (error) {
-    //         console.log(error);
-    //     })
-    //     axios.get(API.BASE_URL + 'user/id/',  {
-    //         headers: { 
-    //             Authorization: `Token ${localStorage.getItem("Token")}` 
-    //         }
-    //     }) 
-    //     .then(function (response) {
-    //         console.log("Profile Details in Sidebar", response);
-    //         localStorage.setItem("Image", response.data.url);
-    //         localStorage.setItem("User_Name", response.data.username);
-    //     })
-    //     .catch(function (error) {
-    //         console.log(error);
-    //     })
-    // }, 5000);
-    // return () => clearInterval(intervalId);
-    // }, [])
+    useEffect(() => {
+        const intervalId = setInterval(() => {
+        axios.get(API.BASE_URL + 'notification/list/',{
+            headers: { 
+                Authorization: `Token ${localStorage.getItem("Token")}` 
+            }
+        })
+        .then(function (response) {
+            console.log("Notification", response.data)
+            setNotifications(response.data.data);
+        })
+        .catch(function (error) {
+            console.log(error);
+        })
+        axios.get(API.BASE_URL + 'user/id/',  {
+            headers: { 
+                Authorization: `Token ${localStorage.getItem("Token")}` 
+            }
+        }) 
+        .then(function (response) {
+            console.log("Profile Details in Sidebar", response);
+            localStorage.setItem("Image", response.data.url);
+            localStorage.setItem("User_Name", response.data.username);
+        })
+        .catch(function (error) {
+            console.log(error);
+        })
+    }, 5000);
+    return () => clearInterval(intervalId);
+    }, [])
 
     useEffect(() => {
         const handleOutsideClick = (event) => {
