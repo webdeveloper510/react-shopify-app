@@ -538,6 +538,12 @@ $blackColor: #000000;
                             text-align: center;
                             margin-bottom: 0;
                         }
+                        h5 {
+                            font-size: 1.1rem;
+                        }
+                        h3 {
+                            font-size: 1.6rem;
+                        }
                     }
                     
                     .overview-image {
@@ -642,7 +648,7 @@ $blackColor: #000000;
                 background: #E3F5FF;
                 h5 {
                     width: 190px;
-                    font-size: 20px;
+                    font-size: 1.1rem;
                 }
             }
         }
