@@ -889,6 +889,7 @@ const CreateInfluencer = () => {
                                                             product_id: product.product_id,
                                                             amount: product.amount[i].substring(1),
                                                             influencer_id: product.influencer_id,
+                                                            discount_type: product.discount_type
                                                         };
                                                         const isCouponSelected = id?.length > 0 ?(
                                                             selectedCouponAmounts.some(selectedCoupon => selectedCoupon.name && selectedCoupon.name.includes(String(couponObject.name)) && selectedCoupon.product_id === couponObject.product_id)
@@ -911,6 +912,7 @@ const CreateInfluencer = () => {
                                                                         product_id: product.product_id,
                                                                         amount: existingProduct.amount.filter(amount => amount !== couponObject.amount),
                                                                         influencer_id: product.influencer_id,
+                                                                        discount_type: couponObject.discount_type
                                                                     };
                                                                     if (updatedProduct.name.length === 0) {
                                                                         return prevSelectedCouponAmounts.filter((_, index) => index !== existingProductIndex);
@@ -929,6 +931,7 @@ const CreateInfluencer = () => {
                                                                         name: Array.isArray(existingProduct.name) ? [...existingProduct.name, couponObject.name] : [couponObject.name],
                                                                         amount: [...existingProduct.amount, couponObject.amount],
                                                                         influencer_id: product.influencer_id,
+                                                                        discount_type: product.discount_type
                                                                         };
                                                                     }
                                                                     return selectedCouponAmount;
@@ -940,6 +943,7 @@ const CreateInfluencer = () => {
                                                                     name: [couponObject.name],
                                                                     amount: [couponObject.amount],
                                                                     influencer_id: product.influencer_id,
+                                                                    discount_type: [couponObject.discount_type]
                                                                 }];
                                                                 });
                                                             }
@@ -999,9 +1003,9 @@ const CreateInfluencer = () => {
                                                                   className={`d-flex flex-column mb-0 ${isCouponSelected ? 'selected' : ''}`}
                                                                   onClick={handleClick}
                                                                 >
-                                                                  {coupon} - {product.discout_type === 'fixed_amount' && "$"}
+                                                                  {coupon} -
                                                                   {Math.abs(parseInt(product.amount[i]))}
-                                                                  {product.discout_type !== 'fixed_amount' && "%"}
+                                                                  {product.discount_type !== 'fixed_amount' ? "%" : "د.إ"}
                                                                 </p>
                                                         );
                                                     })

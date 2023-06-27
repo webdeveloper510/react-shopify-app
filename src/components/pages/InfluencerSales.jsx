@@ -135,7 +135,7 @@ function InfluencerSales() {
                                 <tr className='campaign-inputs'>
                                     <td>{name.campaing_id}</td>
                                     <td>{matchingFullnames[i]}</td>
-                                    <td>{name.offer == 'commission' && '$'}{name.influener_fee}{name.offer == 'percentage' && '%'}</td>
+                                    <td>{name.offer == 'commission' && "د.إ"}{name.influener_fee}{name.offer == 'percentage' && '%'}</td>
                                     <td>{name.sales}</td>
                                     <td>{name.amount.toFixed(2)}</td>
                                     <td>{name.amount_paid ? name.amount_paid : 0}</td>
