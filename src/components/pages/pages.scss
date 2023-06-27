@@ -1,9 +1,10 @@
 $primarColor: #E6E6E6;
 $blackColor: #000000;
+$whiteColor: #FFFFFF;
 .page {
     width: 77%;
     margin-left: auto;
-    background: #fff;
+    background: $whiteColor;
     border-radius: 30px;
     box-shadow: 0px 0px 1px 1px rgba(0, 0, 0, 0.25);
     .canvasjs-chart-credit {
@@ -16,7 +17,7 @@ $blackColor: #000000;
                 position: absolute;
                 bottom: 0;
                 left: 0;
-                background: #fff;
+                background: $whiteColor;
                 width: 65px;
                 height: 20px;
                 z-index: 99;
@@ -43,7 +44,7 @@ $blackColor: #000000;
         left: 0;
         padding: 40px 0;
         form {
-            background: #fff;
+            background: $whiteColor;
             padding: 3rem;
             width: 100%;
             max-width: 700px;
@@ -86,7 +87,7 @@ $blackColor: #000000;
             padding: 20px 35px;
             border: 0.97px solid rgba(0, 0, 0, 0.2);
             width: 100%;
-            background-color: #fff;
+            background-color: $whiteColor;
             margin-bottom: 1.5rem;
             border-radius: 30px;
             cursor: pointer;
@@ -167,7 +168,7 @@ $blackColor: #000000;
 
     .active-prod {
         background: $blackColor;
-        color: #fff;
+        color: $whiteColor;
     }
 
     .selected-influencers {
@@ -291,7 +292,7 @@ $blackColor: #000000;
         }
         .selected {
             background-color: $blackColor;
-            color: #fff;
+            color: $whiteColor;
         }
     }
     table {
@@ -334,7 +335,7 @@ $blackColor: #000000;
                 }
                 &:nth-child(odd) {
                     background: #034870;
-                    color: #fff;
+                    color: $whiteColor;
                     &::before {
                         background-color: #7464ed8c;
                     }
@@ -366,7 +367,7 @@ $blackColor: #000000;
                 }
                 .input {
                     span {
-                        background-color: #fff;
+                        background-color: $whiteColor;
                         border-radius: 20px;
                         position: relative;
                         label {
@@ -403,7 +404,7 @@ $blackColor: #000000;
                             }
                             &:not(:checked) + label {
                                 &::before {
-                                    background-color: #fff;
+                                    background-color: $whiteColor;
                                 }
                             }
                             
@@ -516,8 +517,8 @@ $blackColor: #000000;
                         width: 100%;
                         span {
                             background: $blackColor;
-                            height: 46px;
-                            width: 52px;
+                            height: 42px;
+                            width: 42px;
                             border-radius: 17px;
                             display: flex;
                             justify-content: center;
@@ -668,7 +669,7 @@ $blackColor: #000000;
             border-radius: 15px;
             font-size: 11px;
             outline: none;
-            background: #fff;
+            background: $whiteColor;
             border: 1px solid #E5ECF6;
             color: $blackColor;
             &:nth-child(1) {
@@ -679,7 +680,7 @@ $blackColor: #000000;
             background: $blackColor!important;
             margin-right: .5rem;
             border: 1px solid transparent !important;
-            color: #fff;
+            color: $whiteColor;
         }
     }
     .confirm {
@@ -711,7 +712,7 @@ $blackColor: #000000;
     .campaign-market-container {
         h4 {
             background: #1976D2;
-            color: #fff;
+            color: $whiteColor;
             padding: 16px 20px;
         }
         .campaign-market-list {
@@ -738,7 +739,7 @@ $blackColor: #000000;
                         height: 15px;
                         width: 15px;
                         border-radius: 50%;
-                        color: #fff;
+                        color: $whiteColor;
                         background-color: #FF4E41;
                         position: absolute;
                         right: -13px;
@@ -774,7 +775,7 @@ $blackColor: #000000;
             border-radius: 15px;
             font-size: 13px;
             outline: none;
-            background: #fff;
+            background: $whiteColor;
             border: 1px solid #E5ECF6;
             color: $blackColor;
             &:nth-child(1) {
@@ -785,7 +786,7 @@ $blackColor: #000000;
             background: $blackColor !important;
             margin-right: 0.5rem;
             border: 1px solid transparent !important;
-            color: #fff;
+            color: $whiteColor;
         }
     }
 }
@@ -834,7 +835,7 @@ $blackColor: #000000;
                 border: none;
                 &:nth-child(odd) {
                     background-color: $blackColor;
-                    color: #fff;
+                    color: $whiteColor;
                     margin-right: 25px;
                 }
                 &:nth-child(even) {
@@ -853,7 +854,7 @@ $blackColor: #000000;
                 th {
                     input[type=checkbox] {
                         background-color: transparent !important;
-                        border: 1px solid #fff;
+                        border: 1px solid $whiteColor;
                         accent-color: #5172fc;
                         margin: 0 auto;
                     }
@@ -910,7 +911,7 @@ $blackColor: #000000;
                         height: 20px;
                         width: 20px;
                         border: 2px solid #5172FC;
-                        background-color: #fff;
+                        background-color: $whiteColor;
                         position: absolute;
                         left: 0;
                         top: 5px;
@@ -985,7 +986,7 @@ $blackColor: #000000;
             width: 100%;
         }
         input, textarea {
-            background: linear-gradient(0deg, #EDF2F7, #EDF2F7), #FFFFFF;
+            background: linear-gradient(0deg, #EDF2F7, #EDF2F7), $whiteColor;
             border: 1px solid #E0E4EC;
             outline: none;
             resize: none;
@@ -1020,7 +1021,7 @@ $blackColor: #000000;
     padding: 40px 0;
     
     .coupon-list-container, .tracking-container, .one-time-container, .get-coupon-contianer {
-        background: #fff;
+        background: $whiteColor;
         border-radius: 15px;
         width: 100%;
         max-width: 600px;
@@ -1101,7 +1102,7 @@ $blackColor: #000000;
     }
     ul {
         border: 0.97px solid rgba(0, 0, 0, 0.2);
-        background: #fff;
+        background: $whiteColor;
         display: flex;
         flex-direction: column;
         margin-bottom: 0;
@@ -1130,5 +1131,11 @@ $blackColor: #000000;
                 }
             }
         }
+    }
+}
+
+.tracking-coupon {
+    ul {
+        bottom: unset;
     }
 }

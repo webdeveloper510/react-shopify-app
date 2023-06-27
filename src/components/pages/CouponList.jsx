@@ -55,6 +55,7 @@ const CouponList = () => {
     }
 
     useEffect(() => {
+        setLoading(true);
         axios.get(API.SHOPIFY_URL +  'coupon/list/',{
             headers: {
                 Authorization: `Token ${token}`
@@ -66,6 +67,10 @@ const CouponList = () => {
         .catch(function (error) {
             console.log(error);
         })
+        .finally(() => setLoading(false));
+    }, [token])
+
+    useEffect(() => {
         axios.get(API.BASE_URL + 'influencer/list/',{
             headers: {
  
@@ -79,7 +84,6 @@ const CouponList = () => {
         .catch(function (error) {
             console.log(error);
         })
-        .finally(() => setLoading(false));
     }, [token])
 
     // Pagination logic
@@ -433,6 +437,7 @@ const CouponList = () => {
     return (
     <>
     <div className="coupon p-4 page">
+    {loading && <div className='d-flex loader-container flex-column'><div className='loader'><span></span></div> <p className='text-white'>Processing...</p></div>}
         <div className="coupon-container d-flex flex-column mt-5 w-100">
             <h4 className='mb-4'>Coupon List</h4>
             {couponData?.length > 0 ? (
@@ -530,8 +535,8 @@ const CouponList = () => {
                             <FontAwesomeIcon icon={faClose} style={{ color: "#000", width: "25px", height: "25px"}} />
                         </button>
                         <div className="buttons">
-                            <button className="button mb-3" onClick={trackingShow}>Coupon</button>
-                            <button className="button" onClick={oneTimeShow}>One Time Use</button>
+                            <button className="button mb-3" onClick={trackingShow}>Influencer Coupon</button>
+                            <button className="button" onClick={oneTimeShow}>Marketplace Coupon</button>
                         </div>
                     </div>
                 </div>

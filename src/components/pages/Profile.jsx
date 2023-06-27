@@ -53,6 +53,7 @@ function Profile() {
     }, [token, imagePath])
 
     const createProfile = (e) => {
+        setLoading(true);
         const formData = new FormData();
         formData.append('image',selectedFile);
         formData.append("username", userName)
@@ -63,8 +64,8 @@ function Profile() {
         formData.append('type','normal');
         console.log("FormData" ,formData)
         console.log("selectedFile",selectedFile)
-        console.log("name", selectedFile.name)
-        setLoading(true);
+        console.log("name", selectedFile?.name)
+        
         e.preventDefault();
         axios.put(API.BASE_URL + 'profile/' + userId + '/', formData, {
             headers: {
@@ -140,7 +141,7 @@ function Profile() {
     // localStorage.setItem("Image", image)
   return (
     <div className="profile p-4 page">
-        {loading && <div className='loader'><span></span></div>}
+        {loading && <div className='d-flex loader-container flex-column'><div className='loader'><span></span></div> <p className='text-white'>Processing...</p></div>}
         <form className="profile-form d-flex flex-wrap justify-content-between mt-4">
             <div className="input-container d-flex flex-column mb-4">
                 <label>Username</label>

@@ -65,14 +65,14 @@ const CampaignTable = ({
                 {!approved && (
                   <td>
                     {name.product?.map((name) =>
-                    name.coupon_name
+                    name.coupon_name != null ? name.coupon_name : 'No coupons selected'
                     ).filter(Boolean).join(", ")}
                   </td>
                 )}
                 {!approvedButtons && (
                 <td>
                     {name.product?.map((name) =>
-                    name.amount
+                    name.amount != '' ? name.amount : 'No amount'
                     ).filter(Boolean).join(", ")}
                 </td>
                 )}

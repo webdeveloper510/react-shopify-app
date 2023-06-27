@@ -18,6 +18,7 @@ function InfluencerSales() {
     const token = localStorage.getItem("Token");
 
     useEffect(() => {
+        setLoading(true);
         axios.get(API.BASE_URL + 'influencer/list/', {
             headers: {
               Authorization: `Token ${token}`
@@ -30,6 +31,12 @@ function InfluencerSales() {
         .catch(function (error) {
             console.log(error);
         })
+        .finally(() => setLoading(false));
+        
+    }, [])
+
+    useEffect(() => {
+        setLoading(true);
 
         axios.get(API.BASE_URL + 'influecercamsale/',{
             headers: {
@@ -43,6 +50,7 @@ function InfluencerSales() {
         .catch(function (error) {
             console.log(error)
         })
+        .finally(() => setLoading(false));
         
     }, [])
 

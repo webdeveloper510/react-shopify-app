@@ -447,7 +447,7 @@ const CreateInfluencer = () => {
                       );
                       setSelectedCouponAmounts(updatedSelectedCouponAmounts);
                     } else {
-                      toast.error("No matching rows found.");
+                      toast.error("No coupons assigned to influencer for this product.");
                     }
                   }
                 })

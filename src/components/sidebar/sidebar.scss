@@ -1,5 +1,6 @@
 $primarColor: #E6E6E6;
 $blackColor: #000000;
+$whiteColor: #FFFFFF;
 .sidebar {
     width: 23%;
     .navbar {
@@ -54,7 +55,7 @@ $blackColor: #000000;
                     }
                     a.active {
                         background: $blackColor;
-                        color: #fff !important;
+                        color: $whiteColor !important;
                         img {
                             filter: invert(0);
                         }
@@ -88,8 +89,8 @@ $blackColor: #000000;
             width: 20px;
             border-radius: 50%;
             // background-color: #034870;
-            background-color: #fff;
-            // color: #fff;
+            background-color: $whiteColor;
+            // color: $whiteColor;
             color: #034870;
             font-size: 14px;
             // box-shadow: 0 0 8px 2px rgb(0 0 0 / 20%);
@@ -105,7 +106,7 @@ $blackColor: #000000;
         z-index: 3;
         width: fit-content;
         height: fit-content;
-        background: #fff;
+        background: $whiteColor;
         border-radius: 5px;
         padding-left: 0;
         min-width: 185px;
