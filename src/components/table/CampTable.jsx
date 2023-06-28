@@ -72,8 +72,8 @@ const CampaignTable = ({
                 {!approvedButtons && (
                 <td>
                     {name.product?.map((name) =>
-                    name.amount != '' ? name.amount : 'No amount'
-                    ).filter(Boolean).join(", ")}
+                    name.amount != '' ? name.discount_type == "fixed_amount" ? name.amount + "د.إ" : name.amount + '%': 'No amount'
+                    ).filter(Boolean).join(",  ")}
                 </td>
                 )}
                {declineInflu && (

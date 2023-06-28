@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react';
+import { Chart, Line } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Legend, LineController, ArcElement, PieController } from 'chart.js';
-import { Chart } from 'react-chartjs-2';
 import axios from 'axios';
 import { API } from '../../config/Api';
 
@@ -11,11 +11,6 @@ ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Tooltip,
 
 function createGradient(ctx, area) {
   const colors = [
-    'red',
-    'orange',
-    'yellow',
-    'lime',
-    'green',
     'teal',
     'blue',
     'purple',
@@ -86,6 +81,7 @@ function Sales() {
         {
           label: 'Sales Data',
           data: [],
+          tension: 0.2,
           backgroundColor: createGradient(chartSales.ctx, chartSales.chartArea),
         },
       ],
@@ -136,6 +132,7 @@ function Sales() {
         },
       })
       .then(function (response) {
+        console.log("Analytics", response)
         const analyticsData = response.data;
         const updatedSalesData = {
           labels: [
@@ -180,6 +177,7 @@ function Sales() {
             {
               label: 'Order Data',
               data: analyticsData.order,
+              tension: 0.2,
               backgroundColor: createGradient(chartOrdersRef.current?.ctx, chartOrdersRef.current?.chartArea),
             },
           ],
@@ -215,10 +213,6 @@ function Sales() {
         const labelCount = Object.keys(campaignSalesData).length;
         const colors = [
           'red',
-          'orange',
-          'yellow',
-          'lime',
-          'green',
           'teal',
           'blue',
           'purple',
@@ -242,6 +236,12 @@ function Sales() {
       .finally(() => setLoading(false));
   }, []);
 
+  const options = {
+    plugins: {
+      legend: true
+    },
+  }
+
   return (
     <>
       <div className="sales p-4 page">
@@ -262,12 +262,12 @@ function Sales() {
 
             <div className="chart my-5">
               <h4 className='text-left w-100 d-flex ps-5 mb-4'>Sales Data</h4>
-              <Chart ref={chartSalesRef} type="line" data={chartSalesData} />
+              <Line ref={chartSalesRef} type="line" data={chartSalesData} options={options}></Line>
             </div>
             
             <div className="chart">
               <h4 className='text-left w-100 d-flex ps-5 mb-4'>Order Data</h4>
-              <Chart ref={chartOrdersRef} type="line" data={chartOrdersData} />
+              <Line ref={chartOrdersRef} type="line" data={chartOrdersData} options={options} />
             </div>
           </div>
         </div>
