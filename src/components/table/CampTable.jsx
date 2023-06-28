@@ -71,9 +71,26 @@ const CampaignTable = ({
                 )}
                 {!approvedButtons && (
                 <td>
-                    {name.product?.map((name) =>
-                    name.amount != '' ? name.discount_type == "fixed_amount" ? name.amount + "د.إ" : name.amount + '%': 'No amount'
-                    ).filter(Boolean).join(",  ")}
+                 {name.product.map((product, index) => (
+                  <>
+                    {product.discount_type && Array.isArray(product.discount_type) ?  (
+                      product.discount_type.map((discount, i) => (
+                        <>
+                          {product.amount[i]}
+                          {discount === 'percentage' ? '%' :'Dhs'}
+                          {i < product.discount_type.length - 1 ? ' , ' : ''}
+                        </>
+                      ))
+                    ) : 
+                        product.amount && Array.isArray(product.amount) &&  (
+                          product.amount.map((amount, i) => (
+                              <>
+                                {amount}
+                                {i < product.amount.length - 1 ? ' , ' : ''}
+                              </>
+                          )))}
+                  </>
+                ))}
                 </td>
                 )}
                {declineInflu && (

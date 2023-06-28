@@ -121,7 +121,9 @@ table {
             &:last-child {
               border-radius: 0px 0px 24px 0px;
             }
+            
           }
+          
       }
       td {
           // display: flex;
@@ -141,6 +143,16 @@ table {
               display: flex;
               justify-content: center;
               align-items: center;
+          }
+          td.no-amount {
+            display: none;
+            &:last-child {
+              display: table;
+              padding: 0 !important;
+              margin: 0 !important;
+              border: none !important;
+              width: 100% !important;
+            }
           }
       }
       td.category {
