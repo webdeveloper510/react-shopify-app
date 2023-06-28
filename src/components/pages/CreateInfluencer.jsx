@@ -889,7 +889,7 @@ const CreateInfluencer = () => {
                                                             product_id: product.product_id,
                                                             amount: product.amount[i].substring(1),
                                                             influencer_id: product.influencer_id,
-                                                            discout_type: product.discout_type,
+                                                            discout_type: product.discout_type[i],
                                                         };
                                                         const isCouponSelected = id?.length > 0 ?(
                                                             selectedCouponAmounts.some(selectedCoupon => selectedCoupon.name && selectedCoupon.name.includes(String(couponObject.name)) && selectedCoupon.product_id === couponObject.product_id)
@@ -931,6 +931,7 @@ const CreateInfluencer = () => {
                                                                         name: Array.isArray(existingProduct.name) ? [...existingProduct.name, couponObject.name] : [couponObject.name],
                                                                         amount: [...existingProduct.amount, couponObject.amount],
                                                                         influencer_id: product.influencer_id,
+                                                                        discout_type: [...existingProduct.discout_type, couponObject.discout_type],
                                                                         };
                                                                     }
                                                                     return selectedCouponAmount;
@@ -942,6 +943,7 @@ const CreateInfluencer = () => {
                                                                     name: [couponObject.name],
                                                                     amount: [couponObject.amount],
                                                                     influencer_id: product.influencer_id,
+                                                                    discout_type: [couponObject.discout_type]
                                                                 }];
                                                                 });
                                                             }
@@ -950,17 +952,32 @@ const CreateInfluencer = () => {
                                                             if (selectedCouponIndex !== -1) {
                                                                 setSelectedCoupons(prevSelectedCoupons => prevSelectedCoupons.filter((selectedCoupon, index) => index !== selectedCouponIndex));
                                                                 setSelectedCouponNames(prevSelectedCouponNames => prevSelectedCouponNames.filter((selectedCouponName, index) => index !== selectedCouponIndex));
-                                                                setSelectedCouponAmounts(prevSelectedCouponAmounts => {
+                                                                setSelectedCouponAmounts((prevSelectedCouponAmounts) => {
                                                                     const updatedSelectedCouponAmounts = [...prevSelectedCouponAmounts];
-                                                                    const existingProductIndex = updatedSelectedCouponAmounts.findIndex(selectedCouponAmount => selectedCouponAmount.product_name === product.product_name && selectedCouponAmount.product_id === product.product_id);
+                                                                    const existingProductIndex = updatedSelectedCouponAmounts.findIndex(
+                                                                        (selectedCouponAmount) =>
+                                                                            selectedCouponAmount.product_name ===
+                                                                                product.product_name &&
+                                                                            selectedCouponAmount.product_id === product.product_id
+                                                                    );
+                                                        
                                                                     if (existingProductIndex !== -1) {
-                                                                        const existingProduct = updatedSelectedCouponAmounts[existingProductIndex];
-                                                                        const couponIndex = existingProduct.name.findIndex(name => name === couponObject.name);
+                                                                        const existingProduct =
+                                                                            updatedSelectedCouponAmounts[existingProductIndex];
+                                                                        const couponIndex = existingProduct.name.findIndex(
+                                                                            (name) => name === couponObject.name
+                                                                        );
+                                                        
                                                                         if (couponIndex !== -1) {
                                                                             existingProduct.name.splice(couponIndex, 1);
                                                                             existingProduct.amount.splice(couponIndex, 1);
+                                                                            existingProduct.discout_type.splice(couponIndex, 1);
+                                                        
                                                                             if (existingProduct.name.length === 0) {
-                                                                                updatedSelectedCouponAmounts.splice(existingProductIndex, 1);
+                                                                                updatedSelectedCouponAmounts.splice(
+                                                                                    existingProductIndex,
+                                                                                    1
+                                                                                );
                                                                             }
                                                                         }
                                                                     }
@@ -977,7 +994,8 @@ const CreateInfluencer = () => {
                                                                         return {
                                                                         ...existingProduct,
                                                                         name: [...existingProduct.name, couponObject.name],
-                                                                        amount: [...existingProduct.amount, couponObject.amount]
+                                                                        amount: [...existingProduct.amount, couponObject.amount],
+                                                                        discout_type: [...existingProduct.discout_type, couponObject.discout_type]
                                                                         };
                                                                     }
                                                                     return selectedCouponAmount;
@@ -989,14 +1007,13 @@ const CreateInfluencer = () => {
                                                                     name: [couponObject.name],
                                                                     amount: [couponObject.amount],
                                                                     influencer_id: product.influencer_id,
-                                                                    discout_type: couponObject.discout_type,
+                                                                    discout_type: [couponObject.discout_type],
                                                                 }];
                                                                 });
                                                                 }
                                                             }
                                                         };
                                                         return (
-                                                                // Render the <p> tag
                                                                 <p
                                                                   key={coupon}
                                                                   className={`d-flex flex-column mb-0 ${isCouponSelected ? 'selected' : ''}`}

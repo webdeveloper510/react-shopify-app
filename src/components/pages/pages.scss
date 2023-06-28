@@ -309,7 +309,7 @@ $whiteColor: #FFFFFF;
             a {
                 padding: 20px 20px;
                 min-width: 35%;
-                font-size: 1.6vw;
+                font-size: 1.5vw !important;
                 // background: #5172FC;
                 display: flex;
                 justify-content: center;
@@ -659,28 +659,41 @@ $whiteColor: #FFFFFF;
 .campaign-manage-container {
     position: relative;
     .tab-header {
-        .nav-link {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-width: 100px;
-            padding: 10px 8px;
-            border: none;
-            border-radius: 15px;
-            font-size: 11px;
-            outline: none;
-            background: $whiteColor;
-            border: 1px solid #E5ECF6;
-            color: $blackColor;
-            &:nth-child(1) {
-                margin-right: .5rem;
-            }
+        overflow-x: scroll;
+        display: flex;
+        flex-wrap: nowrap !important;
+        max-width: 873px;
+        padding-bottom: 5px;
+        &::-webkit-scrollbar {
+            height: 5px;
+            border-radius: 10px;
         }
-        .nav-link.active {
-            background: $blackColor!important;
-            margin-right: .5rem;
-            border: 1px solid transparent !important;
-            color: $whiteColor;
+        .nav-item {
+            display: flex;
+            min-width: fit-content;
+            .nav-link {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                min-width: 100px;
+                padding: 10px 8px;
+                border: none;
+                border-radius: 15px;
+                font-size: 11px;
+                outline: none;
+                background: $whiteColor;
+                border: 1px solid #E5ECF6;
+                color: $blackColor;
+                &:nth-child(1) {
+                    margin-right: .5rem;
+                }
+            }
+            .nav-link.active {
+                background: $blackColor!important;
+                margin-right: .5rem;
+                border: 1px solid transparent !important;
+                color: $whiteColor;
+            }
         }
     }
     .confirm {
