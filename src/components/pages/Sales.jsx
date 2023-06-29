@@ -14,6 +14,8 @@ function createGradient(ctx, area) {
     'teal',
     'blue',
     'purple',
+    'red',
+    'green'
   ];
 
   const colorStart = colors[Math.floor(Math.random() * colors.length)];
@@ -38,14 +40,9 @@ function createGradient(ctx, area) {
 function Sales() {
   const token = localStorage.getItem("Token");
   const chartSalesRef = useRef(null);
-  const chartOrdersRef = useRef(null);
   const chartPieRef = useRef(null);
   const [loading, setLoading] = useState(false);
   const [chartSalesData, setChartSalesData] = useState({
-    labels: [],
-    datasets: [],
-  });
-  const [chartOrdersData, setChartOrdersData] = useState({
     labels: [],
     datasets: [],
   });
@@ -55,74 +52,6 @@ function Sales() {
     datasets: [],
   });
 
-  useEffect(() => {
-    const chartSales = chartSalesRef.current;
-
-    if (!chartSales) {
-      return;
-    }
-
-    const updatedSalesData = {
-      labels: [
-        'January',
-        'February',
-        'March',
-        'April',
-        'May',
-        'June',
-        'July',
-        'August',
-        'September',
-        'October',
-        'November',
-        'December',
-      ],
-      datasets: [
-        {
-          label: 'Sales Data',
-          data: [],
-          tension: 0.2,
-          backgroundColor: createGradient(chartSales.ctx, chartSales.chartArea),
-        },
-      ],
-    };
-
-    setChartSalesData(updatedSalesData);
-  }, []);
-
-  useEffect(() => {
-    const chartOrders = chartOrdersRef.current;
-
-    if (!chartOrders) {
-      return;
-    }
-
-    const updatedOrdersData = {
-      labels: [
-        'January',
-        'February',
-        'March',
-        'April',
-        'May',
-        'June',
-        'July',
-        'August',
-        'September',
-        'October',
-        'November',
-        'December',
-      ],
-      datasets: [
-        {
-          label: 'Order Data',
-          data: [],
-          backgroundColor: createGradient(chartOrders.ctx, chartOrders.chartArea),
-        },
-      ],
-    };
-
-    setChartOrdersData(updatedOrdersData);
-  }, []);
 
   useEffect(() => {
     setLoading(true);
@@ -132,7 +61,7 @@ function Sales() {
         },
       })
       .then(function (response) {
-        console.log("Analytics", response)
+        console.log("Sales Data", response)
         const analyticsData = response.data;
         const updatedSalesData = {
           labels: [
@@ -155,36 +84,16 @@ function Sales() {
               data: analyticsData.sales_data,
               backgroundColor: createGradient(chartSalesRef.current?.ctx, chartSalesRef.current?.chartArea),
             },
-          ],
-        };
-
-        const updatedOrdersData = {
-          labels: [
-            'January',
-            'February',
-            'March',
-            'April',
-            'May',
-            'June',
-            'July',
-            'August',
-            'September',
-            'October',
-            'November',
-            'December',
-          ],
-          datasets: [
             {
               label: 'Order Data',
               data: analyticsData.order,
               tension: 0.2,
-              backgroundColor: createGradient(chartOrdersRef.current?.ctx, chartOrdersRef.current?.chartArea),
+              backgroundColor: createGradient(chartSalesRef.current?.ctx, chartSalesRef.current?.chartArea),
             },
           ],
         };
 
         setChartSalesData(updatedSalesData);
-        setChartOrdersData(updatedOrdersData);
       })
       .catch(function (error) {
         console.log(error);
@@ -223,7 +132,7 @@ function Sales() {
           datasets: [
             {
               data: data,
-              backgroundColor: colors.slice(0, labelCount), // Use a subset of colors based on the label count
+              backgroundColor: colors.slice(0, labelCount),
             },
           ],
         };
@@ -263,11 +172,6 @@ function Sales() {
             <div className="chart my-5">
               <h4 className='text-left w-100 d-flex ps-5 mb-4'>Sales Data</h4>
               <Line ref={chartSalesRef} type="line" data={chartSalesData} options={options}></Line>
-            </div>
-            
-            <div className="chart">
-              <h4 className='text-left w-100 d-flex ps-5 mb-4'>Order Data</h4>
-              <Line ref={chartOrdersRef} type="line" data={chartOrdersData} options={options} />
             </div>
           </div>
         </div>
