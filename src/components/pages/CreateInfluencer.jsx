@@ -440,7 +440,7 @@ const CreateInfluencer = () => {
                   console.log("matchedRows", matchedRows);
                   if (showInfluList === false) {
                     if (matchedRows.length > 0) {
-                      hasCoupons = true; // Set the flag to true if any coupons are assigned
+                      hasCoupons = true;
                       const matchedProductDetails = response.data.product_details.filter(
                         (product) => matchedRows.some((row) => row.id === product.influencer_id)
                       );

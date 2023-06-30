@@ -82,6 +82,7 @@ function Sales() {
             {
               label: 'Sales Data',
               data: analyticsData.sales_data,
+              tension: 0.2,
               backgroundColor: createGradient(chartSalesRef.current?.ctx, chartSalesRef.current?.chartArea),
             },
             {
