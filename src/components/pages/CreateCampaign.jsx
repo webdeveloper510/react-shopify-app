@@ -428,11 +428,11 @@ const CreateCampaign = () => {
 
     useEffect(() => {
         const newCombinedInfo = {
-            amount: selectedInfluencer?.amount,
-            discout_type: selectedInfluencer?.discout_type,
-            name: selectedInfluencer?.coupon_name,
+            amount: [selectedInfluencer?.amount],
+            discout_type: [selectedInfluencer?.discout_type],
+            name: [selectedInfluencer?.coupon_name],
             product_id: productIds,
-            product_name: productName,
+            product_name: [productName],
         };
         setSelectedProd(newCombinedInfo);
       }, [selectedInfluencer, productName]);
