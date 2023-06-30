@@ -202,7 +202,7 @@ const CreateCampaign = () => {
             date: selectedDate,
             coupon: selectedCouponNames.toString(),
             offer: influenceOffer,
-            product_discount: selectedProd,
+            product_discount: [selectedProd],
             product_name: productName,
             influencer_fee: influenceFee,
             influencer_visit: influencerVisit,
@@ -276,6 +276,21 @@ const CreateCampaign = () => {
         const list = document.querySelector(".test ul");
         if (!input?.contains(event.target) && !list?.contains(event.target)) {
           setShowList(false);
+        }
+    };
+
+    useEffect(() => {
+        document.addEventListener("click", handleClickOutsideCoupon);
+        return () => {
+          document.removeEventListener("click", handleClickOutsideCoupon);
+        };
+    }, [token]);
+
+    const handleClickOutsideCoupon = (event) => {
+        const input = document.querySelector(".coup input");
+        const list = document.querySelector(".coup ul");
+        if (!input?.contains(event.target) && !list?.contains(event.target)) {
+          setShowInfluencerDropdown(false);
         }
     };
 
@@ -557,7 +572,7 @@ const CreateCampaign = () => {
                     ></textarea>
                 </div>
             
-                <div className="input-container d-flex flex-column mb-4">
+                <div className="input-container d-flex coup flex-column mb-4 drop">
                     <label className='mb-3'>Select Coupon</label>
                     <input
                     type="text"
@@ -571,7 +586,7 @@ const CreateCampaign = () => {
                     style={selectedInfluencer?.coupon_name != '' ? {fontWeight: 'bold', color: ''} : {}}
                     />
                     {showInfluencerDropdown && (
-                    <ul>
+                    <ul className='product-list'>
                         {marketCoupons.map((influencer, i) => (
                         <li
                             className='influencer-box'

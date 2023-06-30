@@ -71,7 +71,7 @@ const CampaignTable = ({
                 )}
                 {!approvedButtons && (
                 <td>
-                 {name.product.map((product, index) => (
+                 {name.product?.map((product, index) => (
                   <>
                     {product.discount_type && Array.isArray(product.discount_type) ?  (
                       product.discount_type.map((discount, i) => (
