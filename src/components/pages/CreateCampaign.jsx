@@ -506,7 +506,7 @@ const CreateCampaign = () => {
                         type="text"
                         placeholder="---Select an option---"
                         onClick={() => setShowList(!showList)}
-                        value={productName.filter(Boolean).join(", ")}
+                        value={productName}
                     />
                     {showList && (
                         <ul className="product-list">
@@ -515,16 +515,8 @@ const CreateCampaign = () => {
                                     <li
                                         key={i}
                                         onClick={() => {
-                                            setProductName((prevValues) =>
-                                                prevValues.includes(name.title)
-                                                    ? prevValues.filter((value) => value !== name.title)
-                                                    : [...prevValues, name.title]
-                                            );
-                                            setProductIds((prevIds) =>
-                                                prevIds.includes(name.id)
-                                                    ? prevIds.filter((value) => value !== name.id)
-                                                    : [...prevIds, name.id]
-                                            );
+                                            setProductName(name.title );
+                                            setProductIds(name.id);
                                             setShowList(false);
                                         }}
                                         className={productName.includes(name.title) ? "active-prod" : ""}
