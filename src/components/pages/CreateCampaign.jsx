@@ -130,7 +130,7 @@ const CreateCampaign = () => {
             coupon: selectedCouponNames.toString(),
             offer: influenceOffer,
             product_name: productName,
-            product_discount: selectedProd,
+            product_discount: [selectedProd],
             influencer_visit: influencerVisit,
             influencer_fee: influenceFee,
             description: campaignDesc,
