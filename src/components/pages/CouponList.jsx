@@ -179,6 +179,9 @@ const CouponList = () => {
             else if (error.response.data.error == "Amount field is required") {
                 toast.warn("Amount or Percentage required", { autoClose: 1000 })
             }
+            else if (error.response.data.message == " value must be between 0 and 100") {
+                toast.warn("Value should be less than 100", { autoClose: 1000 })
+            }
             else {
                 toast.error("Could not create a coupon right now", { autoClose: 1000 })
             }
@@ -222,7 +225,12 @@ const CouponList = () => {
         })
         .catch(function (error) {
             console.log(error);
-            toast.warn("Fields should not be empty!", { autoClose: 1000 });
+            if (error.response.data.message == "must be between 0 and 100") {
+                toast.warn("Value must be between 0 and 100", { autoClose: 1000 })
+            }
+            else {
+                toast.warn("Fields should not be empty!", { autoClose: 1000 });
+            }
         })
         .finally(() => setLoading(false));
     }

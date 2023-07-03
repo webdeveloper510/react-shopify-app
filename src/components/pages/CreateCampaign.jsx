@@ -20,7 +20,7 @@ const CreateCampaign = () => {
     const [showList, setShowList] = useState(false);
     const [campaignDesc, setCampaignDesc] = useState('');
     const [influenceOffer, setInfluenceOffer] = useState('');
-    const [selectedCoupon, setSelectedCoupon] = useState({ name: "", product: "" });
+    const [selectedCoupon, setSelectedCoupon] = useState({ coupon_name: "", product: "" });
     const [prodList, setProdList] = useState('')
     const [loading, setLoading] = useState(false);
     const [productUrl, setProductUrl] = useState([]);
@@ -383,7 +383,12 @@ const CreateCampaign = () => {
                 const products = response.data.data[0].product;
                 const productNames = products.map(product => product.product_name);
                 const productIds = products.map(product => product.product_id);
-                const couponNames = products.flatMap(product => product.name);
+                const couponNames = products.map(product => product.coupon_name);
+                setSelectedInfluencer(prevState => ({
+                    ...prevState,
+                    coupon_name: couponNames,
+                }));
+                console.log("couponNames", couponNames)
                 setProductName(productNames);
                 setProductIds(productIds);
                 setSelectedCouponNames(couponNames);
@@ -430,7 +435,7 @@ const CreateCampaign = () => {
         const newCombinedInfo = {
             amount: [selectedInfluencer?.amount],
             discout_type: [selectedInfluencer?.discout_type],
-            name: [selectedInfluencer?.coupon_name],
+            coupon_name: [selectedInfluencer?.coupon_name],
             product_id: productIds,
             product_name: productName,
         };

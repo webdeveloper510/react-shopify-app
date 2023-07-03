@@ -419,13 +419,17 @@ const CreateInfluencer = () => {
           Promise.all(
             productName?.map((product) => {
               return axios
-                .post(API.BASE_URL + "product/url/", {
-                  products: productIds.filter(Boolean).toString(),
-                }, {
-                  headers: {
-                    Authorization: `Token ${token}`,
+                .post(
+                  API.BASE_URL + "product/url/",
+                  {
+                    products: productIds.filter(Boolean).toString(),
                   },
-                })
+                  {
+                    headers: {
+                      Authorization: `Token ${token}`,
+                    },
+                  }
+                )
                 .then((response) => {
                   console.log("Response 1", response);
                   const influencerIds = response.data.product_details.map(
@@ -433,21 +437,22 @@ const CreateInfluencer = () => {
                   );
                   setProdInfluId(influencerIds);
                   setProductUrl(response.data.product_url);
-                  const matchedRows = selectedRows.filter(
-                    (row) => influencerIds.includes(row.id)
+                  const matchedProductDetails = response.data.product_details.filter(
+                    (product) =>
+                      product.influencer_id.some((id) =>
+                        selectedRows.some((row) => row.id === id)
+                      )
                   );
       
-                  console.log("matchedRows", matchedRows);
+                  console.log("matchedProductDetails", matchedProductDetails);
                   if (showInfluList === false) {
-                    if (matchedRows.length > 0) {
+                    if (matchedProductDetails.length > 0) {
                       hasCoupons = true;
-                      const matchedProductDetails = response.data.product_details.filter(
-                        (product) => matchedRows.some((row) => row.id === product.influencer_id)
-                      );
                       setProductDetails(matchedProductDetails);
       
                       const updatedSelectedCouponAmounts = selectedCouponAmounts.filter(
-                        (couponAmount) => productIds.includes(couponAmount.product_id)
+                        (couponAmount) =>
+                          productIds.includes(couponAmount.product_id)
                       );
                       setSelectedCouponAmounts(updatedSelectedCouponAmounts);
                     }
@@ -457,12 +462,14 @@ const CreateInfluencer = () => {
             })
           ).finally(() => {
             setLoading(false);
-            if (!hasCoupons  && productIds?.length > 0) {
-              toast.error("No coupons assigned to influencers for the selected products.");
+            if (!hasCoupons && productIds?.length > 0) {
+              toast.error(
+                "No coupons assigned to influencers for the selected products."
+              );
             }
           });
         }
-    }, [productName, selectedRows, token]);
+    }, [productName, selectedRows, token]);  
       
     const handleCheckboxChange = (event, row, id) => {
         const checked = event.target.checked;
