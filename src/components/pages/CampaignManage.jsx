@@ -631,7 +631,7 @@ const CampaignManage = () => {
         <h2 className='my-5'>Manage Campaign</h2>
         <Tab.Container id="left-tabs-example" defaultActiveKey="first">
             <Col sm={12}>
-            <Nav variant="pills" className="flex-row mb-4 tab-header">
+            <Nav variant="pills" className="flex-row mb-2 tab-header">
                 <Nav.Item>
                     <Nav.Link eventKey="first">Active Campaigns</Nav.Link>
                 </Nav.Item>

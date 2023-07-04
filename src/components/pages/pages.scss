@@ -83,6 +83,9 @@ $whiteColor: #FFFFFF;
     position: relative;
     .influencer-list-main {
         margin-bottom: 30px;
+        max-height: 500px;
+        overflow-y: scroll;
+        padding-right: 25px;
         .influencer-list-container {
             padding: 20px 35px;
             border: 0.97px solid rgba(0, 0, 0, 0.2);
@@ -659,10 +662,7 @@ $whiteColor: #FFFFFF;
 .campaign-manage-container {
     position: relative;
     .tab-header {
-        overflow-x: scroll;
         display: flex;
-        flex-wrap: nowrap !important;
-        max-width: 873px;
         padding-bottom: 5px;
         &::-webkit-scrollbar {
             height: 5px;
@@ -671,6 +671,7 @@ $whiteColor: #FFFFFF;
         .nav-item {
             display: flex;
             min-width: fit-content;
+            margin-bottom: 1rem;
             .nav-link {
                 display: flex;
                 align-items: center;
@@ -1150,5 +1151,6 @@ $whiteColor: #FFFFFF;
 .tracking-coupon {
     ul {
         bottom: unset;
+        max-height: 200px !important;
     }
 }

@@ -564,7 +564,7 @@ const CouponList = () => {
                             placeholder={prodList?.length > 0 ? "---Select an option---" : "---No Products Available---"}
                             onClick={() => setShowList(!showList)}
                             value={productName}
-                            style={productName?.length > 0 ? {fontWeight: 'bold',} : {}}
+                            style={productName?.length > 0 ? {fontWeight: 'bold', color: '#6c6c6c'} : {}}
                             />
                             {showList && (
                             <ul>
@@ -607,7 +607,7 @@ const CouponList = () => {
                             }
                             onClick={() => setShowInfluencerDropdown(!showInfluencerDropdown)}
                             value={selectedInfluencer ? selectedInfluencer.fullname : ""}
-                            style={selectedInfluencer?.length > 0 ? {fontWeight: 'bold', color: ''} : {}}
+                            style={selectedInfluencer != '' ? {fontWeight: 'bold', color: '#6c6c6c'} : {}}
                             />
                             {showInfluencerDropdown && (
                             <ul>

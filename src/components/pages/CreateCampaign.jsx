@@ -130,7 +130,7 @@ const CreateCampaign = () => {
             coupon: selectedCouponNames.toString(),
             offer: influenceOffer,
             product_name: productName,
-            product_discount: [selectedProd],
+            product_discount: selectedProd,
             influencer_visit: influencerVisit,
             influencer_fee: influenceFee,
             description: campaignDesc,
@@ -202,7 +202,7 @@ const CreateCampaign = () => {
             date: selectedDate,
             coupon: selectedCouponNames.toString(),
             offer: influenceOffer,
-            product_discount: [selectedProd],
+            product_discount: selectedProd,
             product_name: productName,
             influencer_fee: influenceFee,
             influencer_visit: influencerVisit,
@@ -345,7 +345,7 @@ const CreateCampaign = () => {
             campaign_name: campaignName,
             description: campaignDesc,
             offer: influenceOffer,
-            product_discount: selectedCouponAmounts,
+            product_discount: selectedProd,
             influencer_fee: influenceFee,
             date: selectedDate,
             product_name: productName,
@@ -381,12 +381,25 @@ const CreateCampaign = () => {
                 setInfluenceOffer(response.data.data[0].offer);
                 setInfluencerVisit(response.data.data[0].influencer_visit);
                 const products = response.data.data[0].product;
+                const amount = products.map(product => product.amount[0]);
+                const discount_type = response.data.data[0].discout_type;
                 const productNames = products.map(product => product.product_name);
-                const productIds = products.map(product => product.product_id);
-                const couponNames = products.map(product => product.coupon_name);
+                const productIds = products.map(product => product.product_id.toString());
+                const couponNames = products.map(product => product.coupon_name[0]);
+                console.log("amount",amount)
                 setSelectedInfluencer(prevState => ({
-                    ...prevState,
+                    coupon_name: couponNames[0],
+                    amount: amount[0],
+                    discout_type: discount_type,
+                    product_id: productIds.toString(),
+                    product_name: productNames.toString()
+                }));
+                setSelectedProd(prevState => ({
                     coupon_name: couponNames,
+                    amount: amount,
+                    discout_type: discount_type,
+                    product_id: productIds.toString(),
+                    product_name: productNames.toString()
                 }));
                 console.log("couponNames", couponNames)
                 setProductName(productNames);
@@ -410,7 +423,7 @@ const CreateCampaign = () => {
             campaign_name: campaignName,
             description: campaignDesc,
             offer: influenceOffer,
-            product_discount: selectedCouponAmounts,
+            product_discount: selectedProd,
             influencer_fee: influenceFee,
             date: selectedDate,
             product_name: productName,
@@ -432,15 +445,17 @@ const CreateCampaign = () => {
     }
 
     useEffect(() => {
-        const newCombinedInfo = {
-            amount: [selectedInfluencer?.amount],
-            discout_type: [selectedInfluencer?.discout_type],
-            coupon_name: [selectedInfluencer?.coupon_name],
-            product_id: productIds,
-            product_name: productName,
-        };
-        setSelectedProd(newCombinedInfo);
-      }, [selectedInfluencer, productName]);
+        if(id?.length != 1) {
+            const newCombinedInfo = [{
+                amount: [selectedInfluencer?.amount],
+                discout_type: [selectedInfluencer?.discout_type],
+                coupon_name: [selectedInfluencer?.coupon_name],
+                product_id: productIds.toString(),
+                product_name: productName.toString(),
+            }];
+            setSelectedProd(newCombinedInfo);
+        }
+    }, [selectedInfluencer, productName]);
 
     console.log("PRDDDDDDDDD", productName)
     console.log("Coupons Name", selectedCoupon)
