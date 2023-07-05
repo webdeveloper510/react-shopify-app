@@ -915,12 +915,14 @@ const CreateInfluencer = () => {
                                                 {product?.coupon_name?.length > 0 ? (
                                                     product?.coupon_name?.map((coupon, j) => {
                                                         const influencerId = product?.influencer_id[j];
+                                                        const influencerIndex = selectedRows.findIndex(row => row.id === influencerId);
+                                                        const influencer = selectedRows[influencerIndex];
                                                         const couponObject = {
                                                             coupon_name: coupon,
                                                             product_name: product.product_name,
                                                             product_id: product.product_id,
                                                             amount: product.amount[j].substring(1),
-                                                            influencer_id: product.influencer_id,
+                                                            influencer_id: influencerId,
                                                             discout_type: product.discout_type[j],
                                                         };
                                                         const isCouponSelected = id?.length > 0 ?(
@@ -1086,7 +1088,7 @@ const CreateInfluencer = () => {
                                                             if (selectedRows.some(row => row.id === influencerId)) {
                                                                 return (
                                                                     <div className='d-flex flex-column justify-content-center align-items-center'>
-                                                                    <span className='text-center' style={{margin: '0 10px'}}>{matchedInfluencerNames[j]}</span>
+                                                                    <span className='text-center' style={{margin: '0 10px'}}>{influencer?.fullname}</span>
                                                                     <p
                                                                         key={coupon}
                                                                         className={`d-flex flex-column mb-0 ${isCouponSelected ? 'selected' : ''}`}
