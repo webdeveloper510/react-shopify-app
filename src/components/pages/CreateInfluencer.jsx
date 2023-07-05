@@ -432,7 +432,7 @@ const CreateInfluencer = () => {
                 )
                 .then((response) => {
                   console.log("Response 1", response);
-                  const influencerIds = response.data.product_details.map(
+                  const influencerIds = response.data.product_details.flatMap(
                     (product) => product.influencer_id
                   );
                   setProdInfluId(influencerIds);
@@ -455,6 +455,22 @@ const CreateInfluencer = () => {
                           productIds.includes(couponAmount.product_id)
                       );
                       setSelectedCouponAmounts(updatedSelectedCouponAmounts);
+      
+                      // Flatten the influencer IDs array
+                      const flattenedInfluencerIds = influencerIds.flat();
+      
+                      // Filter and map the influencer IDs and coupon names
+                      const influencerCoupons = selectedRows.map((row) => {
+                        const index = flattenedInfluencerIds.findIndex(
+                          (id) => id === row.id
+                        );
+                        if (index !== -1) {
+                          const couponIndex = index % response.data.coupon_name.length;
+                          return response.data.coupon_name[couponIndex];
+                        }
+                        return null;
+                      });
+                      console.log("Influencer Coupons", influencerCoupons);
                     }
                   }
                 })
@@ -469,7 +485,8 @@ const CreateInfluencer = () => {
             }
           });
         }
-    }, [productName, selectedRows, token]);  
+    }, [productName, selectedRows, token]);
+           
       
     const handleCheckboxChange = (event, row, id) => {
         const checked = event.target.checked;
@@ -896,14 +913,15 @@ const CreateInfluencer = () => {
                                             <span>{product?.product_name}:- </span>
                                             <div className='d-flex align-items-center'>
                                                 {product?.coupon_name?.length > 0 ? (
-                                                    product?.coupon_name?.map((coupon, i) => {
+                                                    product?.coupon_name?.map((coupon, j) => {
+                                                        const influencerId = product?.influencer_id[j];
                                                         const couponObject = {
                                                             coupon_name: coupon,
                                                             product_name: product.product_name,
                                                             product_id: product.product_id,
-                                                            amount: product.amount[i].substring(1),
+                                                            amount: product.amount[j].substring(1),
                                                             influencer_id: product.influencer_id,
-                                                            discout_type: product.discout_type[i],
+                                                            discout_type: product.discout_type[j],
                                                         };
                                                         const isCouponSelected = id?.length > 0 ?(
                                                             selectedCouponAmounts.some(selectedCoupon => selectedCoupon.coupon_name && selectedCoupon.coupon_name.includes(String(couponObject.coupon_name)) && selectedCoupon.product_id === couponObject.product_id)
@@ -1065,18 +1083,24 @@ const CreateInfluencer = () => {
                                                             };
                                                             
                                                           
-                                                        return (
-                                                                <p
-                                                                  key={coupon}
-                                                                  className={`d-flex flex-column mb-0 ${isCouponSelected ? 'selected' : ''}`}
-                                                                  onClick={handleClick}
-                                                                >
-                                                                  {coupon} -
-                                                                  {Math.abs(parseInt(product.amount[i]))}
-                                                                  {product.discout_type[i] !== 'fixed_amount' ? "%" : "د.إ"}
-                                                                </p>
-                                                        );
-                                                    })
+                                                            if (selectedRows.some(row => row.id === influencerId)) {
+                                                                return (
+                                                                    <div className='d-flex flex-column justify-content-center align-items-center'>
+                                                                    <span className='text-center' style={{margin: '0 10px'}}>{matchedInfluencerNames[j]}</span>
+                                                                    <p
+                                                                        key={coupon}
+                                                                        className={`d-flex flex-column mb-0 ${isCouponSelected ? 'selected' : ''}`}
+                                                                        onClick={handleClick}
+                                                                    >
+                                                                        {coupon} - {Math.abs(parseInt(product.amount[j]))}
+                                                                        {product.discout_type[j] !== 'fixed_amount' ? "%" : "د.إ"}
+                                                                    </p>
+                                                                    </div>
+                                                                );
+                                                              }
+                                                    
+                                                              return null;
+                                                            })
                                                 ) : <h5 className='fw-light mb-0 ms-2'>No Coupons</h5>}
                                             </div>
                                         </li>
