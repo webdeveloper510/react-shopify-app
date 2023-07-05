@@ -693,6 +693,12 @@ const CreateInfluencer = () => {
             })
         }
     }, [id, influencerList]);
+
+    useEffect(() => {
+        if (productName?.length === 0) {
+          setProductDetails([]);
+        }
+      }, [productName]);
     
     console.log("influencerVisit", influencerList);
     console.log("isVisitChecked", isVisitChecked);
@@ -1085,7 +1091,7 @@ const CreateInfluencer = () => {
                                                             };
                                                             
                                                           
-                                                            if (selectedRows.some(row => row.id === influencerId)) {
+                                                            if (selectedRows.some(row => row.id === influencerId) && productName) {
                                                                 return (
                                                                     <div className='d-flex flex-column justify-content-center align-items-center'>
                                                                     <span className='text-center' style={{margin: '0 10px'}}>{influencer?.fullname}</span>
