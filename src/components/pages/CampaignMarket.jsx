@@ -30,7 +30,10 @@ const CampaignMarket = () => {
     const [influenceVisit, setInfluenceVisit] = useState('');
     const [getId, setGetId] = useState('');
     const [getDeleteConfirm, setDeleteConfirm] = useState(false);
-    const {testing, setTesting, marketDraftId, setMarketDraftId, marketDraftList, setMarketDraftList, marketList, setMarketList, marketId, setMarketId} = useContext(UserContext);
+    const [campActive, setCampActive] = useState([]);
+    const [campDecline, setCampDecline] = useState([]);
+    const [campApproval, setCampApproval] = useState([]);
+    const {testing, setTesting, marketData,  marketDraftId, setMarketDraftId, marketDraftList, setMarketDraftList, marketList, setMarketList, marketId, setMarketId, declineInflu, showButtons} = useContext(UserContext);
     const navigate = useNavigate()
     
     useEffect(() => {
@@ -82,6 +85,49 @@ const CampaignMarket = () => {
         .then(function (response) {
             console.log("Market Expired List",response.data);
             setCampExpiredList(response.data.data);
+        })
+        .catch(function (error) {
+            console.log(error);
+        })
+
+        axios.get(API.BASE_URL + 'marketapproval/',{
+            headers: {
+                Authorization: `Token ${token}`
+            }
+        })
+        .then(function (response) {
+            console.log("Market Approval List",response.data);
+            setCampActive(response.data.data);
+        })
+        .catch(function (error) {
+            console.log(error);
+        })
+
+        axios.get(API.BASE_URL + 'market_decline/',{
+            headers: {
+                Authorization: `Token ${token}`
+            }
+        })
+        .then(function (response) {
+            console.log("Market Decline List",response.data);
+            setCampDecline(response.data.data);
+        })
+        .catch(function (error) {
+            console.log(error);
+        })
+       
+    }, [token])
+
+    useEffect(() => {
+
+        axios.get(API.BASE_URL + 'marketapproval/',{
+            headers: {
+                Authorization: `Token ${token}`
+            }
+        })
+        .then(function (response) {
+            console.log("Market Approval List",response.data);
+            setCampApproval(response.data.data);
         })
         .catch(function (error) {
             console.log(error);
@@ -189,6 +235,46 @@ const CampaignMarket = () => {
         setDeleteConfirm(false)
     }
 
+    const handleVendorAccept = (value, idValue, coupon, amount) => {
+        setLoading(true);
+        axios.post(API.BASE_URL + 'marketplaceaccept/' + value + '/' + idValue + '/',{
+            coupon: coupon,
+            amount: parseInt(amount.slice(1)),
+        },{
+            headers: { 
+                Authorization: `Token 89038b244f66b5a3dc67566064be0709a098815a` 
+            }
+        })
+        .then(function (response) {
+            console.log("Accepted" ,response)
+            toast.success("Campaign Accepted!", { autoClose: 1000 });
+            
+        })
+        .catch(function (error) {
+            console.log(error);
+            toast.warn("Cannot Accept right now. Please try again later", { autoClose: 1000 })
+        })
+        .finally(() => setLoading(false));
+    }
+
+    const handleVendorDecline = (value, idValue) => {
+        setLoading(true);
+        axios.post(API.BASE_URL + 'vendor/decline/' + value + '/' + idValue + '/',{},{
+            headers: { 
+                Authorization: `Token 89038b244f66b5a3dc67566064be0709a098815a` 
+            }
+        })
+        .then(function (response) {
+            console.log("Decline" ,response)
+            toast.success("Campaign Declined!", { autoClose: 1000 });
+        })
+        .catch(function (error) {
+            console.log(error);
+            toast.warn("Cannot Decline right now. Please try again later", { autoClose: 1000 })
+        })
+        .finally(() => setLoading(false));
+    }
+
     console.log("Testing in Market", testing)
     console.log("productNames", productNames)
 
@@ -212,6 +298,12 @@ const CampaignMarket = () => {
                     </Nav.Item>
                     <Nav.Item>
                         <Nav.Link eventKey="third">Expired Campaigns</Nav.Link>
+                    </Nav.Item>
+                    <Nav.Item>
+                        <Nav.Link eventKey="four">Approved Campaigns</Nav.Link>
+                    </Nav.Item>
+                    <Nav.Item>
+                        <Nav.Link eventKey="five">Decline Campaigns</Nav.Link>
                     </Nav.Item>
                 </Nav>
                 </Col>
@@ -305,6 +397,77 @@ const CampaignMarket = () => {
                                 getId={getId}
                                 approved={false}
                                 approvedButtons = {false}
+                                handleCampName={handleCampName}
+                                campName={campName}
+                                handleProdOffer={handleProdOffer}
+                            />
+                            ) :
+                            (
+                                <>
+                                    <h5 className='mt-4 text-center'>No Expired Campaign</h5>
+                                    <img src={NoData} alt='no-data' style={{width: '100%', maxHeight: 220, marginTop: '4rem', objectFit: 'contain'}} />
+                                    <h3 className='text-center'>No Data Found</h3>
+                                </>
+                            )
+                        }
+                    </Tab.Pane>
+
+                    <Tab.Pane eventKey="four">
+                        {campApproval?.length > 0 ? (
+                            <CampaignTable 
+                            campList={campApproval}
+                            getSingleMarket={getSingleMarket}
+                            deleteConfirm={deleteConfirm}
+                            getDeleteConfirm={getDeleteConfirm}
+                            getMarket={getMarket}
+                            influencerSale = {true}
+                            couponCross={couponCross}
+                            getMarketInfo={getMarketInfo}
+                            handleProdDiscount={handleProdDiscount}
+                            prodDiscount={prodDiscount}
+                            handleInfluenceVisit={handleInfluenceVisit}
+                            influenceVisit={influenceVisit}
+                            deleteCampaign={deleteCampaign}
+                            getId={getId}
+                            handleCampName={handleCampName}
+                            campName={campName}
+                            handleProdOffer={handleProdOffer}
+                            showButtons={false}
+                            handleVendorAccept={handleVendorAccept}
+                            handleVendorDecline={handleVendorDecline}
+                        />
+                            ) :
+                            (
+                                <>
+                                    <h5 className='mt-4 text-center'>No Approved Campaign</h5>
+                                    <img src={NoData} alt='no-data' style={{width: '100%', maxHeight: 220, marginTop: '4rem', objectFit: 'contain'}} />
+                                    <h3 className='text-center'>No Data Found</h3>
+                                </>
+                            )
+                        }
+                    </Tab.Pane>
+
+                    <Tab.Pane eventKey="five">
+                        {campExpiredList?.length > 0 ? (
+                            <CampaignTable 
+                                campList={campActive}
+                                declineInflu = {false}
+                                getSingleMarket={getSingleMarket}
+                                deleteConfirm={deleteConfirm}
+                                influencerSale = {true}
+                                getDeleteConfirm={getDeleteConfirm}
+                                getMarket={getMarket}
+                                couponCross={couponCross}
+                                getMarketInfo={getMarketInfo}
+                                handleProdDiscount={handleProdDiscount}
+                                prodDiscount={prodDiscount}
+                                handleInfluenceVisit={handleInfluenceVisit}
+                                influenceVisit={influenceVisit}
+                                deleteCampaign={deleteCampaign}
+                                getId={getId}
+                                approved={false}
+                                approvedButtons = {false}
+                                marketData = {true}
                                 handleCampName={handleCampName}
                                 campName={campName}
                                 handleProdOffer={handleProdOffer}

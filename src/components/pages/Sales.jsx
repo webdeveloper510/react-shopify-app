@@ -9,34 +9,6 @@ import './pages.scss';
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Legend, LineController, ArcElement, PieController);
 
 
-function createGradient(ctx, area) {
-  const colors = [
-    'teal',
-    'blue',
-    'purple',
-    'red',
-    'green'
-  ];
-
-  const colorStart = colors[Math.floor(Math.random() * colors.length)];
-  let colorMid = colors[Math.floor(Math.random() * colors.length)];
-  while (colorMid === colorStart) {
-    colorMid = colors[Math.floor(Math.random() * colors.length)];
-  }
-  let colorEnd = colors[Math.floor(Math.random() * colors.length)];
-  while (colorEnd === colorStart || colorEnd === colorMid) {
-    colorEnd = colors[Math.floor(Math.random() * colors.length)];
-  }
-
-  const gradient = ctx.createLinearGradient(0, area.bottom, 0, area.top);
-
-  gradient.addColorStop(0, colorStart);
-  gradient.addColorStop(0.5, colorMid);
-  gradient.addColorStop(1, colorEnd);
-
-  return gradient;
-}
-
 function Sales() {
   const token = localStorage.getItem("Token");
   const chartSalesRef = useRef(null);
@@ -83,13 +55,22 @@ function Sales() {
               label: 'Sales Data',
               data: analyticsData.sales_data,
               tension: 0.2,
-              backgroundColor: createGradient(chartSalesRef.current?.ctx, chartSalesRef.current?.chartArea),
+              backgroundColor: [
+                'red',
+                'blue',
+              ],
             },
             {
               label: 'Order Data',
               data: analyticsData.order,
               tension: 0.2,
-              backgroundColor: createGradient(chartSalesRef.current?.ctx, chartSalesRef.current?.chartArea),
+              backgroundColor: [
+                'teal',
+                'blue',
+                'purple',
+                'red',
+                'green'
+              ],
             },
           ],
         };

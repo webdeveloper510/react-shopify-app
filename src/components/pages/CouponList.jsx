@@ -5,7 +5,7 @@ import Download from '../../assests/img/download.png';
 import axios from 'axios';
 import { API } from '../../config/Api';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faClose, faChevronLeft } from '@fortawesome/free-solid-svg-icons';
+import { faClose, faChevronLeft, faPenToSquare } from '@fortawesome/free-solid-svg-icons';
 import { toast } from 'react-toastify';
 
 // Images
@@ -166,6 +166,9 @@ const CouponList = () => {
             console.log(error);
             if (error.response.data.error == "Coupon field is required") {
                 toast.warn("Coupon field is required", { autoClose: 1000 })
+            }
+            else if(couponDesc.trim() == '') {
+                toast.warn("Coupon cannot be empty")
             }
             else if (error.response.data.response == "Coupon name already taken") {
                 toast.warn("Coupon name already taken", { autoClose: 1000 })
@@ -356,6 +359,7 @@ const CouponList = () => {
     const trackingApi = (event) => {
         event.preventDefault();
         setLoading(true);
+        
         axios.post('https://api.myrefera.com/shopify/particular/product/', {
             discount_code: couponDesc,
             discount_type: discountType,
@@ -385,6 +389,9 @@ const CouponList = () => {
             console.log(error);
             if (error.response.data.error == "Product  field is required") {
                 toast.warn("Product field is required", { autoClose: 1000 })
+            }
+            else if(couponDesc.trim() == '') {
+                toast.warn("Coupon cannot be empty")
             }
             else if (error.response.data.error == "Coupon already Exists") {
                 toast.warn("Coupon name already exsits", { autoClose: 1000 })
@@ -487,7 +494,10 @@ const CouponList = () => {
                                     <td>{couponData.created_at}</td>
                                     <td>
                                         <button onClick={(event) => getSingleCoupon(couponData.id, event)}>
-                                        <img src={Delete} style={{ marginRight: 5 }} /> Edit
+                                        <FontAwesomeIcon
+                                            icon={faPenToSquare}
+                                            style={{ color: "#fff", width: "15px", height: "15px", marginRight: 5 }}
+                                        /> Edit
                                         </button>
                                         {loading && (
                                         <div className="d-flex loader-container flex-column">
@@ -585,6 +595,7 @@ const CouponList = () => {
                                     handleClick(name.title, name.id)
                                     // setShowList(false);
                                     }}
+                                    className={productName.includes(name.title) ? "active-prod" : ""}
                                 >
                                     {name.title}
                                 </li>
@@ -629,7 +640,7 @@ const CouponList = () => {
                             <select value={discountType} onChange={handleDiscountType}>
                                 <option value="" disabled>Discount Type</option>
                                 <option value="fixed_amount">Fixed Amount</option>
-                                <option value="percentage">Precentage</option>
+                                <option value="percentage">Percentage</option>
                             </select>
                         </div>
                         <div className="input-container">
@@ -657,7 +668,7 @@ const CouponList = () => {
                             <select name="" id="" value={discountType} onChange={handleDiscountType}>
                                 <option value="" disabled>Discount Type</option>
                                 <option value="fixed_amount">Fixed Amount</option>
-                                <option value="percentage">Precentage</option>
+                                <option value="percentage">Percentage</option>
                             </select>
                         </div>
                         <div className="input-container">
@@ -711,6 +722,7 @@ const CouponList = () => {
                                                     // setProductIds((prevIds) => [...prevIds, name.id]);
                                                 }
                                             }}
+                                            className={productName.includes(name.title) ? "active-prod" : ""}
                                         >
                                             {name.title}
                                         </li>
@@ -766,11 +778,11 @@ const CouponList = () => {
                             <select name="" id="" value={discountType} onChange={handleDiscountType}>
                                 <option value="" disabled>{getCouponInfo?.discount_type}</option>
                                 <option value="fixed_amount">Fixed Amount</option>
-                                <option value="percentage">Precentage</option>
+                                <option value="percentage">Percentage</option>
                             </select>
                         </div>
                         <div className="input-container">
-                            <label>{discountType == "fixed_amount" ? "Amount" : "Commision"}</label>
+                            <label>{discountType == "fixed_amount" ? "Amount" : "Commission"}</label>
                             <input type="number" onWheel={(e) => e.target.blur()} value={couponAmount} onChange={handleCouponAmount} />
                         </div>
                         {couponStatus == 1 ? (

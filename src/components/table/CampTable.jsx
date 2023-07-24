@@ -1,6 +1,6 @@
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPenToSquare, faClose, faCheck, faXmark } from "@fortawesome/free-solid-svg-icons";
+import { faPenToSquare, faClose, faCheck, faXmark, faEye } from "@fortawesome/free-solid-svg-icons";
 import Delete from '../../assests/img/delete.svg';
 
 const CampaignTable = ({
@@ -18,6 +18,7 @@ const CampaignTable = ({
   editCampaign,
   deleteCampaign,
   getId,
+  showMarket,
   handleCampName,
   campName,
   handleProdOffer,
@@ -27,15 +28,17 @@ const CampaignTable = ({
   approved = true,
   approvedButtons = true,
   declineInflu = true,
-  showEdit = true
+  showEdit = true,
+  marketData = false,
+  campEdit = false
 }) => {
   return (
     <table className='w-100 campaign'>
       <tbody className='w-100'>
         <tr className='headings'>
           <th>Campaign Name</th>
-          {!approvedButtons && (<th>Products</th>)}
-          {approved && (<th>Influencer</th>)}
+          {marketData == false && (!approvedButtons && (<th>Products</th>))}
+          {approved && (<th>Influencer</th>) || marketData == true && (<th>Influencer</th>)}
           
           {!approvedButtons && (
             <>
@@ -45,6 +48,10 @@ const CampaignTable = ({
           )}
           {declineInflu && (
             <th>Actions</th>
+          )|| marketData == true &&(
+            <th>Actions</th>
+          ) || declineInflu == false && campEdit == true &&(
+            <th>Actions</th>
           )}
         </tr>
         {campList?.map((name, i) => {
@@ -52,7 +59,7 @@ const CampaignTable = ({
             <>
                 <tr key={i} className='campaign-inputs'>
                 <td>{name?.campaign_name}</td>
-                {!approvedButtons && (
+                {!approvedButtons && marketData == false && (
                   <td className='category'>
                     {name.product?.map((name) =>
                     name.product_name
@@ -61,15 +68,21 @@ const CampaignTable = ({
                 )}
                 {approvedButtons && (
                   <td>{name.username}</td>
+                ) || marketData == true && (
+                  <td>{name.username}</td>
                 )}
-                {!approved && (
+                {!approved && marketData == false && (
                   <td>
                     {name.product?.map((name) =>
                     name.coupon_name != null ? name.coupon_name : 'No coupons selected'
                     ).filter(Boolean).join(", ")}
                   </td>
+                ) || marketData == true && (
+                  <td>{name.coupon_name?.map((name) =>
+                    name != null ? name : 'No coupons selected'
+                    )}</td>
                 )}
-                {!approvedButtons && (
+                {!approvedButtons && marketData == false && (
                 <td>
                  {name.product?.map((product, index) => (
                   <>
@@ -92,69 +105,87 @@ const CampaignTable = ({
                   </>
                 ))}
                 </td>
-                )}
-               {declineInflu && (
-                showButtons == true ? (
+                ) || marketData == true && (
+                  <td>{name.amount?.map((name) =>
+                    name != null ? name : 'No coupons selected'
+                    )}</td>)}
+                {declineInflu && (
+                  showButtons == true ? (
+                    <td>
+                      {showEdit && (
+                        <button
+                        onClick={(event) => {
+                            getSingleMarket(name.campaignid_id, event);
+                        }}
+                        style={{ marginRight: 15 }}
+                        >
+                        <FontAwesomeIcon
+                            icon={faPenToSquare}
+                            style={{ color: "#fff", width: "15px", height: "15px" }}
+                        />
+                        </button>
+                      )}
+                      <button onClick={() => { deleteConfirm(name.campaignid_id) }}>
+                        <img src={Delete} alt='delete-icon' />
+                      </button>
+                  </td>
+                  ):
+                  (
                   <td>
-                    {showEdit && (
-                       <button
-                       onClick={(event) => {
-                           getSingleMarket(name.campaignid_id, event);
-                       }}
-                       style={{ marginRight: 15 }}
-                       >
-                       <FontAwesomeIcon
-                           icon={faPenToSquare}
-                           style={{ color: "#fff", width: "15px", height: "15px" }}
-                       />
-                       </button>
-                    )}
-                     <button onClick={() => { deleteConfirm(name.campaignid_id) }}>
-                     <img src={Delete} alt='delete-icon' />
-                     </button>
-                 </td>
-                ):
-                (
-                 <td>
-                     <button
-                     type="button"
-                     style={{ marginRight: 15 }}
-                     data-toggle="tooltip"
-                     data-placement="top"
-                     title="Accept"
-                     onClick={() => {handleVendorAccept(name.campaignid_id, name.influencer_name)}}
-                   >
-                     <FontAwesomeIcon
-                       icon={faCheck}
-                       style={{
-                         color: "#fff",
-                         width: "15px",
-                         height: "15px",
-                       }}
-                     />
-                   </button>
-                   <button
-                     type="button"
-                     data-toggle="tooltip"
-                     data-placement="top"
-                     style={{ marginRight: 15 }}
-                     title="Decline"
-                     onClick={() => {handleVendorDecline(name.campaignid_id, name.influencer_name)}}
-                   >
-                     <FontAwesomeIcon
-                       icon={faXmark}
-                       style={{
-                         color: "#fff",
-                         width: "15px",
-                         height: "15px",
-                       }}
-                     />
-                   </button>
-                 </td>
-                 
-                )
-                
-               )}
+                      <button
+                      type="button"
+                      style={{ marginRight: 15 }}
+                      data-toggle="tooltip"
+                      data-placement="top"
+                      title="Accept"
+                      onClick={() => {handleVendorAccept(name.campaignid_id, name.username, name.coupon_name[0], name.amount[0])}}
+                    >
+                      <FontAwesomeIcon
+                        icon={faCheck}
+                        style={{
+                          color: "#fff",
+                          width: "15px",
+                          height: "15px",
+                        }}
+                      />
+                    </button>
+                    <button
+                      type="button"
+                      data-toggle="tooltip"
+                      data-placement="top"
+                      style={{ marginRight: 15 }}
+                      title="Decline"
+                      onClick={() => {handleVendorDecline(name.campaignid_id, name.username)}}
+                    >
+                      <FontAwesomeIcon
+                        icon={faXmark}
+                        style={{
+                          color: "#fff",
+                          width: "15px",
+                          height: "15px",
+                        }}
+                      />
+                    </button>
+                  </td>
+                  
+                  )
+                  
+                )}
+                {declineInflu == false && campEdit == true && (
+                  <td>
+                  <button
+                  onClick={(event) => {
+                      showMarket(event, name.campaignid_id);
+                  }}
+                  style={{ marginRight: 15 }}
+                  >
+                  <FontAwesomeIcon
+                      icon={faEye}
+                      style={{ color: "#fff", width: "15px", height: "15px" }}
+                  />
+                  </button>
+                </td>
+                )}
                 </tr>
                 {getDeleteConfirm && 
                     <div className="get-coupon">
@@ -175,32 +206,36 @@ const CampaignTable = ({
                 {getMarket && 
                     <div className="get-coupon">
                         <div className="get-coupon-contianer">
-                        <h3>Edit Campaign</h3>
+                        <h3>Campaign Info</h3>
                         <button className='close' onClick={couponCross}>
-                            <FontAwesomeIcon icon={faClose} style={{ color: "$blackColor", width: "25px", height: "25px"}} />
+                            <FontAwesomeIcon icon={faClose} style={{ color: "000", width: "25px", height: "25px"}} />
                         </button>
+                        <div className="get-coupon-info"></div>
                         <form action="">
                             <div className="input-container">
-                                <label>Campaign Name</label>
-                                <input type="text" placeholder={getMarketInfo?.campaign_name} onChange={handleCampName} value={campName} />
+                                <label>Campaign Name: <strong className="ms-2">{getMarketInfo?.campaign_name}</strong></label>
                             </div>
                             <div className="input-container">
-                                <label>Offer</label>
-                                <select onChange={handleProdOffer}>
-                                    <option value="" disabled>{getMarketInfo?.offer}</option>
-                                    <option value="fixed_amount">Fixed Amount</option>
-                                    <option value="percentage">Precentage</option>
-                                </select>
+                                <label>Product Name: <strong className="ms-2">{getMarketInfo?.product_name}</strong></label>
                             </div>
                             <div className="input-container">
-                                <label>Discount</label>
-                                <input type="text" placeholder={getMarketInfo?.product_discount}  onChange={handleProdDiscount} value={prodDiscount} />
+                                <label>Date: <strong className="ms-2">{getMarketInfo?.date}</strong></label>
                             </div>
                             <div className="input-container">
-                                <label>Description</label>
-                                <input type="text" placeholder={getMarketInfo?.description} onChange={handleInfluenceVisit} value={influenceVisit} />
+                                <label>End Date: <strong className="ms-2">{getMarketInfo?.end_data}</strong></label>
                             </div>
-                            <button className='button button-black mt-4 mx-auto' onClick={(event) => editCampaign(name.id, event)}>Edit</button>
+                            <div className="input-container">
+                              <label htmlFor="">Influencer: <strong className="ms-2">{name.username}</strong></label>
+                            </div>
+                            <div className="input-container">
+                                <label>Influencer Fee: <strong className="ms-2">{getMarketInfo?.influencer_fee}{getMarketInfo?.offer == 'percentage' ? "%" : "د.إ"}</strong></label>
+                            </div>
+                            <div className="input-container">
+                                <label>Influencer Visit: <strong className="ms-2">{getMarketInfo?.influencer_visit}</strong></label>
+                            </div>
+                            <div className="input-container">
+                                <label>Description: <strong className="ms-2">{getMarketInfo?.description}</strong></label>
+                            </div>
                         </form>
                         </div>
                     </div>

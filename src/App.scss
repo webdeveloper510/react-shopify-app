@@ -132,6 +132,7 @@ table {
           padding: 16px 8px;
           border-right: 0.97px solid rgba(0, 0, 0, 0.1);
           border-bottom: 0.97px solid rgba(0, 0, 0, 0.1);
+          min-height: 50px;
           &:nth-child(1) {
               border-left: 0.97px solid rgba(0, 0, 0, 0.1);
           }

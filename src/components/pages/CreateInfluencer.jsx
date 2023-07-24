@@ -455,11 +455,7 @@ const CreateInfluencer = () => {
                           productIds.includes(couponAmount.product_id)
                       );
                       setSelectedCouponAmounts(updatedSelectedCouponAmounts);
-      
-                      // Flatten the influencer IDs array
                       const flattenedInfluencerIds = influencerIds.flat();
-      
-                      // Filter and map the influencer IDs and coupon names
                       const influencerCoupons = selectedRows.map((row) => {
                         const index = flattenedInfluencerIds.findIndex(
                           (id) => id === row.id
@@ -724,7 +720,7 @@ const CreateInfluencer = () => {
 
             {showInfluList && (
                 <>
-                    <Link to='/create' onClick={handleBack} className="button button-black back w-100 justify-content-start mt-4 mb-5">
+                    <Link to={id?.length > 0 ? '/manage' : '/create'} onClick={handleBack} className="button button-black back w-100 justify-content-start mt-4 mb-5">
                         <FontAwesomeIcon icon={faChevronLeft} style={{ color: "#000", width: "15px", height: "15px", marginRight: 5 }} />
                         Back
                     </Link>

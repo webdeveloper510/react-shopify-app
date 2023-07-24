@@ -169,11 +169,6 @@ $whiteColor: #FFFFFF;
         }
     }
 
-    .active-prod {
-        background: $blackColor;
-        color: $whiteColor;
-    }
-
     .selected-influencers {
         ul {
             margin: 0;
@@ -1028,10 +1023,9 @@ $whiteColor: #FFFFFF;
     height: 100%;
     min-height: 100vh;
     background: rgba(0, 0, 0, 0.1);
-    position: absolute;
+    position: fixed;
     inset: 0;
-    top: 0;
-    left: 0;
+    margin: auto;
     padding: 40px 0;
     
     .coupon-list-container, .tracking-container, .one-time-container, .get-coupon-contianer {
@@ -1065,9 +1059,9 @@ $whiteColor: #FFFFFF;
             flex-direction: column;
             max-height: 400px;
             overflow-y: scroll;
-            &::-webkit-scrollbar {
-                display: none;
-            }
+            // &::-webkit-scrollbar {
+            //     display: none;
+            // }
             .input-container {
                 margin-top: 1.5rem;
                 label {
@@ -1153,4 +1147,20 @@ $whiteColor: #FFFFFF;
         bottom: unset;
         max-height: 200px !important;
     }
+}
+
+.tracking-coupon, .get-coupon, .one-time-coupon {
+    .tracking-container, .get-coupon-contianer, .one-time-container {
+        padding-right: 2rem;
+        form {
+            padding-right: 1rem;
+        }
+    }
+}
+
+
+
+.active-prod {
+    background: $blackColor;
+    color: $whiteColor;
 }

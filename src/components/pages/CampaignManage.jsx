@@ -18,7 +18,7 @@ import SideBar from '../sidebar/Sidebar';
 import './pages.scss';
 
 const CampaignManage = () => {
-    const {userToken, campList, setCampList, campListPending, setCampListPending, countCamp, setCountCamp, draftList, setDraftList} = useContext(UserContext);
+    const {userToken, marketData, campList, setCampList, campListPending, setCampListPending, countCamp, setCountCamp, draftList, setDraftList} = useContext(UserContext);
     const [campName, setCampName] = useState('');
     const [influenceVisit, setInfluenceVisit] = useState('');
     const [prodDiscount, setProdDiscount] = useState('');
@@ -63,12 +63,12 @@ const CampaignManage = () => {
               const [influencerResponse, approvalResponse] = await Promise.all([
                 axios.get(API.BASE_URL + 'influencer/list/', {
                   headers: {
-                    Authorization: `Token ${token}`
+                    Authorization: `Token 89038b244f66b5a3dc67566064be0709a098815a`
                   }
                 }),
                 axios.get(API.BASE_URL + 'vendor_approval/', {
                   headers: {
-                    Authorization: `Token ${token}`
+                    Authorization: `Token 89038b244f66b5a3dc67566064be0709a098815a`
                   }
                 })
               ]);
@@ -103,12 +103,12 @@ const CampaignManage = () => {
               const [influencerResponse, activeResponse] = await Promise.all([
                 axios.get(API.BASE_URL + 'influencer/list/', {
                   headers: {
-                    Authorization: `Token ${token}`
+                    Authorization: `Token 89038b244f66b5a3dc67566064be0709a098815a`
                   }
                 }),
                 axios.get(API.BASE_URL + 'active/', {
                   headers: {
-                    Authorization: `Token ${token}`
+                    Authorization: `Token 89038b244f66b5a3dc67566064be0709a098815a`
                   }
                 })
               ]);
@@ -143,12 +143,12 @@ const CampaignManage = () => {
               const [influencerResponse, declineResponse] = await Promise.all([
                 axios.get(API.BASE_URL + 'influencer/list/', {
                   headers: {
-                    Authorization: `Token ${token}`
+                    Authorization: `Token 89038b244f66b5a3dc67566064be0709a098815a`
                   }
                 }),
                 axios.get(API.BASE_URL + 'vendor_decline/',{
                     headers: {
-                        Authorization: `Token ${token}`
+                        Authorization: `Token 89038b244f66b5a3dc67566064be0709a098815a`
                     }
                 })
               ]);
@@ -183,12 +183,12 @@ const CampaignManage = () => {
               const [influencerResponse, updatedDeclineResponse] = await Promise.all([
                 axios.get(API.BASE_URL + 'influencer/list/', {
                   headers: {
-                    Authorization: `Token ${token}`
+                    Authorization: `Token 89038b244f66b5a3dc67566064be0709a098815a`
                   }
                 }),
                 axios.get(API.BASE_URL + 'vendor_decline/', {
                   headers: {
-                    Authorization: `Token ${token}`
+                    Authorization: `Token 89038b244f66b5a3dc67566064be0709a098815a`
                   }
                 })
               ]);
@@ -220,7 +220,7 @@ const CampaignManage = () => {
 
         axios.get(API.BASE_URL + 'pending/',{
             headers: {
-                Authorization: `Token ${token}`
+                Authorization: `Token 89038b244f66b5a3dc67566064be0709a098815a`
             }
         })
         .then(function (response) {
@@ -234,7 +234,7 @@ const CampaignManage = () => {
 
         axios.get(API.BASE_URL + 'product/list/',{
             headers: {
-                Authorization: `Token ${token}`
+                Authorization: `Token 89038b244f66b5a3dc67566064be0709a098815a`
             }
         })
         .then(function (response) {
@@ -246,7 +246,7 @@ const CampaignManage = () => {
 
         axios.get(API.BASE_URL + 'draft/list/',{
             headers: {
-                Authorization: `Token ${token}`
+                Authorization: `Token 89038b244f66b5a3dc67566064be0709a098815a`
             }
         })
         .then(function (response) {
@@ -259,7 +259,7 @@ const CampaignManage = () => {
 
         axios.get(API.BASE_URL + 'campaignexp/',{
           headers: {
-              Authorization: `Token ${token}`
+              Authorization: `Token 89038b244f66b5a3dc67566064be0709a098815a`
           }
         })
         .then(function (response) {
@@ -275,7 +275,7 @@ const CampaignManage = () => {
         setLoading(true);
         axios.delete(API.BASE_URL + 'delete/' + value + '/',{
             headers: {
-                Authorization: `Token ${token}`
+                Authorization: `Token 89038b244f66b5a3dc67566064be0709a098815a`
             }
         })
         .then(function (response) {
@@ -305,7 +305,7 @@ const CampaignManage = () => {
         setLoading(true);
         axios.get(API.BASE_URL +  'single/' + value + '/', {
             headers: {
-                Authorization: `Token ${token}`
+                Authorization: `Token 89038b244f66b5a3dc67566064be0709a098815a`
         }})
         .then(function (response) {
             console.log("Single Market Data" ,response.data.data)
@@ -316,6 +316,28 @@ const CampaignManage = () => {
             setProdDiscount(response.data.data.product_discount)
             setInfluenceVisit(response.data.data.description)
             navigate(`/create-influencer/${response.data.data[0].campaignid_id}`)
+        })
+        .catch(function (error) {
+            console.log(error);
+        })
+        .finally(() => setLoading(false));
+    }
+
+    const showMarketCampaign = (event, value) => {
+      event.preventDefault();
+      setLoading(true);
+        axios.get(API.BASE_URL +  'single/' + value + '/', {
+            headers: {
+                Authorization: `Token 89038b244f66b5a3dc67566064be0709a098815a`
+        }})
+        .then(function (response) {
+            console.log("Single Market Data" ,response.data.data)
+            setGetMarket(true);
+            setGetMarketInfo(response.data.data[0])
+            setCampName(response.data.data.campaign_name)
+            setProdOffer(response.data.data.offer)
+            setProdDiscount(response.data.data.product_discount)
+            setInfluenceVisit(response.data.data.description)
         })
         .catch(function (error) {
             console.log(error);
@@ -334,7 +356,7 @@ const CampaignManage = () => {
             product_discount: prodDiscount
         },{
             headers: { 
-                Authorization: `Token ${token}` 
+                Authorization: `Token 89038b244f66b5a3dc67566064be0709a098815a` 
             }
         })
         .then(function (response) {
@@ -342,14 +364,14 @@ const CampaignManage = () => {
             toast.success("Campaign Edited!", { autoClose: 1000 });
             axios.get(API.BASE_URL + 'active/',{
                 headers: { 
-                    Authorization: `Token ${token}` 
+                    Authorization: `Token 89038b244f66b5a3dc67566064be0709a098815a` 
                 }
             })
             .then(function (response) {
                 setCampList(response.data.data);
                 axios.get(API.BASE_URL + 'active/',{
                     headers: { 
-                        Authorization: `Token ${token}` 
+                        Authorization: `Token 89038b244f66b5a3dc67566064be0709a098815a` 
                     }
                 })
                 .then(function (response) {
@@ -362,7 +384,7 @@ const CampaignManage = () => {
         
                 axios.get(API.BASE_URL + 'pending/',{
                     headers: { 
-                        Authorization: `Token ${token}` 
+                        Authorization: `Token 89038b244f66b5a3dc67566064be0709a098815a` 
                     }
                 })
                 .then(function (response) {
@@ -375,7 +397,7 @@ const CampaignManage = () => {
         
                 axios.get(API.BASE_URL + 'product/list/',{
                     headers: { 
-                        Authorization: `Token ${token}` 
+                        Authorization: `Token 89038b244f66b5a3dc67566064be0709a098815a` 
                     }
                 })
                 .then(function (response) {
@@ -387,7 +409,7 @@ const CampaignManage = () => {
         
                 axios.get(API.BASE_URL + 'draft/list/',{
                     headers: { 
-                        Authorization: `Token ${token}` 
+                        Authorization: `Token 89038b244f66b5a3dc67566064be0709a098815a` 
                     }
                 })
                 .then(function (response) {
@@ -404,7 +426,7 @@ const CampaignManage = () => {
     
             axios.get(API.BASE_URL + 'pending/',{
                 headers: { 
-                    Authorization: `Token ${token}` 
+                    Authorization: `Token 89038b244f66b5a3dc67566064be0709a098815a` 
                 }
             })
             .then(function (response) {
@@ -459,7 +481,7 @@ const CampaignManage = () => {
         setLoading(true);
         axios.post(API.BASE_URL + 'vendor/accept/' + value + '/' + idValue + '/',{},{
             headers: { 
-                Authorization: `Token ${token}` 
+                Authorization: `Token 89038b244f66b5a3dc67566064be0709a098815a` 
             }
         })
         .then(function (response) {
@@ -473,12 +495,12 @@ const CampaignManage = () => {
                   const [influencerResponse, approvalResponse] = await Promise.all([
                     axios.get(API.BASE_URL + 'influencer/list/', {
                       headers: { 
-                        Authorization: `Token ${token}` 
+                        Authorization: `Token 89038b244f66b5a3dc67566064be0709a098815a` 
                       }
                     }),
                     axios.get(API.BASE_URL + 'vendor_approval/', {
                       headers: { 
-                        Authorization: `Token ${token}` 
+                        Authorization: `Token 89038b244f66b5a3dc67566064be0709a098815a` 
                       }
                     })
                   ]);
@@ -512,12 +534,12 @@ const CampaignManage = () => {
                   const [influencerResponse, activeResponse] = await Promise.all([
                     axios.get(API.BASE_URL + 'influencer/list/', {
                       headers: { 
-                        Authorization: `Token ${token}` 
+                        Authorization: `Token 89038b244f66b5a3dc67566064be0709a098815a` 
                       }
                     }),
                     axios.get(API.BASE_URL + 'active/', {
                       headers: { 
-                        Authorization: `Token ${token}` 
+                        Authorization: `Token 89038b244f66b5a3dc67566064be0709a098815a` 
                       }
                     })
                   ]);
@@ -558,7 +580,7 @@ const CampaignManage = () => {
         setLoading(true);
         axios.post(API.BASE_URL + 'vendor/decline/' + value + '/' + idValue + '/',{},{
             headers: { 
-                Authorization: `Token ${token}` 
+                Authorization: `Token 89038b244f66b5a3dc67566064be0709a098815a` 
             }
         })
         .then(function (response) {
@@ -573,12 +595,12 @@ const CampaignManage = () => {
                   const [influencerResponse, approvalResponse] = await Promise.all([
                     axios.get(API.BASE_URL + 'influencer/list/', {
                       headers: {
-                        Authorization: `Token ${token}`
+                        Authorization: `Token 89038b244f66b5a3dc67566064be0709a098815a`
                       }
                     }),
                     axios.get(API.BASE_URL + 'vendor_approval/', {
                       headers: {
-                        Authorization: `Token ${token}`
+                        Authorization: `Token 89038b244f66b5a3dc67566064be0709a098815a`
                       }
                     })
                   ]);
@@ -657,8 +679,7 @@ const CampaignManage = () => {
                 <Tab.Pane eventKey="first">
                     {campList?.length > 0 ? (
                         <CampaignTable campList={campList}
-                            getSingleMarket={getSingleMarket}
-                            deleteConfirm={deleteConfirm}
+                            showMarket={showMarketCampaign}
                             getDeleteConfirm={getDeleteConfirm}
                             getMarket={getMarket}
                             influencerSale = {true}
@@ -669,6 +690,8 @@ const CampaignManage = () => {
                             handleInfluenceVisit={handleInfluenceVisit}
                             influenceVisit={influenceVisit}
                             approved={true}
+                            declineInflu={false}
+                            campEdit = {true}
                             approvedButtons = {true}
                             editCampaign={editCampaign}
                             deleteCampaign={deleteCampaign}
@@ -785,7 +808,7 @@ const CampaignManage = () => {
                     : 
                     (
                         <>
-                    <h5 className='mt-4 text-center'>No Campaigns in Draft right now</h5>
+                    <h5 className='mt-4 text-center'>No Campaigns in Approved right now</h5>
                     <img src={NoData} alt='no-data' style={{width: '100%', maxHeight: 220, marginTop: '4rem', objectFit: 'contain'}} />
                             <h3 className='text-center'>No Data Found</h3>
                     </>
@@ -821,7 +844,7 @@ const CampaignManage = () => {
                     : 
                     (
                         <>
-                    <h5 className='mt-4 text-center'>No Campaigns in Draft right now</h5>
+                    <h5 className='mt-4 text-center'>No Campaigns in Decline right now</h5>
                     <img src={NoData} alt='no-data' style={{width: '100%', maxHeight: 220, marginTop: '4rem', objectFit: 'contain'}} />
                             <h3 className='text-center'>No Data Found</h3>
                     </>
