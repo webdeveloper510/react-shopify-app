@@ -137,8 +137,8 @@ function InfluencerSales() {
                                     <td>{matchingFullnames[i]}</td>
                                     <td>{name.offer == 'commission' && "د.إ"}{name.influener_fee}{name.offer == 'percentage' && '%'}</td>
                                     <td>{name.sales}</td>
-                                    <td>{name.amount.toFixed(2)}</td>
-                                    <td>{name.amount_paid ? name.amount_paid : 0}</td>
+                                    <td>{name.amount.toFixed(2)}د.إ</td>
+                                    <td>{name.amount_paid ? name.amount_paid : 0} د.إ</td>
                                     <td><button type='button' onClick={(e) => {handleTransferShow(e, i, name.amount)}}>Transfer</button></td>
                                 </tr>
                                 {transferShow && selectedTransferIndex === i && (

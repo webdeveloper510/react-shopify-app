@@ -20,7 +20,8 @@ import ProfileImg from '../../assests/img/profile.png';
 import User from '../../assests/img/user.png';
 import Notification from '../../assests/img/notification.png';
 import NoNotification from '../../assests/img/no-notification.png';
-import Payment from '../../assests/img/payment.png'
+import Payment from '../../assests/img/payment.png';
+import MoneyTransfer from'../../assests/img/money-transfer.png';
 
 const SideBar = () => {
     const [notifications, setNotifications] = useState([])
@@ -173,6 +174,10 @@ const SideBar = () => {
                         <NavLink to='/stripe-details' className='text-black py-2'>
                             <img src={Payment} style={{height: 21, width: 21}} className="me-2 black-img" alt='menu-img' />
                             Stripe Details
+                        </NavLink>
+                        <NavLink to='/transfer' className='text-black py-2'>
+                            <img src={MoneyTransfer} style={{height: 21, width: 21}} className="me-2 black-img" alt='menu-img' />
+                            Transfer
                         </NavLink>
                         <NavLink to='/profile' className='text-black py-2'>
                             <img src={ProfileImg} className="me-2" alt='menu-img' />

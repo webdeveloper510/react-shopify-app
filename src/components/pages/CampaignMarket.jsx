@@ -242,7 +242,7 @@ const CampaignMarket = () => {
             amount: parseInt(amount.slice(1)),
         },{
             headers: { 
-                Authorization: `Token 89038b244f66b5a3dc67566064be0709a098815a` 
+                Authorization: `Token ${token}` 
             }
         })
         .then(function (response) {
@@ -261,7 +261,7 @@ const CampaignMarket = () => {
         setLoading(true);
         axios.post(API.BASE_URL + 'vendor/decline/' + value + '/' + idValue + '/',{},{
             headers: { 
-                Authorization: `Token 89038b244f66b5a3dc67566064be0709a098815a` 
+                Authorization: `Token ${token}` 
             }
         })
         .then(function (response) {

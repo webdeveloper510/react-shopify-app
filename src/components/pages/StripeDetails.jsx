@@ -44,7 +44,7 @@ function StripeDetails() {
         {loading && <div className='d-flex loader-container flex-column'><div className='loader'><span></span></div> <p className='text-white'>Processing...</p></div>}
       <Container>
         <div className="payment-container d-flex flex-column ">
-            <div className="heading">
+            <div className="heading my-5">
                 <h2>Stripe Details</h2>
             </div>
             <div className="payment-details d-flex flex-column justify-content-center align-items-center m-auto">
