@@ -1009,6 +1009,38 @@ $whiteColor: #FFFFFF;
     }
 }
 
+.payment {
+    .payment-container {
+        min-height: 95vh;
+        .payment-details {
+            width: 100%;
+            max-width: 600px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            padding: 2rem;
+            border-radius: 5px;
+            border: 1px solid #b5b5b5;
+            form {
+                width: 100%;
+                .input-container {
+                    position: relative;
+                    input {
+                        width: 100%;
+                    }
+                    svg {
+                        position: absolute;
+                        top: 0;
+                        bottom: 0;
+                        right: 10px;
+                        display: flex;
+                        margin: auto;
+                        opacity: .5;
+                    }
+                }
+            }
+        }
+    }
+}
+
 .get-coupon h4 {
     background: none !important;
     color: $blackColor !important;

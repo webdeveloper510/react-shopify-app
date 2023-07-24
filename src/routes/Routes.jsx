@@ -12,6 +12,7 @@ import Profile from '../components/pages/Profile';
 import CreateCampaign from '../components/pages/CreateCampaign';
 import CreateInfluencer from '../components/pages/CreateInfluencer';
 import InfluencerSales from '../components/pages/InfluencerSales';
+import StripeDetails from '../components/pages/StripeDetails';
 
 const Routing = () => {
   return (
@@ -34,6 +35,7 @@ const Routing = () => {
         <Route path='/create-influencer' element={<CreateInfluencer />} />
         <Route path='/create-influencer/:id' element={<CreateInfluencer />} />
         <Route path='/influencer-sales' element={<InfluencerSales />} />
+        <Route path='/stripe-details' element={<StripeDetails />} />
       </Routes>
     </div>
   );

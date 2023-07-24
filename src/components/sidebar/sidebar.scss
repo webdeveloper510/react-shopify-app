@@ -52,12 +52,18 @@ $whiteColor: #FFFFFF;
                         img {
                             filter: invert(1);
                         }
+                        .black-img {
+                            filter: invert(0);
+                        }
                     }
                     a.active {
                         background: $blackColor;
                         color: $whiteColor !important;
                         img {
                             filter: invert(0);
+                        }
+                        .black-img {
+                            filter: invert(1);
                         }
                     }
                 }
