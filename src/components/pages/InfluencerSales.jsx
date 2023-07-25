@@ -100,6 +100,18 @@ function InfluencerSales() {
           .then(function (response) {
             console.log("Influencer List", response);
             toast.success("Money transfer Successfully");
+            axios.get(API.BASE_URL + 'influecercamsale/',{
+                headers: {
+                    Authorization: `Token ${token}`
+                }
+            })
+            .then(function (response) {
+                console.log("Influencer Sales", response);
+                setInfluSales(response.data.sale_details)
+            })
+            .catch(function (error) {
+                console.log(error)
+            })
         })
         .catch(function (error) {
             console.log(error);
