@@ -20,8 +20,8 @@ function AdminTransfer() {
             }
         })
         .then(function (response) {
-            console.log("Admin Transfer", response.data);
-            setTransferData(response.data.campaign_sales)
+            console.log("Admin Transfer", response.data.sale_details);
+            setTransferData(response.data.sale_details)
         })
         .catch(function (error) {
             console.log(error);
@@ -58,8 +58,7 @@ function AdminTransfer() {
                 }
             })
             .then(function (response) {
-                console.log("Admin Transfer", response.data);
-                setTransferData(response.data.campaign_sales)
+                setTransferData(response.data.sale_details)
             })
             .catch(function (error) {
                 console.log(error);
@@ -97,10 +96,10 @@ function AdminTransfer() {
                             return(
                                 <>
                                 <tr className='campaign-inputs'>
-                                    <td>{name.campaign_id}</td>
-                                    <td>{name.campaign_name}</td>
-                                    <td>{name.sale}د.إ</td>
-                                    <td>{name.commission.toFixed(2)}د.إ</td>
+                                    <td>{name.campaign_detail}</td>
+                                    <td>{name.campaing_id}</td>
+                                    <td>{name.sales}د.إ</td>
+                                    <td>{name.admin_fee}د.إ</td>
                                     <td><button type='button' onClick={(e) => {handleTransferShow(e, i)}}>Transfer</button></td>
                                 </tr>
                                 {transferShow === i &&  (
@@ -118,7 +117,7 @@ function AdminTransfer() {
                                                 <label htmlFor="">Amount</label>
                                                 <input type="number" value={name.admin_part} disabled />
                                              </div>
-                                             <button type='button' className='button-black mt-4' onClick={(e) => {adminMoney(e,name.account, name.admin_id, name.commission, name.campaign_id, name.sale)}}>Transfer</button>
+                                             <button type='button' className='button-black mt-4' onClick={(e) => {adminMoney(e,name.account, name.admin_id, name.admin_fee, name.campaign_detail, name.sales)}}>Transfer</button>
                                         </form>
                                     </div>
                                 )}

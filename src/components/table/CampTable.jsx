@@ -138,7 +138,7 @@ const CampaignTable = ({
                       data-toggle="tooltip"
                       data-placement="top"
                       title="Accept"
-                      onClick={() => {handleVendorAccept(name.campaignid_id, name.username, name.coupon_name[0], name.amount[0])}}
+                      onClick={() => {handleVendorAccept(name.campaignid_id, name.influencer_name ?name.influencer_name : name.username, name.coupon_name, name.amount)}}
                     >
                       <FontAwesomeIcon
                         icon={faCheck}
@@ -155,7 +155,7 @@ const CampaignTable = ({
                       data-placement="top"
                       style={{ marginRight: 15 }}
                       title="Decline"
-                      onClick={() => {handleVendorDecline(name.campaignid_id, name.username)}}
+                      onClick={() => {handleVendorDecline(name.campaignid_id, name.influencer_name ?name.influencer_name : name.username)}}
                     >
                       <FontAwesomeIcon
                         icon={faXmark}
