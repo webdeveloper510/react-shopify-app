@@ -396,11 +396,14 @@ const CouponList = () => {
             else if (error.response.data.error == "Coupon already Exists") {
                 toast.warn("Coupon name already exsits", { autoClose: 1000 })
             }
+            else if (error.response.data.error == "discount type field is required") {
+                toast.warn("Discount type field is required", { autoClose: 1000 })
+            }
             else if (error.response.data.error == "discount code  field is required") {
                 toast.warn("Coupon field is required", { autoClose: 1000 })
             }
-            else if (error.response.data.error == "discount type field is required") {
-                toast.warn("Discount type field is required", { autoClose: 1000 })
+            else if (error.response.data.error == "Influencer name  field is required") {
+                toast.warn("Influencer name field is required", { autoClose: 1000 })
             }
             else if (error.response.data.error == "Amount field is required") {
                 toast.warn("Amount or Percentage required", { autoClose: 1000 })
@@ -454,7 +457,7 @@ const CouponList = () => {
     <div className="coupon p-4 page">
     {loading && <div className='d-flex loader-container flex-column'><div className='loader'><span></span></div> <p className='text-white'>Processing...</p></div>}
         <div className="coupon-container d-flex flex-column mt-5 w-100">
-            <h4 className='mb-4'>Coupon List</h4>
+            <h2 className='mb-4'>Coupon List</h2>
             {couponData?.length > 0 ? (
                 <div className="filters d-flex justify-content-between align-items-center">
                 <div className="input-container d-flex flex-column" style={{width: 200}}>

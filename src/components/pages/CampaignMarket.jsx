@@ -335,9 +335,9 @@ const CampaignMarket = () => {
                             ) :
                             (
                                 <>
-                                    <h5 className='mt-4 text-center'>No Campaign</h5>
                                     <img src={NoData} alt='no-data' style={{width: '100%', maxHeight: 220, marginTop: '4rem', objectFit: 'contain'}} />
-                            <h3 className='text-center'>No Data Found</h3>
+                                    <h3 className='mt-4 text-center'>No Pending Campaign</h3>
+                            
                                 </>
                             )
                         }
@@ -369,9 +369,9 @@ const CampaignMarket = () => {
                             ) :
                             (
                                 <>
-                                    <h5 className='mt-4 text-center'>No Campaign</h5>
                                     <img src={NoData} alt='no-data' style={{width: '100%', maxHeight: 220, marginTop: '4rem', objectFit: 'contain'}} />
-                            <h3 className='text-center'>No Data Found</h3>
+                                    <h3 className='mt-4 text-center'>No Draft Campaign</h3>
+                            
                                 </>
                             )
                         }
@@ -404,9 +404,9 @@ const CampaignMarket = () => {
                             ) :
                             (
                                 <>
-                                    <h5 className='mt-4 text-center'>No Expired Campaign</h5>
                                     <img src={NoData} alt='no-data' style={{width: '100%', maxHeight: 220, marginTop: '4rem', objectFit: 'contain'}} />
-                                    <h3 className='text-center'>No Data Found</h3>
+                                    <h3 className='mt-4 text-center'>No Expired Campaign</h3>
+                                    
                                 </>
                             )
                         }
@@ -439,18 +439,18 @@ const CampaignMarket = () => {
                             ) :
                             (
                                 <>
-                                    <h5 className='mt-4 text-center'>No Approved Campaign</h5>
                                     <img src={NoData} alt='no-data' style={{width: '100%', maxHeight: 220, marginTop: '4rem', objectFit: 'contain'}} />
-                                    <h3 className='text-center'>No Data Found</h3>
+                                    <h3 className='mt-4 text-center'>No Approved Campaign</h3>
+                                    
                                 </>
                             )
                         }
                     </Tab.Pane>
 
                     <Tab.Pane eventKey="five">
-                        {campExpiredList?.length > 0 ? (
+                        {campDecline?.length > 0 ? (
                             <CampaignTable 
-                                campList={campActive}
+                                campList={campDecline}
                                 declineInflu = {false}
                                 getSingleMarket={getSingleMarket}
                                 deleteConfirm={deleteConfirm}
@@ -475,9 +475,9 @@ const CampaignMarket = () => {
                             ) :
                             (
                                 <>
-                                    <h5 className='mt-4 text-center'>No Expired Campaign</h5>
                                     <img src={NoData} alt='no-data' style={{width: '100%', maxHeight: 220, marginTop: '4rem', objectFit: 'contain'}} />
-                                    <h3 className='text-center'>No Data Found</h3>
+                                    <h3 className='mt-4 text-center'>No Declined Campaign</h3>
+                                    
                                 </>
                             )
                         }

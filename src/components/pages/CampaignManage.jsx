@@ -705,9 +705,9 @@ const CampaignManage = () => {
                     :
                     (
                         <>
-                            <h5 className='mt-4 text-center'>No Active Campaigns right now</h5>
                             <img src={NoData} alt='no-data' style={{width: '100%', maxHeight: 220, marginTop: '4rem', objectFit: 'contain'}} />
-                            <h3 className='text-center'>No Data Found</h3>
+                            <h3 className='mt-4 text-center'>No Active Campaigns right now</h3>
+                            
                         </>
                     )}
                 </Tab.Pane>
@@ -739,9 +739,9 @@ const CampaignManage = () => {
                     : 
                     (
                         <>
-                    <h5 className='mt-4 text-center'>No Pending Campaigns right now</h5>
                       <img src={NoData} alt='no-data' style={{width: '100%', maxHeight: 220, marginTop: '4rem', objectFit: 'contain'}} />
-                        <h3 className='text-center'>No Data Found</h3>
+                    <h3 className='mt-4 text-center'>No Pending Campaigns right now</h3>
+                        
                     </>
                     )}
                 </Tab.Pane>
@@ -773,9 +773,8 @@ const CampaignManage = () => {
                     : 
                     (
                         <>
-                    <h5 className='mt-4 text-center'>No Campaigns in Draft right now</h5>
                     <img src={NoData} alt='no-data' style={{width: '100%', maxHeight: 220, marginTop: '4rem', objectFit: 'contain'}} />
-                            <h3 className='text-center'>No Data Found</h3>
+                    <h3 className='mt-4 text-center'>No Campaigns in Draft right now</h3>
                     </>
                     )}
                 </Tab.Pane>
@@ -808,9 +807,9 @@ const CampaignManage = () => {
                     : 
                     (
                         <>
-                    <h5 className='mt-4 text-center'>No Campaigns in Approved right now</h5>
                     <img src={NoData} alt='no-data' style={{width: '100%', maxHeight: 220, marginTop: '4rem', objectFit: 'contain'}} />
-                            <h3 className='text-center'>No Data Found</h3>
+                    <h3 className='mt-4 text-center'>No Campaigns in Approved right now</h3>
+                            
                     </>
                     )}
                 </Tab.Pane>
@@ -844,9 +843,9 @@ const CampaignManage = () => {
                     : 
                     (
                         <>
-                    <h5 className='mt-4 text-center'>No Campaigns in Decline right now</h5>
                     <img src={NoData} alt='no-data' style={{width: '100%', maxHeight: 220, marginTop: '4rem', objectFit: 'contain'}} />
-                            <h3 className='text-center'>No Data Found</h3>
+                          
+                    <h3 className='mt-4 text-center'>No Campaigns in Decline right now</h3>  
                     </>
                     )}
                 </Tab.Pane>
@@ -879,9 +878,9 @@ const CampaignManage = () => {
                     : 
                     (
                         <>
-                    <h5 className='mt-4 text-center'>No Expired Campaigns right now</h5>
+                    
                     <img src={NoData} alt='no-data' style={{width: '100%', maxHeight: 220, marginTop: '4rem', objectFit: 'contain'}} />
-                            <h3 className='text-center'>No Data Found</h3>
+                    <h3 className='mt-4 text-center'>No Expired Campaigns right now</h3>
                     </>
                     )}
                 </Tab.Pane>
