@@ -33,7 +33,7 @@ function AdminTransfer() {
         setLoading(true);
         axios.get(API.BASE_URL + 'admintransfer/',{
             headers: {
-                Authorization: `Token 43272d3b1eb9b1f7beed87ee636d1079483a41ad`
+                Authorization: `Token ${token}`
             }
         })
         .then(function (response) {
@@ -63,7 +63,7 @@ function AdminTransfer() {
             sales: sales
         },{
             headers: {
-                Authorization: `Token 43272d3b1eb9b1f7beed87ee636d1079483a41ad`
+                Authorization: `Token ${token}`
             }
         })
         .then(function (response) {
@@ -71,7 +71,7 @@ function AdminTransfer() {
             toast.success("Money transfer Successfully", { autoClose: 1000 })
             axios.get(API.BASE_URL + 'admintransfer/',{
                 headers: {
-                    Authorization: `Token 43272d3b1eb9b1f7beed87ee636d1079483a41ad`
+                    Authorization: `Token ${token}`
                 }
             })
             .then(function (response) {
@@ -132,7 +132,7 @@ function AdminTransfer() {
                                             </div>
                                             <div className="input-container">
                                                 <label htmlFor="">Amount</label>
-                                                <input type="number" value={name.admin_part} disabled />
+                                                <input type="number" value={name.admin_fee} disabled />
                                              </div>
                                              <button type='button' className='button-black mt-4' onClick={(e) => {adminMoney(e,name.account, name.admin_id, name.admin_fee, name.campaign_detail, name.sales)}}>Transfer</button>
                                         </form>
