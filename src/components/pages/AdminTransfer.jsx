@@ -134,7 +134,7 @@ function AdminTransfer() {
                                                 <label htmlFor="">Amount</label>
                                                 <input type="number" value={name.admin_fee} disabled />
                                              </div>
-                                             <button type='button' className='button-black mt-4' onClick={(e) => {adminMoney(e,name.account, name.admin_id, name.admin_fee, name.campaign_detail, name.sales)}}>Transfer</button>
+                                             <button type='button' className='button-black mt-4' onClick={(e) => {adminMoney(e,name.account, name.admin, name.admin_fee, name.campaign_detail, name.sales)}}>Transfer</button>
                                         </form>
                                     </div>
                                 )}
