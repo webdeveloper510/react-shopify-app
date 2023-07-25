@@ -1,3 +1,20 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 import React, {useState, useEffect} from 'react';
 import { Container } from 'react-bootstrap';
 import { API } from '../../config/Api';
@@ -16,7 +33,7 @@ function AdminTransfer() {
         setLoading(true);
         axios.get(API.BASE_URL + 'admintransfer/',{
             headers: {
-                Authorization: `Token ${token}`
+                Authorization: `Token 43272d3b1eb9b1f7beed87ee636d1079483a41ad`
             }
         })
         .then(function (response) {
@@ -46,7 +63,7 @@ function AdminTransfer() {
             sales: sales
         },{
             headers: {
-                Authorization: `Token ${token}`
+                Authorization: `Token 43272d3b1eb9b1f7beed87ee636d1079483a41ad`
             }
         })
         .then(function (response) {
@@ -54,7 +71,7 @@ function AdminTransfer() {
             toast.success("Money transfer Successfully", { autoClose: 1000 })
             axios.get(API.BASE_URL + 'admintransfer/',{
                 headers: {
-                    Authorization: `Token ${token}`
+                    Authorization: `Token 43272d3b1eb9b1f7beed87ee636d1079483a41ad`
                 }
             })
             .then(function (response) {
