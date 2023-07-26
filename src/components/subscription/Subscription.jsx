@@ -17,6 +17,7 @@ function Subscription() {
         }})
         .then(function (response) {
             console.log("BuySubscription", response);
+            localStorage.setItem("Session_Id", response.data.id);
             window.location.href = response.data.session_url
         })
         .catch(function (error) {

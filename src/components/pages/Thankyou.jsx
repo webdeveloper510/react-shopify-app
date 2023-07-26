@@ -1,7 +1,26 @@
-import React from 'react';
-import './pages.scss'
+import React, {useEffect} from 'react';
+import axios from 'axios';
+import { API } from '../../config/Api';
+import { useNavigate } from 'react-router-dom';
+import './pages.scss';
 
 function Thankyou() {
+  const session_id = localStorage.getItem("Session_Id")
+  const token = localStorage.getItem("Token");
+  const navigate = useNavigate();
+  useEffect(() => {
+    axios.get(API.BASE_URL + `success/?session_id=${session_id}`, {
+      headers: {
+        Authorization: `Token ${token}`
+      }
+    })
+      .then(function (response) {
+        console.log("Success", response);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }, [token]);
   return (
     <div className='thank-you w-100'>
         <section className="login-main-wrapper">
