@@ -19,7 +19,7 @@ function App() {
   const [subscriptionChecked, setSubscriptionChecked] = useState(false);
   const token = localStorage.getItem('Token')
   const location = useLocation();
-  const history = useNavigate()();
+  const history = useNavigate();
   console.log('Current route:', location.pathname);
   useEffect(() => {
     const timer = setTimeout(() => {
