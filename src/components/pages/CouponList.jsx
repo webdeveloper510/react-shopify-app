@@ -245,7 +245,7 @@ const CouponList = () => {
             discount_code: couponDesc,
             discount_type: discountType,
             amount: couponAmount.toString(),
-            influencer_id: getCouponInfo?.indb,
+            influencer_id: selectedInfluencer?.id,
             product_id: productIds.toString(),
             influ_ids: selectedInfluencer?.id
         }, {
@@ -306,7 +306,7 @@ const CouponList = () => {
           setCouponAmount(Math.trunc(response.data.amount.substring(1)));
           setCouponStatus(response.data.status);
           const matchingInfluencers = influencerList.filter(
-            (influencer) => influencer.id === response.data.infl_id[0].influencer_id
+            (influencer) => influencer.id === response.data.infl_id
           );
           setMatchingInfluencers(matchingInfluencers);
         })
