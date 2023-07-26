@@ -2,7 +2,7 @@ import React, {useEffect, useState, useContext} from 'react';
 import Routing from './routes/Routes';
 import GoToTop from './GoToTop';
 import './App.scss';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import UserContext from './components/context/UserContext';
 import axios from 'axios';
 import { API } from './config/Api';
@@ -16,8 +16,10 @@ import 'react-toastify/dist/ReactToastify.css';
 function App() {
   const {image, name} = useContext(UserContext);
   const [loading, setLoading] = useState(true);
+  const [subscriptionChecked, setSubscriptionChecked] = useState(false);
   const token = localStorage.getItem('Token')
   const location = useLocation();
+  const history = useNavigate()();
   console.log('Current route:', location.pathname);
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -26,6 +28,7 @@ function App() {
 
     return () => clearTimeout(timer);
   }, []);
+
   useEffect(() => {
     setTimeout(() => {
       console.log('///////////////////////////////');
@@ -39,6 +42,26 @@ function App() {
       console.log('///////////////////////////////');
     }, 4000)
   }, [])
+
+  useEffect(() => {
+    axios.get(API.BASE_URL + 'checksubscritpion/', {
+      headers: {
+        Authorization: `Token ${token}`
+      }
+    })
+      .then(function (response) {
+        console.log("Check Subscription", response);
+        if (response.data.message === "please buy subscription") {
+          history('/dashboard');
+        }
+        else {
+          history('/overview');
+        }
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }, [history]);
   console.log("NAMEEEEE", name)
   console.log("Image", image)
   return (

@@ -1,4 +1,4 @@
-import { Routes, Route, redirect } from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import Home from '../components/home/Home';
 import SideBar from '../components/sidebar/Sidebar';
 import CampaignOver from '../components/pages/CampaignOver';
@@ -14,15 +14,24 @@ import CreateInfluencer from '../components/pages/CreateInfluencer';
 import InfluencerSales from '../components/pages/InfluencerSales';
 import StripeDetails from '../components/pages/StripeDetails';
 import AdminTransfer from '../components/pages/AdminTransfer';
+import Subscription from '../components/subscription/Subscription';
+import Thankyou from '../components/pages/Thankyou';
+import PaymentFailed from '../components/pages/PaymentFailed';
 
 const Routing = () => {
+  const location = useLocation();
+  const shouldShowSideBar = location.pathname !== '/' && location.pathname !== '/dashboard' && location.pathname !== '/thankyou' && location.pathname !== '/payment-failed';
   return (
       
     <div className="routes">
-      <SideBar />
       <Routes>
-        <Route path='/' element={<CampaignOver />} />
-        <Route exact path='/dashboard' element={<CampaignOver />} />
+        <Route path='/' element={<Subscription />} />
+        <Route exact path='/dashboard' element={<Subscription />} />
+        <Route exact path='/thankyou' element={<Thankyou />} />
+        <Route path='/payment-failed' element={<PaymentFailed />} />
+      </Routes>
+      {shouldShowSideBar && <SideBar />}
+      <Routes>
         <Route path='/overview' element={<CampaignOver />} />
         <Route path='/create' element={<CampaignNew />} />
         <Route path='/manage' element={<CampaignManage />} />

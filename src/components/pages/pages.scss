@@ -724,6 +724,9 @@ $whiteColor: #FFFFFF;
             color: $whiteColor;
             padding: 16px 20px;
         }
+        .nav-item {
+            margin-bottom: 1rem;
+        }
         .campaign-market-list {
             .campaign-market-box {
                 width: 25%;
@@ -798,6 +801,91 @@ $whiteColor: #FFFFFF;
             color: $whiteColor;
         }
     }
+}
+
+.thank-you {
+    .thankyou-wrapper{
+        width:100%;
+        height:auto;
+        margin:auto;
+        padding:10px 0px 50px;
+        height: 97vh;
+        h1{
+            font:100px Arial, Helvetica, sans-serif;
+            text-align:center;
+            color:#333333;
+            padding:0px 10px 10px;
+        }
+        p{
+            font:26px Arial, Helvetica, sans-serif;
+            text-align:center;
+            color:#333333;
+            padding:5px 10px 10px;
+          }
+          a{
+            font:26px Arial, Helvetica, sans-serif;
+            text-align:center;
+            color:#ffffff;
+            display:block;
+            text-decoration:none;
+            width:250px;
+            background:#E47425;
+            margin:10px auto 0px;
+            padding:15px 20px 15px;
+            border-bottom:5px solid #F96700;
+            &:hover{
+                font:26px Arial, Helvetica, sans-serif;
+                text-align:center;
+                color:#ffffff;
+                display:block;
+                text-decoration:none;
+                width:250px;
+                background:#F96700;
+                margin:10px auto 0px;
+                padding:15px 20px 15px;
+                border-bottom:5px solid #F96700;
+              }
+          }
+      }
+}
+
+.payment-failed {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .container {
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        form {
+            img {
+                max-width: 220px;
+                display: flex;
+                margin: 0 auto 30px;
+            }
+        }
+    }
+    .teal{
+        background-color: #ffc952 !important;
+        color: #444444 !important;
+      }
+      a{
+        color: #47b8e0 !important;
+      }
+      .message{
+        text-align: left;
+      }
+      .price1{
+          font-size: 40px;
+          font-weight: 200;
+          display: block;
+          text-align: center;
+      }
+      .ui.message {
+        p {margin: 5px;}
+      }
 }
 
 .coupon {

@@ -24,6 +24,7 @@ const CampaignMarket = () => {
     const [getMarket, setGetMarket] = useState(false);
     const [prodOffer, setProdOffer] = useState('');
     const [campExpiredList, setCampExpiredList] = useState([]);
+    const [marketActive, setMarketActive] = useState([]);
     const [loading, setLoading] = useState(false);
     const [campName, setCampName] = useState('');
     const [prodDiscount, setProdDiscount] = useState('');
@@ -128,6 +129,23 @@ const CampaignMarket = () => {
         .then(function (response) {
             console.log("Market Approval List",response.data);
             setCampApproval(response.data.data);
+        })
+        .catch(function (error) {
+            console.log(error);
+        })
+       
+    }, [token])
+
+    useEffect(() => {
+
+        axios.get(API.BASE_URL + 'market_approval/',{
+            headers: {
+                Authorization: `Token ${token}`
+            }
+        })
+        .then(function (response) {
+            console.log("Market Active List",response.data);
+            setMarketActive(response.data.data);
         })
         .catch(function (error) {
             console.log(error);
@@ -324,13 +342,16 @@ const CampaignMarket = () => {
                         <Nav.Link eventKey="second">Draft Campaigns</Nav.Link>
                     </Nav.Item>
                     <Nav.Item>
-                        <Nav.Link eventKey="third">Expired Campaigns</Nav.Link>
+                        <Nav.Link eventKey="third">Active Campaigns</Nav.Link>
                     </Nav.Item>
                     <Nav.Item>
-                        <Nav.Link eventKey="four">Approved Campaigns</Nav.Link>
+                        <Nav.Link eventKey="four">Expired Campaigns</Nav.Link>
                     </Nav.Item>
                     <Nav.Item>
-                        <Nav.Link eventKey="five">Decline Campaigns</Nav.Link>
+                        <Nav.Link eventKey="five">Approved Campaigns</Nav.Link>
+                    </Nav.Item>
+                    <Nav.Item>
+                        <Nav.Link eventKey="six">Decline Campaigns</Nav.Link>
                     </Nav.Item>
                 </Nav>
                 </Col>
@@ -405,6 +426,41 @@ const CampaignMarket = () => {
                     </Tab.Pane>
 
                     <Tab.Pane eventKey="third">
+                        {marketActive?.length > 0 ? (
+                            <CampaignTable 
+                                campList={marketActive}
+                                declineInflu = {false}
+                                getSingleMarket={getSingleMarket}
+                                deleteConfirm={deleteConfirm}
+                                influencerSale = {true}
+                                getDeleteConfirm={getDeleteConfirm}
+                                getMarket={getMarket}
+                                couponCross={couponCross}
+                                getMarketInfo={getMarketInfo}
+                                handleProdDiscount={handleProdDiscount}
+                                prodDiscount={prodDiscount}
+                                handleInfluenceVisit={handleInfluenceVisit}
+                                influenceVisit={influenceVisit}
+                                deleteCampaign={deleteCampaign}
+                                getId={getId}
+                                approved={false}
+                                approvedButtons = {false}
+                                handleCampName={handleCampName}
+                                campName={campName}
+                                handleProdOffer={handleProdOffer}
+                            />
+                            ) :
+                            (
+                                <>
+                                    <img src={NoData} alt='no-data' style={{width: '100%', maxHeight: 220, marginTop: '4rem', objectFit: 'contain'}} />
+                                    <h3 className='mt-4 text-center'>No Active Campaign</h3>
+                                    
+                                </>
+                            )
+                        }
+                    </Tab.Pane>
+
+                    <Tab.Pane eventKey="four">
                         {campExpiredList?.length > 0 ? (
                             <CampaignTable 
                                 campList={campExpiredList}
@@ -439,7 +495,7 @@ const CampaignMarket = () => {
                         }
                     </Tab.Pane>
 
-                    <Tab.Pane eventKey="four">
+                    <Tab.Pane eventKey="five">
                         {campApproval?.length > 0 ? (
                             <CampaignTable 
                             campList={campApproval}
@@ -474,7 +530,7 @@ const CampaignMarket = () => {
                         }
                     </Tab.Pane>
 
-                    <Tab.Pane eventKey="five">
+                    <Tab.Pane eventKey="six">
                         {campDecline?.length > 0 ? (
                             <CampaignTable 
                                 campList={campDecline}
