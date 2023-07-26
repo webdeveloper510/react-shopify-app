@@ -20,7 +20,7 @@ function PaymentFailed() {
                         
                     </div>
                 
-                    <button className="button button-black m-auto mt-3">Try again</button>
+                    <a href="https://admin.shopify.com/store/marketplacee-app/apps/marketplace-54" className="button button-black m-auto mt-3">Try again</a>
                 
                 </form>
                 </div>

@@ -30,7 +30,7 @@ function Thankyou() {
                   <div className="thankyou-wrapper">
                       <h1><img src="http://montco.happeningmag.com/wp-content/uploads/2014/11/thankyou.png" alt="thanks" /></h1>
                         <p>for contacting us, we will get in touch with you soon... </p>
-                        <a href="index.html">Back to home</a>
+                        <a href="https://admin.shopify.com/store/marketplacee-app/apps/marketplace-54">Back to home</a>
                         <div className="clr"></div>
                     </div>
                     <div className="clr"></div>
