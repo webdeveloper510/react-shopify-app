@@ -18,7 +18,7 @@ function Subscription() {
         .then(function (response) {
             console.log("BuySubscription", response);
             localStorage.setItem("Session_Id", response.data.id);
-            window.location.href = response.data.session_url
+            window.open(response.data.session_url, '_blank');
         })
         .catch(function (error) {
             console.log(error);
