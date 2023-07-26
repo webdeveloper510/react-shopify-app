@@ -155,7 +155,7 @@ const CampaignTable = ({
                       data-placement="top"
                       style={{ marginRight: 15 }}
                       title="Decline"
-                      onClick={() => {handleVendorDecline(name.campaignid_id, name.influencer_name ?name.influencer_name : name.username)}}
+                      onClick={() => {handleVendorDecline(name.campaignid_id, name.influencer_name ?name.influencer_name : name.username, name.coupon_name, name.amount)}}
                     >
                       <FontAwesomeIcon
                         icon={faXmark}

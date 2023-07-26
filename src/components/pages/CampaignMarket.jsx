@@ -238,8 +238,8 @@ const CampaignMarket = () => {
     const handleVendorAccept = (value, idValue, coupon, amount) => {
         setLoading(true);
         axios.post(API.BASE_URL + 'marketplaceaccept/' + value + '/' + idValue + '/',{
-            coupon: coupon,
-            amount: parseInt(amount.slice(1)),
+            coupon: coupon[0],
+            amount: parseInt(amount[0].slice(1)),
         },{
             headers: { 
                 Authorization: `Token ${token}` 
@@ -248,6 +248,18 @@ const CampaignMarket = () => {
         .then(function (response) {
             console.log("Accepted" ,response)
             toast.success("Campaign Accepted!", { autoClose: 1000 });
+            axios.get(API.BASE_URL + 'marketapproval/',{
+                headers: {
+                    Authorization: `Token ${token}`
+                }
+            })
+            .then(function (response) {
+                console.log("Market Approval List",response.data);
+                setCampApproval(response.data.data);
+            })
+            .catch(function (error) {
+                console.log(error);
+            })
             
         })
         .catch(function (error) {
@@ -257,9 +269,12 @@ const CampaignMarket = () => {
         .finally(() => setLoading(false));
     }
 
-    const handleVendorDecline = (value, idValue) => {
+    const handleVendorDecline = (value, idValue, coupon, amount) => {
         setLoading(true);
-        axios.post(API.BASE_URL + 'vendor/decline/' + value + '/' + idValue + '/',{},{
+        axios.post(API.BASE_URL + 'vendor/decline/' + value + '/' + idValue + '/',{
+            coupon: coupon[0],
+            amount: parseInt(amount[0].slice(1)),
+        },{
             headers: { 
                 Authorization: `Token ${token}` 
             }
@@ -267,6 +282,18 @@ const CampaignMarket = () => {
         .then(function (response) {
             console.log("Decline" ,response)
             toast.success("Campaign Declined!", { autoClose: 1000 });
+            axios.get(API.BASE_URL + 'marketapproval/',{
+                headers: {
+                    Authorization: `Token ${token}`
+                }
+            })
+            .then(function (response) {
+                console.log("Market Approval List",response.data);
+                setCampApproval(response.data.data);
+            })
+            .catch(function (error) {
+                console.log(error);
+            })
         })
         .catch(function (error) {
             console.log(error);
