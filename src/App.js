@@ -62,6 +62,8 @@ function App() {
         .catch(function (error) {
           console.log(error);
         });
+    } else {
+      history('/overview');
     }
     
   }, [history]);
