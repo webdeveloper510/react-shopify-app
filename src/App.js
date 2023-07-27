@@ -44,23 +44,26 @@ function App() {
   }, [])
 
   useEffect(() => {
-    axios.get(API.BASE_URL + 'checksubscritpion/', {
-      headers: {
-        Authorization: `Token ${token}`
-      }
-    })
-      .then(function (response) {
-        console.log("Check Subscription", response);
-        if (response.data.message === "please buy subscription") {
-          history('/dashboard');
-        }
-        else {
-          history('/overview');
+    if(!localStorage.getItem("Session_Id")) {
+      axios.get(API.BASE_URL + 'checksubscritpion/', {
+        headers: {
+          Authorization: `Token ${token}`
         }
       })
-      .catch(function (error) {
-        console.log(error);
-      });
+        .then(function (response) {
+          console.log("Check Subscription", response);
+          if (response.data.message === "please buy subscription") {
+            history('/dashboard');
+          }
+          else {
+            history('/overview');
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    }
+    
   }, [history]);
   console.log("NAMEEEEE", name)
   console.log("Image", image)

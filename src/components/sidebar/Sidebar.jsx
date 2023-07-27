@@ -137,9 +137,9 @@ const SideBar = () => {
                         className="me-auto my-2 my-lg-0"
                         style={{ maxHeight: '100px' }}
                         navbarScroll
-                        activeKey="/dashboard"
+                        activeKey="/overview"
                     >
-                        <NavLink to='/dashboard' className='text-black py-2'>
+                        <NavLink to='/overview' className='text-black py-2'>
                             <img src={CampaignOverview} className="me-2" alt='menu-img' />
                             Campaign Overview
                         </NavLink>
