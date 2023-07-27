@@ -44,28 +44,34 @@ function App() {
   }, [])
 
   useEffect(() => {
-    if(!localStorage.getItem("Session_Id")) {
-      axios.get(API.BASE_URL + 'checksubscritpion/', {
-        headers: {
-          Authorization: `Token ${token}`
-        }
-      })
-        .then(function (response) {
-          console.log("Check Subscription", response);
-          if (response.data.message === "please buy subscription") {
-            history('/dashboard');
-          }
-          else {
-            history('/overview');
+    const checkSubscription = () => {
+      if (!localStorage.getItem("Session_Id")) {
+        axios.get(API.BASE_URL + 'checksubscritpion/', {
+          headers: {
+            Authorization: `Token ${token}`
           }
         })
-        .catch(function (error) {
-          console.log(error);
-        });
-    } else {
-      history('/overview');
-    }
-    
+          .then(function (response) {
+            console.log("Check Subscription", response);
+            if (response.data.message === "please buy subscription") {
+              history('/dashboard');
+            }
+            else {
+              history('/overview');
+            }
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+      } else {
+        history('/overview');
+      }
+    };
+
+    checkSubscription(); // Call the function on initial render
+
+    // Set the callback function as the dependency
+    // This will ensure the useEffect runs only once on mount.
   }, [history]);
   console.log("NAMEEEEE", name)
   console.log("Image", image)
