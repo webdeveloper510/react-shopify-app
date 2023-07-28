@@ -1,12 +1,40 @@
 import React, {useState, useEffect} from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { API } from '../../config/Api';
 
 function Subscription() {
     const token = localStorage.getItem("Token");
     const navigate = useNavigate();
+    const location = useLocation();
     const [loading, setLoading] = useState(false);
+    useEffect(() => {
+        const checkSubscription = () => {
+          if (!localStorage.getItem("Session_Id")) {
+            axios.get(API.BASE_URL + 'checksubscritpion/', {
+              headers: {
+                Authorization: `Token ${token}`
+              }
+            })
+              .then(function (response) {
+                console.log("Check Subscription", response);
+                if (response.data.message === "please buy subscription") {
+                  navigate('/dashboard');
+                }
+                else {
+                  navigate('/overview');
+                }
+              })
+              .catch(function (error) {
+                console.log(error);
+              });
+          } else {
+            navigate('/overview');
+          }
+        };
+    
+        checkSubscription();
+    }, [navigate]);
     const handleSubscription = (plan) => {
         setLoading(true);
         axios.post(API.BASE_URL + 'checkout_session/', {
