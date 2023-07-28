@@ -1,6 +1,6 @@
 import React from 'react';
 import './pages.scss';
-import Error from '../../assests/img/error.png';
+import Error from '../../assests/img/error.png'; 
 
 function PaymentFailed() {
   return (
