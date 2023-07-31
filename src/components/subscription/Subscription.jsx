@@ -9,31 +9,31 @@ function Subscription() {
     const location = useLocation();
     const [loading, setLoading] = useState(false);
     useEffect(() => {
-        const checkSubscription = () => {
-          if (!localStorage.getItem("Session_Id")) {
-            axios.get(API.BASE_URL + 'checksubscritpion/', {
-              headers: {
-                Authorization: `Token ${token}`
+      const checkSubscription = () => {
+        if (localStorage.getItem("Session_Id") != null || localStorage.getItem("Session_Id") != '' || localStorage.getItem("Session_Id") != undefined) {
+          axios.get(API.BASE_URL + 'checksubscritpion/', {
+            headers: {
+              Authorization: `Token ${token}`
+            }
+          })
+            .then(function (response) {
+              console.log("Check Subscription", response);
+              if (response.data.message === "please buy subscription") {
+                navigate('/dashboard');
+              }
+              else {
+                navigate('/overview');
               }
             })
-              .then(function (response) {
-                console.log("Check Subscription", response);
-                if (response.data.message === "please buy subscription") {
-                  navigate('/dashboard');
-                }
-                else {
-                  navigate('/overview');
-                }
-              })
-              .catch(function (error) {
-                console.log(error);
-              });
-          } else {
-            navigate('/overview');
-          }
-        };
-    
-        checkSubscription();
+            .catch(function (error) {
+              console.log(error);
+            });
+        } else {
+          navigate('/overview');
+        }
+      };
+  
+      checkSubscription();
     }, [navigate]);
     const handleSubscription = (plan) => {
         setLoading(true);

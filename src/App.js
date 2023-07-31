@@ -18,7 +18,7 @@ function App() {
   const [loading, setLoading] = useState(true);
   const token = localStorage.getItem('Token')
   const location = useLocation();
-  console.log('Current route:', location.pathname);
+  console.log('Current route:', location);
   useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false);
