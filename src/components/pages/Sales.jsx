@@ -29,7 +29,7 @@ function Sales() {
     setLoading(true);
     axios.get(API.BASE_URL + 'analytics/', {
         headers: {
-          Authorization: `Token ${token}`,
+          Authorization: `Token 43272d3b1eb9b1f7beed87ee636d1079483a41ad`,
         },
       })
       .then(function (response) {
@@ -83,7 +83,7 @@ function Sales() {
 
       axios.get(API.BASE_URL + 'sale_coup/', {
         headers: {
-          Authorization: `Token ${token}`,
+          Authorization: `Token 43272d3b1eb9b1f7beed87ee636d1079483a41ad`,
         },
       })
       .then(function (response) {

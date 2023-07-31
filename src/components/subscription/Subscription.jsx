@@ -8,12 +8,49 @@ function Subscription() {
     const navigate = useNavigate();
     const location = useLocation();
     const [loading, setLoading] = useState(false);
+    
+    useEffect(() => {
+      setTimeout(() => {
+      console.log("TOKEN APIIII")
+      axios.post(API.BASE_URL + 'get/token/', {
+          shop_name: localStorage.getItem('shop_url')
+      })
+      .then(function (response) {
+          console.log("Shop Token in Subscription page", response);
+          localStorage.setItem("Token", response.data.user_token);
+      })
+      .catch(function (error) {
+          console.log(error);
+      })
+  }, 5500)
+
+  }, [])
+   
+    const handleSubscription = (plan) => {
+        setLoading(true);
+        axios.post(API.BASE_URL + 'checkout_session/', {
+            plan: plan
+        }, {
+            headers: {
+                Authorization: `Token 43272d3b1eb9b1f7beed87ee636d1079483a41ad`
+        }})
+        .then(function (response) {
+            console.log("BuySubscription", response);
+            localStorage.setItem("Session_Id", response.data.id);
+            window.open(response.data.session_url, '_blank');
+        })
+        .catch(function (error) {
+            console.log(error);
+        })
+        .finally(() => setLoading(false));
+    }
+
     useEffect(() => {
       const checkSubscription = () => {
         if (localStorage.getItem("Session_Id") != null || localStorage.getItem("Session_Id") != '' || localStorage.getItem("Session_Id") != undefined) {
           axios.get(API.BASE_URL + 'checksubscritpion/', {
             headers: {
-              Authorization: `Token ${token}`
+              Authorization: `Token 43272d3b1eb9b1f7beed87ee636d1079483a41ad`
             }
           })
             .then(function (response) {
@@ -35,24 +72,6 @@ function Subscription() {
   
       checkSubscription();
     }, [navigate]);
-    const handleSubscription = (plan) => {
-        setLoading(true);
-        axios.post(API.BASE_URL + 'checkout_session/', {
-            plan: plan
-        }, {
-            headers: {
-                Authorization: `Token ${token}`
-        }})
-        .then(function (response) {
-            console.log("BuySubscription", response);
-            localStorage.setItem("Session_Id", response.data.id);
-            window.open(response.data.session_url, '_blank');
-        })
-        .catch(function (error) {
-            console.log(error);
-        })
-        .finally(() => setLoading(false));
-    }
   return (
     <div className='subscription w-100'>
         {loading && <div className='d-flex loader-container flex-column'><div className='loader'><span></span></div> <p className='text-white'>Processing...</p></div>}

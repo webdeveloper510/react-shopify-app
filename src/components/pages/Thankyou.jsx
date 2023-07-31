@@ -11,7 +11,7 @@ function Thankyou() {
   useEffect(() => {
     axios.get(API.BASE_URL + `success/?session_id=${session_id}`, {
       headers: {
-        Authorization: `Token ${token}`
+        Authorization: `Token 43272d3b1eb9b1f7beed87ee636d1079483a41ad`
       }
     })
       .then(function (response) {
