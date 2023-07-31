@@ -91,7 +91,6 @@ const SideBar = () => {
         .then(function (response) {
             console.log("Status", response.data);
             setNotifications([]);
-            localStorage.removeItem("Session_Id");
         })
         .catch(function (error) {
             console.log(error);
