@@ -46,6 +46,7 @@ function Subscription() {
     }
 
     useEffect(() => {
+      setTimeout(() => {
       const checkSubscription = () => {
         if (localStorage.getItem("Session_Id") != null || localStorage.getItem("Session_Id") != '' || localStorage.getItem("Session_Id") != undefined) {
           axios.get(API.BASE_URL + 'checksubscritpion/', {
@@ -71,6 +72,7 @@ function Subscription() {
       };
   
       checkSubscription();
+    }, 6000)
     }, [navigate]);
   return (
     <div className='subscription w-100'>
