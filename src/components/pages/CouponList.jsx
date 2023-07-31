@@ -411,6 +411,9 @@ const CouponList = () => {
             else if (error.response.data.error == "amount should be less than 100") {
                 toast.warn("Value should be less than 100", { autoClose: 1000 })
             }
+            else if (error.response.data.error == "Amount should be in positive") {
+                toast.warn("Amount should be in positive", { autoClose: 1000 })
+            }
             else {
                 toast.error("Could not create a coupon right now", { autoClose: 1000 })
             }

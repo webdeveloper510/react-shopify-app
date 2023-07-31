@@ -362,6 +362,9 @@ const CreateCampaign = () => {
         })
         .catch(function (error) {
           console.log(error);
+          if(error.response.data.influencer_fee == "Influencer fee must be in positive.") {
+              toast.warn("Influencer fee must be in positive.", { autoClose: 1000 })
+          }
           toast.warn("Unable to edit. Please try again later", { autoClose: 1000 })
         })
         .finally(() => setLoading(false));
