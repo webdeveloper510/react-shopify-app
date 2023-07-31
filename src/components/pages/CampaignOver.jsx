@@ -30,8 +30,11 @@ const CampaignOver = () => {
         })
         .then(function (response) {
             console.log("Shop Token", response);
-            setUserToken(response.data.user_token);
-            localStorage.setItem("Token", response.data.user_token);
+            if(localStorage.getItem("Token") == null || localStorage.getItem("Token") == "" || localStorage.getItem("Token") == undefined) {
+                setUserToken(response.data.user_token);
+                localStorage.setItem("Token", response.data.user_token);
+            }
+            
             axios.get(API.BASE_URL + 'user/id/',{
                 headers: {
                     Authorization: `Token ${localStorage.getItem('Token')}`

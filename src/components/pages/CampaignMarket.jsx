@@ -40,7 +40,7 @@ const CampaignMarket = () => {
     useEffect(() => {
         axios.get(API.BASE_URL + 'market/list/',{
             headers: {
-                Authorization: `Token 43272d3b1eb9b1f7beed87ee636d1079483a41ad`
+                Authorization: `Token ${token}`
             }
         })
         .then(function (response) {
@@ -54,7 +54,7 @@ const CampaignMarket = () => {
 
         axios.get(API.BASE_URL + 'markdraft/list/',{
             headers: {
-                Authorization: `Token 43272d3b1eb9b1f7beed87ee636d1079483a41ad`
+                Authorization: `Token ${token}`
             }
         })
         .then(function (response) {
@@ -68,7 +68,7 @@ const CampaignMarket = () => {
 
         axios.get(API.BASE_URL + 'product/list/',{
             headers: {
-                Authorization: `Token 43272d3b1eb9b1f7beed87ee636d1079483a41ad`
+                Authorization: `Token ${token}`
             }
         })
         .then(function (response) {
@@ -80,7 +80,7 @@ const CampaignMarket = () => {
 
         axios.get(API.BASE_URL + 'marketcampaignexp/',{
             headers: {
-                Authorization: `Token 43272d3b1eb9b1f7beed87ee636d1079483a41ad`
+                Authorization: `Token ${token}`
             }
         })
         .then(function (response) {
@@ -93,7 +93,7 @@ const CampaignMarket = () => {
 
         axios.get(API.BASE_URL + 'marketapproval/',{
             headers: {
-                Authorization: `Token 43272d3b1eb9b1f7beed87ee636d1079483a41ad`
+                Authorization: `Token ${token}`
             }
         })
         .then(function (response) {
@@ -106,7 +106,7 @@ const CampaignMarket = () => {
 
         axios.get(API.BASE_URL + 'market_decline/',{
             headers: {
-                Authorization: `Token 43272d3b1eb9b1f7beed87ee636d1079483a41ad`
+                Authorization: `Token ${token}`
             }
         })
         .then(function (response) {
@@ -123,7 +123,7 @@ const CampaignMarket = () => {
 
         axios.get(API.BASE_URL + 'marketapproval/',{
             headers: {
-                Authorization: `Token 43272d3b1eb9b1f7beed87ee636d1079483a41ad`
+                Authorization: `Token ${token}`
             }
         })
         .then(function (response) {
@@ -140,7 +140,7 @@ const CampaignMarket = () => {
 
         axios.get(API.BASE_URL + 'market_approval/',{
             headers: {
-                Authorization: `Token 43272d3b1eb9b1f7beed87ee636d1079483a41ad`
+                Authorization: `Token ${token}`
             }
         })
         .then(function (response) {
@@ -209,7 +209,7 @@ const CampaignMarket = () => {
         setLoading(true);
         axios.delete(API.BASE_URL + 'delete/' + value + '/',{
             headers: {
-                Authorization: `Token 43272d3b1eb9b1f7beed87ee636d1079483a41ad`
+                Authorization: `Token ${token}`
             }
         })
         .then(function (response) {
@@ -230,7 +230,7 @@ const CampaignMarket = () => {
         setLoading(true);
         axios.get(API.BASE_URL +  'single/' + value + '/', {
             headers: {
-                Authorization: `Token 43272d3b1eb9b1f7beed87ee636d1079483a41ad`
+                Authorization: `Token ${token}`
         }})
         .then(function (response) {
             console.log("Single Market Data" ,response.data.data)
@@ -260,7 +260,7 @@ const CampaignMarket = () => {
             amount: parseInt(amount[0].slice(1)),
         },{
             headers: { 
-                Authorization: `Token 43272d3b1eb9b1f7beed87ee636d1079483a41ad` 
+                Authorization: `Token ${token}` 
             }
         })
         .then(function (response) {
@@ -268,7 +268,7 @@ const CampaignMarket = () => {
             toast.success("Campaign Accepted!", { autoClose: 1000 });
             axios.get(API.BASE_URL + 'marketapproval/',{
                 headers: {
-                    Authorization: `Token 43272d3b1eb9b1f7beed87ee636d1079483a41ad`
+                    Authorization: `Token ${token}`
                 }
             })
             .then(function (response) {
@@ -294,7 +294,7 @@ const CampaignMarket = () => {
             amount: parseInt(amount[0].slice(1)),
         },{
             headers: { 
-                Authorization: `Token 43272d3b1eb9b1f7beed87ee636d1079483a41ad` 
+                Authorization: `Token ${token}` 
             }
         })
         .then(function (response) {
@@ -302,7 +302,7 @@ const CampaignMarket = () => {
             toast.success("Campaign Declined!", { autoClose: 1000 });
             axios.get(API.BASE_URL + 'marketapproval/',{
                 headers: {
-                    Authorization: `Token 43272d3b1eb9b1f7beed87ee636d1079483a41ad`
+                    Authorization: `Token ${token}`
                 }
             })
             .then(function (response) {
