@@ -26,6 +26,7 @@ const CouponList = () => {
     const [couponDesc, setCouponDesc] = useState('');
     const [discountType, setDiscountType] = useState('');
     const [couponAmount, setCouponAmount] = useState('');
+    const [influIndb, setInfluIndb] = useState('')
     const [couponStatus, setCouponStatus] = useState('');
     const [loading, setLoading] = useState(false);
     const [prodList, setProdList] = useState('');
@@ -247,7 +248,7 @@ const CouponList = () => {
             discount_type: discountType,
             amount: couponAmount.toString(),
             influ_ids: selectedInfluencer?.id !=undefined ? selectedInfluencer?.id : matchingInfluencers[0]?.id,
-            influencer_id: selectedInfluencer?.id !=undefined ? selectedInfluencer?.id : matchingInfluencers[0]?.id,
+            influencer_id: influIndb,
             product_id: productIds.toString(),
         }, {
             headers: {
@@ -304,6 +305,7 @@ const CouponList = () => {
           setGetCoupon(true);
           setCouponDesc(response.data.title);
           setDiscountType(response.data.discount_type);
+          setInfluIndb(response.data.indb)
           setCouponAmount(Math.trunc(response.data.amount.substring(1)));
           setCouponStatus(response.data.status);
           const matchingInfluencers = influencerList.filter(
@@ -453,7 +455,7 @@ const CouponList = () => {
 
     console.log("productIds", productIds)
     console.log("showList", selectedProductNames)
-    console.log("selectedInfluencer", selectedInfluencer?.id)
+    console.log("selectedInfluencer", selectedInfluencer)
     console.log("matching Influencer", matchingInfluencers)
     console.log("influencer list", influencerList)
 

@@ -234,6 +234,12 @@ const CampaignTable = ({
                                 <label>Influencer Visit: <strong className="ms-2">{getMarketInfo?.influencer_visit}</strong></label>
                             </div>
                             <div className="input-container">
+                                <label>Coupon: <strong className="ms-2">{getMarketInfo?.product?.map((coupon) => coupon.coupon_name)}</strong></label>
+                            </div>
+                            <div className="input-container">
+                                <label>Discount: <strong className="ms-2">{getMarketInfo?.product?.map((coupon) => coupon.amount)}</strong></label>
+                            </div>
+                            <div className="input-container">
                                 <label>Description: <strong className="ms-2">{getMarketInfo?.description}</strong></label>
                             </div>
                         </form>

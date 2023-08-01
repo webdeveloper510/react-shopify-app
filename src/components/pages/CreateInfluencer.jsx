@@ -269,6 +269,9 @@ const CreateInfluencer = () => {
             else if(error.response.data.product) {
                 toast.warn("Please selecta any Product.", { autoClose: 1000 });
             }
+            else if(error.response.data.influencer_fee == "Influencer fee must be in positive.") {
+                toast.warn("Influencer fee must be in positive.", { autoClose: 1000 });
+            }
             else if(error.response.data.influencer_fee) {
                 toast.warn("Please add a fee for Influencer.", { autoClose: 1000 });
             }
@@ -363,6 +366,9 @@ const CreateInfluencer = () => {
             }
             else if(error.response.data.product) {
                 toast.warn("Please selecta any Product.", { autoClose: 1000 });
+            }
+            else if(error.response.data.influencer_fee == "Influencer fee must be in positive.") {
+                toast.warn("Influencer fee must be in positive.", { autoClose: 1000 });
             }
             else if(error.response.data.influencer_fee) {
                 toast.warn("Please add a fee for Influencer.", { autoClose: 1000 });
