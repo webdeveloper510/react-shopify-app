@@ -54,9 +54,9 @@ const CreateInfluencer = () => {
     const {id} = useParams();
   
     const handleBack = () => {
-      setShowInfluList(false);
-      setShowCampaignList(false);
-      setProductName([]);
+        setShowInfluList(false);
+        setShowCampaignList(false);
+        setProductName([]);
         setCampaignName('');
         setSelectedDate('');
         setInfluenceOffer('');
