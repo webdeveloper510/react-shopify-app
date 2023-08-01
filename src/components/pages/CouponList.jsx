@@ -239,15 +239,16 @@ const CouponList = () => {
     }
 
     const editCouponProducts = (value, event) => {
+        console.log("matchingInfluencers?.idmatchingInfluencers?.id", matchingInfluencers)
         event.preventDefault();
         setLoading(true);
         axios.post(API.SHOPIFY_URL +  'particular/edit/?price=' + value, {
             discount_code: couponDesc,
             discount_type: discountType,
             amount: couponAmount.toString(),
-            influencer_id: selectedInfluencer?.id,
+            influ_ids: selectedInfluencer?.id !=undefined ? selectedInfluencer?.id : matchingInfluencers[0]?.id,
+            influencer_id: selectedInfluencer?.id !=undefined ? selectedInfluencer?.id : matchingInfluencers[0]?.id,
             product_id: productIds.toString(),
-            influ_ids: selectedInfluencer?.id
         }, {
             headers: {
  
@@ -454,6 +455,7 @@ const CouponList = () => {
     console.log("showList", selectedProductNames)
     console.log("selectedInfluencer", selectedInfluencer?.id)
     console.log("matching Influencer", matchingInfluencers)
+    console.log("influencer list", influencerList)
 
     return (
     <>
