@@ -176,11 +176,20 @@ const CreateCampaign = () => {
             else if(error.response.data.product) {
                 toast.warn("Please selecta any Product.", { autoClose: 1000 });
             }
+            else if(error.response.data.influencer_fee == "Influencer fee must be in positive.") {
+                toast.warn("Influencer fee must be in positive.", { autoClose: 1000 });
+            }
+            else if(error.response.data.influencer_fee) {
+                toast.warn("Please add a fee for Influencer.", { autoClose: 1000 });
+            }
             else if(error.response.data.product_discount) {
                 toast.warn("Please select any value of Product Discount.", { autoClose: 1000 });
             }
             else if(error.response.data.coupon) {
                 toast.warn("Coupon may not be blank.", { autoClose: 1000 });
+            }
+            else if(error.response.data.error) {
+                toast.warn(`Campaign with ${error.response.data.error[0]} already exists`, { autoClose: 1000 });
             }
             else if(error.response.data.description) {
                 toast.warn("Description may not be blank.", { autoClose: 1000 });
@@ -248,11 +257,20 @@ const CreateCampaign = () => {
             else if(error.response.data.product) {
                 toast.warn("Please selecta any Product.", { autoClose: 1000 });
             }
+            else if(error.response.data.influencer_fee == "Influencer fee must be in positive.") {
+                toast.warn("Influencer fee must be in positive.", { autoClose: 1000 });
+            }
+            else if(error.response.data.influencer_fee) {
+                toast.warn("Please add a fee for Influencer.", { autoClose: 1000 });
+            }
             else if(error.response.data.product_discount) {
                 toast.warn("Please select any value of Product Discount.", { autoClose: 1000 });
             }
             else if(error.response.data.coupon) {
                 toast.warn("Coupon may not be blank.", { autoClose: 1000 });
+            }
+            else if(error.response.data.error) {
+                toast.warn(`Campaign with ${error.response.data.error[0]} already exists`, { autoClose: 1000 });
             }
             else if(error.response.data.description) {
                 toast.warn("Description may not be blank.", { autoClose: 1000 });

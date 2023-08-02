@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faClose, faCheck, faXmark, faEye } from "@fortawesome/free-solid-svg-icons";
 import Delete from '../../assests/img/delete.svg';
@@ -32,6 +33,35 @@ const CampaignTable = ({
   marketData = false,
   campEdit = false
 }) => {
+  const [usernameMap, setUsernameMap] = useState({});
+  const token = localStorage.getItem('Token');
+  useEffect(() => {
+    axios
+      .get("https://api.myrefera.com/campaign/influencer/list/", {
+        headers: {
+            Authorization: `Token ${token}`
+    }})
+      .then((response) => {
+        const influencerData = response.data.data;
+        console.log("NKJNKNKNKNKJNJK", response)
+
+        const map = {};
+        influencerData.forEach((influencer) => {
+          map[influencer.id] = influencer.username;
+        });
+
+        setUsernameMap(map);
+        console.log("setUsernameMap", usernameMap)
+      })
+      .catch((error) => {
+        console.error("Error fetching influencer data:", error);
+      });
+  }, [token]);
+
+  const getUsernameForCampaign = (campaignId) => {
+    const username = usernameMap[campaignId];
+    return username ? username : "N/A";
+  };
   return (
     <table className='w-100 campaign'>
       <tbody className='w-100'>
@@ -55,6 +85,7 @@ const CampaignTable = ({
           )}
         </tr>
         {campList?.map((name, i) => {
+          const username = getUsernameForCampaign(name.influencer_name);
           return (
             <>
                 <tr key={i} className='campaign-inputs'>
@@ -67,9 +98,9 @@ const CampaignTable = ({
                   </td>
                 )}
                 {approvedButtons && (
-                  <td>{name.username}</td>
+                  <td>{name.username ? name.username : username}</td>
                 ) || marketData == true && (
-                  <td>{name.username}</td>
+                  <td>{name.username ? name.username : username}</td>
                 )}
                 {!approved && marketData == false && (
                   <td>

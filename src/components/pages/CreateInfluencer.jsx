@@ -281,6 +281,9 @@ const CreateInfluencer = () => {
             else if(error.response.data.coupon) {
                 toast.warn("Coupon may not be blank.", { autoClose: 1000 });
             }
+            else if(error.response.data.error) {
+                toast.warn(`Campaign with ${error.response.data.error[0]} already exists`, { autoClose: 1000 });
+            }
             else if(error.response.data.description) {
                 toast.warn("Description may not be blank.", { autoClose: 1000 });
             }
@@ -378,6 +381,9 @@ const CreateInfluencer = () => {
             }
             else if(error.response.data.coupon) {
                 toast.warn("Coupon may not be blank.", { autoClose: 1000 });
+            }
+            else if(error.response.data.error) {
+                toast.warn(`Campaign with ${error.response.data.error[0]} already exists`, { autoClose: 1000 });
             }
             else if(error.response.data.description) {
                 toast.warn("Description may not be blank.", { autoClose: 1000 });

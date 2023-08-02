@@ -320,6 +320,28 @@ const CampaignMarket = () => {
         .finally(() => setLoading(false));
     }
 
+    const showMarketCampaign = (event, value) => {
+        event.preventDefault();
+        setLoading(true);
+          axios.get(API.BASE_URL +  'single/' + value + '/', {
+              headers: {
+                  Authorization: `Token ${token}`
+          }})
+          .then(function (response) {
+              console.log("Single Market Data" ,response.data.data)
+              setGetMarket(true);
+              setGetMarketInfo(response.data.data[0])
+              setCampName(response.data.data.campaign_name)
+              setProdOffer(response.data.data.offer)
+              setProdDiscount(response.data.data.product_discount)
+              setInfluenceVisit(response.data.data.description)
+          })
+          .catch(function (error) {
+              console.log(error);
+          })
+          .finally(() => setLoading(false));
+      }
+
     console.log("Testing in Market", testing)
     console.log("productNames", productNames)
 
@@ -429,25 +451,27 @@ const CampaignMarket = () => {
                         {marketActive?.length > 0 ? (
                             <CampaignTable 
                                 campList={marketActive}
-                                declineInflu = {false}
-                                getSingleMarket={getSingleMarket}
-                                deleteConfirm={deleteConfirm}
-                                influencerSale = {true}
+                                showMarket={showMarketCampaign}
                                 getDeleteConfirm={getDeleteConfirm}
                                 getMarket={getMarket}
+                                influencerSale = {true}
                                 couponCross={couponCross}
                                 getMarketInfo={getMarketInfo}
                                 handleProdDiscount={handleProdDiscount}
                                 prodDiscount={prodDiscount}
                                 handleInfluenceVisit={handleInfluenceVisit}
                                 influenceVisit={influenceVisit}
+                                approved={true}
+                                declineInflu={false}
+                                campEdit = {true}
+                                approvedButtons = {true}
+                                // editCampaign={editCampaign}
                                 deleteCampaign={deleteCampaign}
                                 getId={getId}
-                                approved={false}
-                                approvedButtons = {false}
                                 handleCampName={handleCampName}
                                 campName={campName}
                                 handleProdOffer={handleProdOffer}
+                                showEdit={false}
                             />
                             ) :
                             (
