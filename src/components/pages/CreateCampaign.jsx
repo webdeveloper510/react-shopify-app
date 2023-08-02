@@ -185,6 +185,12 @@ const CreateCampaign = () => {
             else if(error.response.data.product_discount) {
                 toast.warn("Please select any value of Product Discount.", { autoClose: 1000 });
             }
+            else if(error.response.data.error == "Product field may not be blank.") {
+                toast.warn("Product field may not be blank.", { autoClose: 1000 });
+            }
+            else if(error.response.data.error == "Coupon field may not be blank.") {
+                toast.warn("Coupon field may not be blank.", { autoClose: 1000 });
+            }
             else if(error.response.data.coupon) {
                 toast.warn("Coupon may not be blank.", { autoClose: 1000 });
             }
@@ -265,6 +271,12 @@ const CreateCampaign = () => {
             }
             else if(error.response.data.product_discount) {
                 toast.warn("Please select any value of Product Discount.", { autoClose: 1000 });
+            }
+            else if(error.response.data.error == "Product field may not be blank.") {
+                toast.warn("Product field may not be blank.", { autoClose: 1000 });
+            }
+            else if(error.response.data.error == "Coupon field may not be blank.") {
+                toast.warn("Coupon field may not be blank.", { autoClose: 1000 });
             }
             else if(error.response.data.coupon) {
                 toast.warn("Coupon may not be blank.", { autoClose: 1000 });
