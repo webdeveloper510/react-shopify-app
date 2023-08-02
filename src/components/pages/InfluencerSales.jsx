@@ -21,7 +21,7 @@ function InfluencerSales() {
         setLoading(true);
         axios.get(API.BASE_URL + 'influencer/list/', {
             headers: {
-              Authorization: `Token ${token}`
+              Authorization: `Token 43272d3b1eb9b1f7beed87ee636d1079483a41ad`
             }
           })
           .then(function (response) {
@@ -40,7 +40,7 @@ function InfluencerSales() {
 
         axios.get(API.BASE_URL + 'influecercamsale/',{
             headers: {
-                Authorization: `Token ${token}`
+                Authorization: `Token 43272d3b1eb9b1f7beed87ee636d1079483a41ad`
             }
         })
         .then(function (response) {
@@ -94,7 +94,7 @@ function InfluencerSales() {
             sales: sales
         },{
             headers: {
-              Authorization: `Token ${token}`
+              Authorization: `Token 43272d3b1eb9b1f7beed87ee636d1079483a41ad`
             }
           },)
           .then(function (response) {
@@ -102,7 +102,7 @@ function InfluencerSales() {
             toast.success("Money transfer Successfully");
             axios.get(API.BASE_URL + 'influecercamsale/',{
                 headers: {
-                    Authorization: `Token ${token}`
+                    Authorization: `Token 43272d3b1eb9b1f7beed87ee636d1079483a41ad`
                 }
             })
             .then(function (response) {
