@@ -306,7 +306,7 @@ const CouponList = () => {
           setCouponDesc(response.data.title);
           setDiscountType(response.data.discount_type);
           setInfluIndb(response.data.indb)
-          setCouponAmount(Math.trunc(response.data.amount.substring(1)));
+          setCouponAmount(response.data.amount.substring(1));
           setCouponStatus(response.data.status);
           const matchingInfluencers = influencerList.filter(
             (influencer) => influencer.id === response.data.infl_id
