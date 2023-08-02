@@ -14,12 +14,18 @@ function Sales() {
   const chartSalesRef = useRef(null);
   const chartPieRef = useRef(null);
   const [loading, setLoading] = useState(false);
+  const chartCouponRef = useRef(null);
   const [chartSalesData, setChartSalesData] = useState({
     labels: [],
     datasets: [],
   });
 
   const [chartPieData, setChartPieData] = useState({
+    labels: [],
+    datasets: [],
+  });
+
+  const [chartCouponData, setChartCouponData] = useState({
     labels: [],
     datasets: [],
   });
@@ -127,6 +133,50 @@ function Sales() {
       .finally(() => setLoading(false));
   }, []);
 
+  useEffect(() => {
+    setLoading(true);
+    axios.get(API.BASE_URL + 'couponorder/', {
+        headers: {
+          Authorization: `Token ${token}`,
+        },
+      })
+      .then(function (response) {
+        console.log("Sales Dataaaaaa", response)
+        const analyticsData = response.data;
+        const sales = analyticsData.map(item => item.count);
+        const campaignNames = analyticsData.map(item => item.coupon_name);
+
+        const updatedCouponData = {
+          labels: campaignNames,
+          datasets: [
+            {
+              label: 'Sales Data',
+              data: sales,
+              tension: 0.2,
+              backgroundColor: [
+                'red',
+                'blue',
+                'green',
+                'yellow',
+                'orange',
+                'teak',
+                'purple',
+                'brown',
+                'yellowgreen',
+                'tomato'
+              ],
+            },
+          ],
+        };
+
+        setChartCouponData(updatedCouponData);
+      })
+      .catch(function (error) {
+        console.log(error);
+      })
+      .finally(() => setLoading(false));
+  }, []);
+
   const options = {
     plugins: {
       legend: true
@@ -154,6 +204,11 @@ function Sales() {
             <div className="chart my-5">
               <h3 className='text-left w-100 d-flex ps-5 mb-4'>Sales Data</h3>
               <Line ref={chartSalesRef} type="line" data={chartSalesData} options={options}></Line>
+            </div>
+
+            <div className="chart my-5">
+              <h3 className='text-left w-100 d-flex ps-5 mb-4'>Coupon Order</h3>
+              <Line ref={chartCouponRef} type="line" data={chartCouponData} options={options}></Line>
             </div>
           </div>
         </div>
