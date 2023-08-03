@@ -929,6 +929,8 @@ const CreateInfluencer = () => {
                                                 {product?.coupon_name?.length > 0 ? (
                                                     product?.coupon_name?.map((coupon, j) => {
                                                         const influencerId = product?.influencer_id[j];
+                                                        const couponId = product.coupon_id[j];
+                                                        console.log("influencerId influencerId", influencerId)
                                                         const influencerIndex = selectedRows.findIndex(row => row.id === influencerId);
                                                         const influencer = selectedRows[influencerIndex];
                                                         const couponObject = {
@@ -936,8 +938,9 @@ const CreateInfluencer = () => {
                                                             product_name: product.product_name,
                                                             product_id: product.product_id,
                                                             amount: product.amount[j].substring(1),
-                                                            influencer_id: influencerId,
+                                                            influencer_id: product.influencer_id[j],
                                                             discout_type: product.discout_type[j],
+                                                            coupon_id: product.coupon_id[j]
                                                         };
                                                         const isCouponSelected = id?.length > 0 ?(
                                                             selectedCouponAmounts.some(selectedCoupon => selectedCoupon.coupon_name && selectedCoupon.coupon_name.includes(String(couponObject.coupon_name)) && selectedCoupon.product_id === couponObject.product_id)
@@ -969,10 +972,11 @@ const CreateInfluencer = () => {
                                                                         product_name: product.product_name,
                                                                         product_id: product.product_id,
                                                                         amount: existingProduct.amount.filter((amount) => amount !== couponObject.amount),
-                                                                        influencer_id: product.influencer_id,
+                                                                        influencer_id: existingProduct.influencer_id.filter((influencer_id) => influencer_id !== couponObject.influencer_id),
                                                                         discout_type: Array.isArray(existingProduct.discout_type)
                                                                           ? existingProduct.discout_type.filter((type) => type !== couponObject.discout_type)
                                                                           : existingProduct.discout_type,
+                                                                          coupon_id: existingProduct.coupon_id.filter((coupon_id) => coupon_id !== couponObject.coupon_id)
                                                                       };
                                                           
                                                                     if (updatedProduct.coupon_name.length === 0) {
@@ -995,10 +999,11 @@ const CreateInfluencer = () => {
                                                                           ? [...existingProduct.coupon_name, couponObject.coupon_name]
                                                                           : [couponObject.coupon_name],
                                                                         amount: [...existingProduct.amount, couponObject.amount],
-                                                                        influencer_id: product.influencer_id,
+                                                                        influencer_id: [...existingProduct.influencer_id, couponObject.influencer_id],
                                                                         discout_type: Array.isArray(existingProduct.discout_type)
                                                                           ? [...existingProduct.discout_type, couponObject.discout_type]
                                                                           : [couponObject.discout_type],
+                                                                          coupon_id: [...existingProduct.coupon_id, couponObject.coupon_id]
                                                                       };
                                                                     }
                                                                     return selectedCouponAmount;
@@ -1012,8 +1017,9 @@ const CreateInfluencer = () => {
                                                                     product_id: product.product_id,
                                                                     coupon_name: [couponObject.coupon_name],
                                                                     amount: [couponObject.amount],
-                                                                    influencer_id: product.influencer_id,
+                                                                    influencer_id: [couponObject.influencer_id],
                                                                     discout_type: [couponObject.discout_type],
+                                                                    coupon_id: [couponObject.coupon_id]
                                                                   },
                                                                 ];
                                                               });
@@ -1089,8 +1095,9 @@ const CreateInfluencer = () => {
                                                                         product_id: product.product_id,
                                                                         coupon_name: [couponObject.coupon_name],
                                                                         amount: [couponObject.amount],
-                                                                        influencer_id: product.influencer_id,
+                                                                        influencer_id: [couponObject.influencer_id],
                                                                         discout_type: [couponObject.discout_type],
+                                                                        coupon_id: [couponObject.coupon_id]
                                                                       },
                                                                     ];
                                                                   });
