@@ -39,7 +39,7 @@ const CampaignTable = ({
     axios
       .get("https://api.myrefera.com/campaign/influencer/list/", {
         headers: {
-            Authorization: `Token ${token}`
+            Authorization: `Token 43272d3b1eb9b1f7beed87ee636d1079483a41ad`
     }})
       .then((response) => {
         const influencerData = response.data.data;
@@ -98,9 +98,9 @@ const CampaignTable = ({
                   </td>
                 )}
                 {approvedButtons && (
-                  <td>{name.username ? name.username : username}</td>
+                  <td>{name.username ? name.username : name.influencer_name? username : username}</td>
                 ) || marketData == true && (
-                  <td>{name.username ? name.username : username}</td>
+                  <td>{name.username ? name.username : name.influencer_name? username : username}</td>
                 )}
                 {!approved && marketData == false && (
                   <td>
