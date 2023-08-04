@@ -79,7 +79,7 @@ const CreateCampaign = () => {
     useEffect(() => {
         axios.get(API.BASE_URL + 'product/list/',{
             headers: {
-                Authorization: `Token 43272d3b1eb9b1f7beed87ee636d1079483a41ad`
+                Authorization: `Token ${token}`
             }
         })
         .then(function (response) {
@@ -92,7 +92,7 @@ const CreateCampaign = () => {
 
         axios.get(API.BASE_URL + 'influencer/list/',{
             headers: {
-                Authorization: `Token 43272d3b1eb9b1f7beed87ee636d1079483a41ad`
+                Authorization: `Token ${token}`
             }
         })
         .then(function (response) {
@@ -138,7 +138,7 @@ const CreateCampaign = () => {
             coupon_id: selectedInfluencer?.id
         }, {
             headers: {
-                Authorization: `Token 43272d3b1eb9b1f7beed87ee636d1079483a41ad`
+                Authorization: `Token ${token}`
             }
         })
         .then(function (response) {
@@ -227,7 +227,7 @@ const CreateCampaign = () => {
             coupon_id: selectedInfluencer?.id
         }, {
             headers: {
-                Authorization: `Token 43272d3b1eb9b1f7beed87ee636d1079483a41ad`
+                Authorization: `Token ${token}`
             }
         })
         .then(function (response) {
@@ -336,7 +336,7 @@ const CreateCampaign = () => {
                   products: productIds.filter(Boolean).toString()
                 }, {
                   headers: {
-                    Authorization: `Token 43272d3b1eb9b1f7beed87ee636d1079483a41ad`,
+                    Authorization: `Token ${token}`,
                   },
                 })
                 .then((response) => {
@@ -354,7 +354,7 @@ const CreateCampaign = () => {
         setLoading(true);
         axios.get(API.SHOPIFY_URL + "coupons/", {
             headers: {
-            Authorization: `Token 43272d3b1eb9b1f7beed87ee636d1079483a41ad`,
+            Authorization: `Token ${token}`,
             },
         })
         .then((response) => {
@@ -385,7 +385,7 @@ const CreateCampaign = () => {
             coupon_id: selectedInfluencer?.id
           },{
           headers: {
-            Authorization: `Token 43272d3b1eb9b1f7beed87ee636d1079483a41ad`
+            Authorization: `Token ${token}`
           }
         })
         .then(function (response) {
@@ -407,7 +407,7 @@ const CreateCampaign = () => {
         if(id?.length > 0) {
             axios.get(API.BASE_URL +  'single/' + id + '/', {
                 headers: {
-                    Authorization: `Token 43272d3b1eb9b1f7beed87ee636d1079483a41ad`
+                    Authorization: `Token ${token}`
             }})
             .then(function (response) {
                 console.log("Single Market Data" ,response.data.data);
@@ -465,7 +465,7 @@ const CreateCampaign = () => {
             product_name: productName,
           },{
           headers: {
-            Authorization: `Token 43272d3b1eb9b1f7beed87ee636d1079483a41ad`
+            Authorization: `Token ${token}`
           }
         })
         .then(function (response) {
