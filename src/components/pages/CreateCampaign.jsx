@@ -29,13 +29,17 @@ const CreateCampaign = () => {
     const [selectedInfluencer, setSelectedInfluencer] = useState([]);
     const [selectedCoupons, setSelectedCoupons] = useState([]);
     const [influenceFee, setInfluenceFee] = useState('');
+    const [selectedCouponsData, setSelectedCouponsData] = useState([]);
     const [prevCouponClicked, setPrevCouponClicked] = useState('');
+    const [productDetailsState, setProductDetailsState] = useState(null);
     const [couponClicked, setCouponClicked] = useState('');
     const [selectedCouponNames, setSelectedCouponNames] = useState([]);
     const [selectedCouponAmounts, setSelectedCouponAmounts] = useState([]);
     const [isVisitChecked, setIsVisitChecked] = useState(false);
     const [isOfferChecked, setIsOfferChecked] = useState(false);
     const [initialCoupons, setInitialCoupons] = useState([]);
+    const [selectedProduct, setSelectedProduct] = useState(null);
+    const [selectedProductIds, setSelectedProductIds] = useState([]);
     const { setMarketId, setMarketList,setMarketDraftId, setMarketDraftList, countCamp, setCountCamp} = useContext(UserContext);
     const token = localStorage.getItem("Token");
     const [productDetails, setProductDetails] = useState([]);
@@ -130,7 +134,7 @@ const CreateCampaign = () => {
             coupon: selectedCouponNames.toString(),
             offer: influenceOffer,
             product_name: productName,
-            product_discount: selectedProd,
+            product_discount: selectedCouponsData?.undefined?.product_discount,
             influencer_visit: influencerVisit,
             influencer_fee: influenceFee,
             description: campaignDesc,
@@ -218,7 +222,7 @@ const CreateCampaign = () => {
             date: selectedDate,
             coupon: selectedCouponNames.toString(),
             offer: influenceOffer,
-            product_discount: selectedProd,
+            product_discount: selectedCouponsData?.undefined?.product_discount,
             product_name: productName,
             influencer_fee: influenceFee,
             influencer_visit: influencerVisit,
@@ -326,33 +330,84 @@ const CreateCampaign = () => {
         }
     };
 
-    useEffect(() => {
-        if (Array.isArray(productName)) {
-          Promise.all(
-            productName?.map((product) => {
-              setLoading(true);
-              return axios
-                .post(API.BASE_URL + "product/url/", {
-                  products: productIds.filter(Boolean).toString()
-                }, {
-                  headers: {
-                    Authorization: `Token ${token}`,
-                  },
-                })
-                .then((response) => {
-                  console.log("Response 1",response);
-                  setProductUrl(response.data.product_url)
-                })
-                .catch((error) => console.log(error))
-                .finally(() => setLoading(false));
-            })
-          ).finally(() => setLoading(false));
+    const handleProductSelection = (selectedProduct) => {
+        setLoading(true);
+        let hasCoupons = false;
+      
+        axios
+          .post(
+            API.BASE_URL + "marketplace/url/",
+            {
+              products: selectedProduct.id.toString(),
+            },
+            {
+              headers: {
+                Authorization: `Token ${token}`,
+              },
+            }
+          )
+          .then((response) => {
+            console.log("Response 1", response);
+            setProductUrl(response.data.product_url);
+            setProductDetailsState(response.data.product_details);
+          })
+          .catch((error) => console.log(error))
+          .finally(() => {
+            setLoading(false);
+          });
+    };
+
+    const handleCouponSelection = (productIndex, couponIndex) => {
+        const selectedProduct = productDetailsState[productIndex];
+        if (!selectedProduct || !Array.isArray(selectedProduct.coupon_name)) {
+          return;
         }
-    }, [productName, productIds, token]);
+      
+        const selectedCoupon = {
+          coupon_name: [selectedProduct.coupon_name[couponIndex]],
+          amount: [selectedProduct.amount[couponIndex].toString()],
+          discout_type: [selectedProduct.discout_type[couponIndex]],
+          coupon_id: [selectedProduct.coupon_id[couponIndex]],
+          product_id: selectedProduct.product_id,
+          product_name: selectedProduct.product_name,
+        };
+      
+        setSelectedCouponsData((prevData) => {
+          const productId = selectedProduct.id;
+          const existingProductData = prevData[productId] || {};
+          const existingProductDiscount = existingProductData.product_discount || [];
+      
+          const isCouponSelected = existingProductDiscount.some(
+            (coupon) => coupon.coupon_id[0] === selectedCoupon.coupon_id[0]
+          );
+      
+          if (isCouponSelected) {
+            return {
+              ...prevData,
+              [productId]: {
+                ...existingProductData,
+                product_discount: existingProductDiscount.filter(
+                  (coupon) => coupon.coupon_id[0] !== selectedCoupon.coupon_id[0]
+                ),
+              },
+            };
+          } else {
+            return {
+              ...prevData,
+              [productId]: {
+                ...existingProductData,
+                product_discount: [...existingProductDiscount, selectedCoupon],
+              },
+            };
+          }
+        });
+    }
+
+    console.log("selectedCouponDataselectedCouponData", selectedCouponsData)
 
     useEffect(() => {
         setLoading(true);
-        axios.get(API.SHOPIFY_URL + "coupons/", {
+        axios.get(API.BASE_URL + "marketplace/url/", {
             headers: {
             Authorization: `Token ${token}`,
             },
@@ -377,7 +432,7 @@ const CreateCampaign = () => {
             campaign_name: campaignName,
             description: campaignDesc,
             offer: influenceOffer,
-            product_discount: selectedProd,
+            product_discount: selectedCouponsData?.undefined?.product_discount,
             influencer_fee: influenceFee,
             date: selectedDate,
             product_name: productName,
@@ -497,7 +552,7 @@ const CreateCampaign = () => {
             campaign_name: campaignName,
             description: campaignDesc,
             offer: influenceOffer,
-            product_discount: selectedProd,
+            product_discount: selectedCouponsData?.undefined?.product_discount,
             influencer_fee: influenceFee,
             date: selectedDate,
             product_name: productName,
@@ -639,32 +694,41 @@ const CreateCampaign = () => {
                     <label className="mb-3">Product</label>
                     <input
                         type="text"
-                        placeholder="---Select an option---"
+                        placeholder={
+                        selectedProduct
+                            ? selectedProduct.title
+                            : prodList?.length > 0
+                            ? "---Select an option---"
+                            : "---No Products Available---"
+                        }
                         onClick={() => setShowList(!showList)}
                         value={productName}
                     />
                     {showList && (
                         <ul className="product-list">
-                            {prodList?.length > 0 ? (
-                                prodList?.map((name, i) => (
-                                    <li
-                                        key={i}
-                                        onClick={() => {
-                                            setProductName(name.title );
-                                            setProductIds(name.id);
-                                            setShowList(false);
-                                        }}
-                                        className={productName.includes(name.title) ? "active-prod" : ""}
-                                    >
-                                        {name.title}
-                                    </li>
-                                ))
-                            ) : (
-                                "No Products"
-                            )}
+                        {prodList?.length > 0 ? (
+                            prodList?.map((name, i) => (
+                            <li
+                                key={i}
+                                onClick={() => {
+                                setSelectedProduct(name);
+                                setSelectedProductIds([name.id]);
+                                setShowList(false);
+                                handleProductSelection(name);
+                                }}
+                                className={
+                                selectedProduct && selectedProduct.id === name.id ? "active-prod" : ""
+                                }
+                            >
+                                {name.title}
+                            </li>
+                            ))
+                        ) : (
+                            "No Products"
+                        )}
                         </ul>
                     )}
-                </div>
+                </div>       
 
                 {influenceOffer.length > 0 ? (
                     <div className="input-container d-flex flex-column mb-4">
@@ -672,20 +736,6 @@ const CreateCampaign = () => {
                         <input type="number" onWheel={(e) => e.target.blur()} value={influenceFee} onChange={(e) => {setInfluenceFee(e.target.value)}} />
                     </div>
                 ): ""}
-
-                {/* {productIds.length > 0&& (
-                    <div className="input-container d-flex flex-column mb-4">
-                        <label className="mb-3">Product URL</label>
-                        <div className='product-urls'>
-                            {productUrl?.map((url, index) => (
-                                <a key={index} href={url} target="_blank">
-                                    <FontAwesomeIcon icon={faSearch} style={{ color: "#5172fc", width: "15px", height: "15px", marginRight: 10 }} />
-                                    {url}
-                                </a>
-                            ))}
-                        </div>
-                    </div>
-                )} */}
 
                 <div className="input-container d-flex flex-column mb-4">
                     <label className="mb-3">Description</label>
@@ -699,34 +749,62 @@ const CreateCampaign = () => {
                         style={{ color: '#666' }}
                     ></textarea>
                 </div>
-            
-                <div className="input-container d-flex coup flex-column mb-4 drop">
-                    <label className='mb-3'>Select Coupon</label>
-                    <input
-                    type="text"
-                    placeholder={
-                        marketCoupons.length > 0
-                        ? "---Select an option---"
-                        : "---No Coupon Available---"
-                    }
-                    onClick={() => setShowInfluencerDropdown(!showInfluencerDropdown)}
-                    value={selectedInfluencer ? selectedInfluencer.coupon_name : ""}
-                    style={selectedInfluencer?.coupon_name != '' ? {fontWeight: 'bold', color: ''} : {}}
-                    />
-                    {showInfluencerDropdown && (
-                    <ul className='product-list'>
-                        {marketCoupons.map((influencer, i) => (
-                        <li
-                            className='influencer-box'
-                            key={i}
-                            onClick={() => handleInfluencerSelection(influencer)}
-                        >
-                            {influencer.coupon_name}
-                        </li>
-                        ))}
-                    </ul>
+
+                
+                <div className="input-container d-flex coup flex-column mb-4 prod-couponss w-100 mt-5">
+                {productDetailsState?.length > 0 ? (
+  <div className="coupons d-flex flex-column">
+    <ul className="coupons coupons-list">
+      {productDetailsState?.map((product, i) => {
+        const productId = product.id;
+        const selectedProductData = selectedCouponsData[productId] || {};
+        const selectedProductDiscount =
+          selectedProductData.product_discount || [];
+        
+        return (
+          <li className="flex-row" key={i}>
+            <label className="d-flex">{product.product_name + "- "}</label>
+            {product.coupon_name && Array.isArray(product.coupon_name) ? (
+              product.coupon_name?.map((coupon, j) => {
+                const selectedCoupon = selectedProductDiscount.find(
+                  (couponData) => couponData.coupon_id[0] === product.coupon_id[j]
+                );
+
+                const isSelected = selectedCoupon !== undefined;
+                const couponAmount = Math.abs(parseInt(product.amount?.[j]));
+
+                return (
+                  <p
+                    className={`d-flex flex-column mb-0 ${isSelected ? "selected" : ""}`}
+                    key={j}
+                    onClick={() => handleCouponSelection(i, j)}
+                  >
+                    {coupon && couponAmount && product.discout_type?.[j] ? (
+                      <>
+                        {coupon} - {couponAmount}
+                        {product.discout_type[j] !== "fixed_amount" ? "%" : "د.إ"}
+                      </>
+                    ) : (
+                      ""
                     )}
-                </div>
+                  </p>
+                );
+              })
+            ) : (
+              <label className="d-flex flex-column mb-0">No Coupons Available</label>
+            )}
+          </li>
+        );
+      })}
+    </ul>
+  </div>
+) : (
+  <label>Please Select a Product</label>
+)}
+
+</div>
+
+                    
 
                 <div className="buttons d-flex justify-content-center">
                     
