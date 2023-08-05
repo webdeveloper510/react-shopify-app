@@ -567,19 +567,58 @@ const CreateInfluencer = () => {
           if (error.response.status === 410) {
             const errorNames = error.response.data.error;
             console.log("error.response.data.error", error.response.data.error)
-            if (errorNames) {
-                const errorMessages = errorNames.map((errName) => {
-                    return errName;
-                });
-                toast.warn(errorMessages + " already exists", { autoClose: 1000 });
+                if (errorNames) {
+                    const errorMessages = errorNames.map((errName) => {
+                        return errName;
+                    });
+                    toast.warn(errorMessages + " already exists", { autoClose: 1000 });
+                }
+                else {
+                    toast.warn("Error occurred. Please try again later", { autoClose: 1000 });
+                }
+            }
+            if(error.response.data.campaign_name) {
+                toast.warn("Campaign Name may not be blank.", { autoClose: 1000 });
+            }
+            else if(error.response.data.influencer_visit) {
+                toast.warn("Influencer Visit may not be blank.", { autoClose: 1000 });
+            }
+            else if(error.response.data.date) {
+                toast.warn("Date may not be blank.", { autoClose: 1000 });
+            }
+            else if(error.response.data.offer) {
+                toast.warn("Offer may not be blank.", { autoClose: 1000 });
+            }
+            else if(error.response.data.product) {
+                toast.warn("Please selecta any Product.", { autoClose: 1000 });
+            }
+            else if(error.response.data.influencer_fee == "Influencer fee must be in positive.") {
+                toast.warn("Influencer fee must be in positive.", { autoClose: 1000 });
+            }
+            else if(error.response.data.influencer_fee) {
+                toast.warn("Please add a fee for Influencer.", { autoClose: 1000 });
+            }
+            else if(error.response.data.product_discount) {
+                toast.warn("Please select any value of Product Discount.", { autoClose: 1000 });
+            }
+            else if(error.response.data.error == "Product field may not be blank.") {
+                toast.warn("Product field may not be blank.", { autoClose: 1000 });
+            }
+            else if(error.response.data.error == "Coupon field may not be blank.") {
+                toast.warn("Coupon field may not be blank.", { autoClose: 1000 });
+            }
+            else if(error.response.data.coupon) {
+                toast.warn("Coupon may not be blank.", { autoClose: 1000 });
+            }
+            else if(error.response.data.error) {
+                toast.warn(`Campaign with ${error.response.data.error[0]} already exists`, { autoClose: 1000 });
+            }
+            else if(error.response.data.description) {
+                toast.warn("Description may not be blank.", { autoClose: 1000 });
             }
             else {
-                toast.warn("Error occurred. Please try again later", { autoClose: 1000 });
+                toast.warn("Request failed. Please try again later", { autoClose: 1000 });
             }
-        }
-          else {
-            toast.warn("Unable to edit. Please try again later", { autoClose: 1000 })
-          }
         })
         .finally(() => setLoading(false));
     }
@@ -625,9 +664,48 @@ const CreateInfluencer = () => {
                 toast.warn("Error occurred. Please try again later", { autoClose: 1000 });
             }
         }
-          else {
-            toast.warn("Unable to edit. Please try again later", { autoClose: 1000 })
-          }
+        if(error.response.data.campaign_name) {
+            toast.warn("Campaign Name may not be blank.", { autoClose: 1000 });
+        }
+        else if(error.response.data.influencer_visit) {
+            toast.warn("Influencer Visit may not be blank.", { autoClose: 1000 });
+        }
+        else if(error.response.data.date) {
+            toast.warn("Date may not be blank.", { autoClose: 1000 });
+        }
+        else if(error.response.data.offer) {
+            toast.warn("Offer may not be blank.", { autoClose: 1000 });
+        }
+        else if(error.response.data.product) {
+            toast.warn("Please selecta any Product.", { autoClose: 1000 });
+        }
+        else if(error.response.data.influencer_fee == "Influencer fee must be in positive.") {
+            toast.warn("Influencer fee must be in positive.", { autoClose: 1000 });
+        }
+        else if(error.response.data.influencer_fee) {
+            toast.warn("Please add a fee for Influencer.", { autoClose: 1000 });
+        }
+        else if(error.response.data.product_discount) {
+            toast.warn("Please select any value of Product Discount.", { autoClose: 1000 });
+        }
+        else if(error.response.data.error == "Product field may not be blank.") {
+            toast.warn("Product field may not be blank.", { autoClose: 1000 });
+        }
+        else if(error.response.data.error == "Coupon field may not be blank.") {
+            toast.warn("Coupon field may not be blank.", { autoClose: 1000 });
+        }
+        else if(error.response.data.coupon) {
+            toast.warn("Coupon may not be blank.", { autoClose: 1000 });
+        }
+        else if(error.response.data.error) {
+            toast.warn(`Campaign with ${error.response.data.error[0]} already exists`, { autoClose: 1000 });
+        }
+        else if(error.response.data.description) {
+            toast.warn("Description may not be blank.", { autoClose: 1000 });
+        }
+        else {
+            toast.warn("Request failed. Please try again later", { autoClose: 1000 });
+        }
         })
         .finally(() => setLoading(false));
     }
@@ -706,7 +784,7 @@ const CreateInfluencer = () => {
         if (productName?.length === 0) {
           setProductDetails([]);
         }
-      }, [productName]);
+    }, [productName]);
     
     console.log("influencerVisit", influencerList);
     console.log("isVisitChecked", isVisitChecked);

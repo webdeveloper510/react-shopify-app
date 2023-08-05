@@ -98,9 +98,9 @@ const CampaignTable = ({
                   </td>
                 )}
                 {approvedButtons && (
-                  <td>{name.username ? name.username : name.influencer_name? username : username}</td>
+                  <td>{name.infl_name ? name.infl_name : name.username ? name.username: username }</td>
                 ) || marketData == true && (
-                  <td>{name.username ? name.username : name.influencer_name? username : username}</td>
+                  <td>{name.infl_name ? name.infl_name : name.username ? name.username: username}</td>
                 )}
                 {!approved && marketData == false && (
                   <td>
@@ -115,27 +115,30 @@ const CampaignTable = ({
                 )}
                 {!approvedButtons && marketData == false && (
                 <td>
-                 {name.product?.map((product, index) => (
-                  <>
-                    {product.discount_type && Array.isArray(product.discount_type) ?  (
-                      product.discount_type.map((discount, i) => (
-                        <>
-                          {product.amount[i]}
-                          {discount === 'percentage' ? '%' :'Dhs'}
-                          {i < product.discount_type.length - 1 ? ' , ' : ''}
-                        </>
-                      ))
-                    ) : 
-                        product.amount && Array.isArray(product.amount) &&  (
+                  {name.product?.map((product, index) => (
+                    <>
+                      {product.discount_type && Array.isArray(product.discount_type) ? (
+                        product.discount_type.map((discount, i) => (
+                          <>
+                            {Math.abs(product.amount[i])}
+                            {discount === 'percentage' ? '%' : 'Dhs'}
+                            {i < product.discount_type.length - 1 ? ' , ' : ''}
+                          </>
+                        ))
+                      ) : (
+                        product.amount && Array.isArray(product.amount) && (
                           product.amount.map((amount, i) => (
-                              <>
-                                {amount}
-                                {i < product.amount.length - 1 ? ' , ' : ''}
-                              </>
-                          )))}
-                  </>
-                ))}
+                            <>
+                              {Math.abs(amount)}
+                              {i < product.amount.length - 1 ? ' , ' : ''}
+                            </>
+                          ))
+                        )
+                      )}
+                    </>
+                  ))}
                 </td>
+              
                 ) || marketData == true && (
                   <td>{name.amount?.map((name) =>
                     name != null ? name : 'No coupons selected'
@@ -256,7 +259,7 @@ const CampaignTable = ({
                                 <label>End Date: <strong className="ms-2">{getMarketInfo?.end_data}</strong></label>
                             </div>
                             <div className="input-container">
-                              <label htmlFor="">Influencer: <strong className="ms-2">{name.username}</strong></label>
+                              <label htmlFor="">Influencer: <strong className="ms-2">{name.username ? name.username : username}</strong></label>
                             </div>
                             <div className="input-container">
                                 <label>Influencer Fee: <strong className="ms-2">{getMarketInfo?.influencer_fee}{getMarketInfo?.offer == 'percentage' ? "%" : "د.إ"}</strong></label>
@@ -268,7 +271,16 @@ const CampaignTable = ({
                                 <label>Coupon: <strong className="ms-2">{getMarketInfo?.product?.map((coupon) => coupon.coupon_name)}</strong></label>
                             </div>
                             <div className="input-container">
-                                <label>Discount: <strong className="ms-2">{getMarketInfo?.product?.map((coupon) => coupon.amount)}</strong></label>
+                            <label>
+                              Discount:{' '}
+                              <strong className="ms-2">
+                                {getMarketInfo?.product?.map((coupon) => (
+                                  <span>
+                                    {Math.abs(coupon.amount)}
+                                  </span>
+                                ))}
+                              </strong>
+                            </label>
                             </div>
                             <div className="input-container">
                                 <label>Description: <strong className="ms-2">{getMarketInfo?.description}</strong></label>

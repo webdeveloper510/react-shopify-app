@@ -149,7 +149,8 @@ const CouponList = () => {
         axios.post(API.SHOPIFY_URL +  'create/code/', {
             discount_code: couponDesc,
             discount_type: discountType,
-            amount: couponAmount
+            amount: couponAmount,
+            product_id: productIds?.toString(),
         }, {
             headers: {
                 Authorization: `Token ${token}`
@@ -666,12 +667,48 @@ const CouponList = () => {
             </div>}
 
             {oneTime && <div className="one-time-coupon">
-                <div className="one-time-container">
+                <div className="tracking-container one-time-container">
                     <h3>Create One Time Coupon</h3>
                     <button className='close' onClick={couponCross}>
                         <FontAwesomeIcon icon={faClose} style={{ color: "#000", width: "25px", height: "25px"}} />
                     </button>
                     <form action="">
+                        <div className="input-container">
+                            <label>Products Name</label>
+                            <input
+                            type="text"
+                            placeholder={prodList?.length > 0 ? "---Select an option---" : "---No Products Available---"}
+                            onClick={() => setShowList(!showList)}
+                            value={productName}
+                            style={productName?.length > 0 ? {fontWeight: 'bold', color: '#6c6c6c'} : {}}
+                            />
+                            {showList && (
+                            <ul>
+                                {prodList?.map((name, i) => (
+                                <li
+                                    key={i}
+                                    onClick={() => {
+                                    setProductName((prevValues) =>
+                                        prevValues.includes(name.title)
+                                        ? prevValues.filter((value) => value !== name.title)
+                                        : [...prevValues, name.title]
+                                    );
+                                    setProductIds(prevIds =>
+                                        prevIds.includes(name.id)
+                                            ? prevIds.filter(value => value !== name.id)
+                                            : [...prevIds, name.id]
+                                    );
+                                    handleClick(name.title, name.id)
+                                    // setShowList(false);
+                                    }}
+                                    className={productName.includes(name.title) ? "active-prod" : ""}
+                                >
+                                    {name.title}
+                                </li>
+                                ))}
+                            </ul>
+                            )}
+                        </div>
                         <div className="input-container">
                             <label>Coupon</label>
                             <input type="text" maxLength='30' placeholder='Enter your coupon' value={couponDesc} onChange={handleCouponDesc} />
