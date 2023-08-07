@@ -752,6 +752,7 @@ const CreateInfluencer = () => {
                 setSelectedRows(filteredInfluencers);
                 console.log("filteredInfluencers", filteredInfluencers);
                 const products = response.data.data[0].product;
+                console.log("productsproducts",products);
                 const productNames = products.map(product => product.product_name);
                 const productIds = products.map(product => product.product_id);
                 const couponNames = products.flatMap(product => product.coupon_name);
@@ -1183,7 +1184,7 @@ const CreateInfluencer = () => {
                                                                   });
                                                                 }
                                                               }
-                                                            };
+                                                        };
                                                             
                                                           
                                                             if (selectedRows.some(row => row.id === influencerId) && productName) {
