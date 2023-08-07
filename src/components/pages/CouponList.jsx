@@ -41,6 +41,7 @@ const CouponList = () => {
     const [showInfluencerDropdown, setShowInfluencerDropdown] = useState(false);
     const [matchingInfluencers, setMatchingInfluencers] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
+    const [showProd, setShowProd] = useState(false)
     const ITEMS_PER_PAGE = 5;
 
     const handleCouponDesc = (event) => {
@@ -172,6 +173,9 @@ const CouponList = () => {
             else if(couponDesc.trim() == '') {
                 toast.warn("Coupon cannot be empty")
             }
+            else if (error.response.data.error == "discount code must be three or more than three character long") {
+                toast.warn("Discount code must be three or more than three character long", { autoClose: 1000 })
+            }
             else if (error.response.data.response == "Coupon name already taken") {
                 toast.warn("Coupon name already taken", { autoClose: 1000 })
             }
@@ -236,6 +240,9 @@ const CouponList = () => {
             else if(error.response.data.message == "Coupon already exists") {
                 toast.warn("Coupon name already exists", { autoClose: 1000 })
             }
+            else if (error.response.data.error == "discount code must be three or more than three character long") {
+                toast.warn("Discount code must be three or more than three character long", { autoClose: 1000 })
+            }
             else {
                 toast.warn("Fields should not be empty!", { autoClose: 1000 });
             }
@@ -286,6 +293,9 @@ const CouponList = () => {
             console.log(error);
             if(error.response.data.message == "must be between 0 and 100") {
                 toast.warn("Amount must be between 0 to 100", { autoClose: 1000 });
+            }
+            else if (error.response.data.error == "discount code must be three or more than three character long") {
+                toast.warn("Discount code must be three or more than three character long", { autoClose: 1000 })
             }
             else {
                 toast.warn("Fields should not be empty!", { autoClose: 1000 });
@@ -403,6 +413,9 @@ const CouponList = () => {
             else if (error.response.data.error == "Coupon already Exists") {
                 toast.warn("Coupon name already exsits", { autoClose: 1000 })
             }
+            else if (error.response.data.error == "discount code must be three or more than three character long") {
+                toast.warn("Discount code must be three or more than three character long", { autoClose: 1000 })
+            }
             else if (error.response.data.error == "discount type field is required") {
                 toast.warn("Discount type field is required", { autoClose: 1000 })
             }
@@ -462,6 +475,8 @@ const CouponList = () => {
     console.log("selectedInfluencer", selectedInfluencer)
     console.log("matching Influencer", matchingInfluencers)
     console.log("influencer list", influencerList)
+    console.log("showList", showList)
+    console.log("prodcut", productName)
 
     return (
     <>
@@ -733,115 +748,159 @@ const CouponList = () => {
             {getCoupon && 
                 <div className="get-coupon">
                     <div className="get-coupon-contianer">
-                    <h3>Edit Coupon</h3>
-                    <button className='close' onClick={couponCross}>
-                        <FontAwesomeIcon icon={faClose} style={{ color: "#000", width: "25px", height: "25px"}} />
-                    </button>
-                    <form action="">
-                        {couponStatus == 2 && (
-                            <div className="input-container tracking-container" style={{padding: 0}}>
+                        <h3>Edit Coupon</h3>
+                        <button className='close' onClick={couponCross}>
+                            <FontAwesomeIcon icon={faClose} style={{ color: "#000", width: "25px", height: "25px"}} />
+                        </button>
+                        <form action="">
+                            {couponStatus == 2 ? (
+                                <div className="input-container" style={{padding: 0}}>
+                                    <label>Products Name</label>
+                                    <input
+                                        type="text"
+                                        placeholder={prodList?.length > 0 ? "---Select an option---" : "---No Products Available---"}
+                                        onClick={() => setShowList(true)}
+                                        value={selectedProductNames.join(', ')}
+                                    />
+                                    {showList && (
+                                        <ul>
+                                        {prodList?.map((name, i) => (
+                                            <li
+                                                key={i}
+                                                onClick={() => {
+                                                    if (!productName.includes(name.title)) {
+                                                        setProductName((prevValues) => [...prevValues, name.title]);
+                                                        // setProductIds((prevIds) => [...prevIds, name.id]);
+                                                        handleClick(name.title, name.id);
+                                                    }
+                                                    if (selectedProductNames.includes(name.title)) {
+                                                        setSelectedProductNames((prevValues) =>
+                                                            prevValues.filter((value) => value !== name.title)
+                                                        );
+                                                        setProductIds((prevIds) =>
+                                                            prevIds.filter((value) => value !== name.id)
+                                                        );
+                                                    } else {
+                                                        setSelectedProductNames((prevValues) =>
+                                                            [...prevValues, name.title]
+                                                        );
+                                                        // setProductIds((prevIds) => [...prevIds, name.id]);
+                                                    }
+                                                    setShowList(false)
+                                                }
+                                            }
+                                                className={productName.includes(name.title) ? "active-prod" : ""}
+                                            >
+                                                {name.title}
+                                            </li>
+                                            ))}
+                                        </ul>
+                                    )}
+                                </div>
+                            ):
+                            <div className="input-container">
                                 <label>Products Name</label>
                                 <input
-                                    type="text"
-                                    placeholder={prodList?.length > 0 ? "---Select an option---" : "---No Products Available---"}
-                                    onClick={() => setShowList(true)}
-                                    value={selectedProductNames.join(', ')}
-                                />
-                                {showList && (
-                                    <ul>
-                                    {prodList?.map((name, i) => (
-                                            <li
-                                            key={i}
-                                            onClick={() => {
-                                                if (!productName.includes(name.title)) {
-                                                    setProductName((prevValues) => [...prevValues, name.title]);
-                                                    // setProductIds((prevIds) => [...prevIds, name.id]);
-                                                    handleClick(name.title, name.id);
-                                                }
-                                                if (selectedProductNames.includes(name.title)) {
-                                                    setSelectedProductNames((prevValues) =>
-                                                        prevValues.filter((value) => value !== name.title)
-                                                    );
-                                                    setProductIds((prevIds) =>
-                                                        prevIds.filter((value) => value !== name.id)
-                                                    );
-                                                } else {
-                                                    setSelectedProductNames((prevValues) =>
-                                                        [...prevValues, name.title]
-                                                    );
-                                                    // setProductIds((prevIds) => [...prevIds, name.id]);
-                                                }
-                                            }}
-                                            className={productName.includes(name.title) ? "active-prod" : ""}
-                                        >
-                                            {name.title}
-                                        </li>
-                                        ))}
-                                    </ul>
-                                )}
-                            </div>
-                        )}
-                        <div className="input-container">
-                            <label>Coupon</label>
-                            <input type="text" maxLength='30' value={couponDesc} onChange={handleCouponDesc} />
-                        </div>
-                        {couponStatus == 2 && (
-                            <div className="input-container">
-                                <label>Select Influencer</label>
-                                <input
                                 type="text"
-                                placeholder={
-                                    matchingInfluencers?.length > 0
-                                    ? matchingInfluencers[0].fullname
-                                    : influencerList?.length > 0
-                                    ? "---Select an option---"
-                                    : "---No Influencers Available---"
-                                }
-                                onClick={() => setShowInfluencerDropdown(!showInfluencerDropdown)}
-                                value={selectedInfluencer ? selectedInfluencer.fullname : ""}
+                                placeholder={prodList?.length > 0 ? "---Select an option---" : "---No Products Available---"}
+                                onClick={() => setShowProd(!showProd)}
+                                value={selectedProductNames.join(', ')}
+                                style={productName?.length > 0 ? {fontWeight: 'bold', color: '#6c6c6c'} : {}}
                                 />
-                                {showInfluencerDropdown && (
+                                {showProd && (
                                 <ul>
-                                    {influencerList.map((influencer) => (
+                                    {prodList?.map((name, i) => (
                                     <li
-                                        className='influencer-box d-flex align-items-center px-4'
-                                        key={influencer.id}
-                                        onClick={() => handleInfluencerSelection(influencer)}
+                                        key={i}
+                                        onClick={() => {
+                                            if (!productName.includes(name.title)) {
+                                                setProductName((prevValues) => [...prevValues, name.title]);
+                                                handleClick(name.title, name.id);
+                                            }
+                                            if (selectedProductNames.includes(name.title)) {
+                                                setSelectedProductNames((prevValues) =>
+                                                    prevValues.filter((value) => value !== name.title)
+                                                );
+                                                setProductIds((prevIds) =>
+                                                    prevIds.filter((value) => value !== name.id)
+                                                );
+                                            } else {
+                                                setSelectedProductNames((prevValues) =>
+                                                    [...prevValues, name.title]
+                                                );
+                                            }
+                                            setShowList(false)
+                                        }}
+                                        className={productName.includes(name.title) ? "active-prod" : ""}
                                     >
-                                        <img src={influencer.image} alt="influencer" />
-                                        <p className="ms-2 d-flex flex-column">
-                                            <span className='text-dark'>{influencer.fullname}</span>
-                                            <span>@{influencer.username}</span>
-                                        </p>
-                                        <p className='ms-auto d-flex flex-column'>
-                                            <span className='text-dark'>Followers</span>
-                                            <strong>{(influencer.follower / 1000000).toFixed(6)} M</strong>
-                                        </p>
+                                        {name.title}
                                     </li>
                                     ))}
                                 </ul>
                                 )}
                             </div>
-                        )}
-                        <div className="input-container">
-                            <label>Discount Types</label>
-                            <select name="" id="" value={discountType} onChange={handleDiscountType}>
-                                <option value="" disabled>{getCouponInfo?.discount_type}</option>
-                                <option value="fixed_amount">Fixed Amount</option>
-                                <option value="percentage">Percentage</option>
-                            </select>
-                        </div>
-                        <div className="input-container">
-                            <label>{discountType == "fixed_amount" ? "Amount" : "Commission"}</label>
-                            <input type="number" onWheel={(e) => e.target.blur()} value={couponAmount} onChange={handleCouponAmount} />
-                        </div>
-                        {couponStatus == 1 ? (
-                            <button onClick={(event) => {editCoupon(getCouponInfo?.id, event)}} className='button button-black mt-4 mx-auto'>Edit Coupon</button>
-                        ) : (
-                            <button onClick={(event) => {editCouponProducts(getCouponInfo?.id, event)}} className='button button-black mt-4 mx-auto'>Edit Coupon</button>
-                        )}
-                        
-                    </form>
+                            }
+                            <div className="input-container">
+                                <label>Coupon</label>
+                                <input type="text" maxLength='30' value={couponDesc} onChange={handleCouponDesc} />
+                            </div>
+                            {couponStatus == 2 && (
+                                <div className="input-container">
+                                    <label>Select Influencer</label>
+                                    <input
+                                    type="text"
+                                    placeholder={
+                                        matchingInfluencers?.length > 0
+                                        ? matchingInfluencers[0].fullname
+                                        : influencerList?.length > 0
+                                        ? "---Select an option---"
+                                        : "---No Influencers Available---"
+                                    }
+                                    onClick={() => setShowInfluencerDropdown(!showInfluencerDropdown)}
+                                    value={selectedInfluencer ? selectedInfluencer.fullname : ""}
+                                    />
+                                    {showInfluencerDropdown && (
+                                    <ul>
+                                        {influencerList.map((influencer) => (
+                                        <li
+                                            className='influencer-box d-flex align-items-center px-4'
+                                            key={influencer.id}
+                                            onClick={() => handleInfluencerSelection(influencer)}
+                                        >
+                                            <img src={influencer.image} alt="influencer" />
+                                            <p className="ms-2 d-flex flex-column">
+                                                <span className='text-dark'>{influencer.fullname}</span>
+                                                <span>@{influencer.username}</span>
+                                            </p>
+                                            <p className='ms-auto d-flex flex-column'>
+                                                <span className='text-dark'>Followers</span>
+                                                <strong>{(influencer.follower / 1000000).toFixed(6)} M</strong>
+                                            </p>
+                                        </li>
+                                        ))}
+                                    </ul>
+                                    )}
+                                </div>
+                            )}
+                            <div className="input-container">
+                                <label>Discount Types</label>
+                                <select name="" id="" value={discountType} onChange={handleDiscountType}>
+                                    <option value="" disabled>{getCouponInfo?.discount_type}</option>
+                                    <option value="fixed_amount">Fixed Amount</option>
+                                    <option value="percentage">Percentage</option>
+                                </select>
+                            </div>
+                            <div className="input-container">
+                                <label>{discountType == "fixed_amount" ? "Amount" : "Commission"}</label>
+                                <input type="number" onWheel={(e) => e.target.blur()} value={couponAmount} onChange={handleCouponAmount} />
+                            </div>
+                            {couponStatus == 1 ? (
+                                <button onClick={(event) => {editCoupon(getCouponInfo?.id, event)}} className='button button-black mt-4 mx-auto'>Edit Coupon</button>
+                            ) : (
+                                <button onClick={(event) => {editCouponProducts(getCouponInfo?.id, event)}} className='button button-black mt-4 mx-auto'>Edit Coupon</button>
+                            )}
+                            
+                        </form>
                     </div>
                 </div>
             }

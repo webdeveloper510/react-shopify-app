@@ -1045,6 +1045,7 @@ const CreateInfluencer = () => {
                                                                     existingProduct.coupon_name &&
                                                                     existingProduct.coupon_name.includes(couponObject.coupon_name)
                                                                   ) {
+                                                                      console.log("existingProductexistingProduct", existingProduct)
                                                                     const updatedProduct = {
                                                                         ...existingProduct,
                                                                         coupon_name: existingProduct.coupon_name.filter((name) => name !== couponObject.coupon_name),
@@ -1056,7 +1057,7 @@ const CreateInfluencer = () => {
                                                                           ? existingProduct.discout_type.filter((type) => type !== couponObject.discout_type)
                                                                           : existingProduct.discout_type,
                                                                           coupon_id: existingProduct.coupon_id.filter((coupon_id) => coupon_id !== couponObject.coupon_id)
-                                                                      };
+                                                                    };
                                                           
                                                                     if (updatedProduct.coupon_name.length === 0) {
                                                                       return prevSelectedCouponAmounts.filter((_, index) => index !== existingProductIndex);

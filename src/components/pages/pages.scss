@@ -1296,6 +1296,20 @@ $whiteColor: #FFFFFF;
     }
 }
 
+.get-coupon {
+    .get-coupon-contianer {
+        form {
+            .input-container {
+                ul {
+                    li {
+                        margin-bottom: 0 !important;
+                    }
+                }
+
+            }
+        }
+    }
+}
 .tracking-coupon {
     ul {
         bottom: unset;

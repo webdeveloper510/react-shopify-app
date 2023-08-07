@@ -511,7 +511,6 @@ const CreateCampaign = () => {
                 setInfluencerVisit(response.data.data[0].influencer_visit);
                 const products = response.data.data[0].product;
                 const amount = products.map(product => product.amount[0]);
-                const discount_type = response.data.data[0].discout_type;
                 const productNames = products.map(product => product.product_name);
                 const productIds = products.map(product => product.product_id.toString());
                 const couponNames = products.map(product => product.coupon_name);
@@ -755,6 +754,7 @@ const CreateCampaign = () => {
                                     {product?.coupon_name?.length > 0 ? (
                                         product?.coupon_name?.map((coupon, j) => {
                                             const couponId = product.coupon_id[j];
+                                            console.log("product.discout", product.discout_type[j])
                                             const couponObject = {
                                                 coupon_name: coupon,
                                                 product_name: product.product_name,
@@ -778,10 +778,13 @@ const CreateCampaign = () => {
                                                         selectedCouponAmount.product_name === product.product_name &&
                                                         selectedCouponAmount.product_id === product.product_id
                                                     );
+
+                                                    console.log("setSelectedCouponAmounts", selectedCouponAmounts)
                                                 
                                                     if (existingProductIndex !== -1) {
                                                         const existingProduct = prevSelectedCouponAmounts[existingProductIndex];
-                                                
+                                                        console.log("existingProduct inside", existingProduct);
+                                                        console.log("couponObject", couponObject);
                                                         if (
                                                         existingProduct &&
                                                         existingProduct.coupon_name &&
@@ -793,11 +796,15 @@ const CreateCampaign = () => {
                                                             product_name: product.product_name,
                                                             product_id: product.product_id,
                                                             amount: existingProduct.amount.filter((amount) => amount !== couponObject.amount),
-                                                            discout_type: Array.isArray(existingProduct.discout_type)
-                                                                ? existingProduct.discout_type.filter((type) => type !== couponObject.discout_type)
-                                                                : existingProduct.discout_type,
-                                                                coupon_id: existingProduct.coupon_id.filter((coupon_id) => coupon_id !== couponObject.coupon_id)
-                                                            };
+                                                            discout_type: existingProduct.discout_type.filter((discout_type, index) => {
+                                                                const sameCouponName = existingProduct.coupon_name[index] === couponObject.coupon_name;
+                                                                const otherCouponsWithSameType = existingProduct.coupon_name.some((name, i) => i !== index && name === couponObject.coupon_name);
+                                                                return !sameCouponName || otherCouponsWithSameType;
+                                                            }),
+                                                            coupon_id: existingProduct.coupon_id.filter((coupon_id) => coupon_id !== couponObject.coupon_id)
+                                                        };
+
+                                                        console.log("updatedProduct", updatedProduct);
                                                 
                                                         if (updatedProduct.coupon_name.length === 0) {
                                                             return prevSelectedCouponAmounts.filter((_, index) => index !== existingProductIndex);
