@@ -42,6 +42,7 @@ const CouponList = () => {
     const [matchingInfluencers, setMatchingInfluencers] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [showProd, setShowProd] = useState(false)
+    const [inputValue, setInputValue] = useState(selectedProductNames.join(', '));
     const ITEMS_PER_PAGE = 5;
 
     const handleCouponDesc = (event) => {
@@ -205,6 +206,7 @@ const CouponList = () => {
             discount_code: couponDesc,
             discount_type: discountType,
             amount: couponAmount,
+            product_id: productIds.toString(),
         }, {
             headers: {
  
@@ -456,11 +458,16 @@ const CouponList = () => {
         };
     }, [token]);
 
+    useEffect(() => {
+        setInputValue(selectedProductNames.join(', '));
+    }, [selectedProductNames]);
+
     const handleClickOutside = (event) => {
         const input = document.querySelector(".tracking-container input");
         const list = document.querySelector(".tracking-container ul");
         if (!input?.contains(event.target) && !list?.contains(event.target)) {
           setShowList(false);
+          setShowProd(false)
           setShowInfluencer(false);
         }
     };
@@ -486,14 +493,14 @@ const CouponList = () => {
             <h2 className='mb-4'>Coupon List</h2>
             {couponData?.length > 0 ? (
                 <div className="filters d-flex justify-content-between align-items-center">
-                <div className="input-container d-flex flex-column" style={{width: 200}}>
-                    <label className='w-100 text-dark mb-3'>Offer & Tracking</label>
-                    <div className="search-button d-flex align-items-center">
-                        <input type="text" maxLength='30' placeholder='Filter Coupons'  value={filterValue} onChange={(event) => setFilterValue(event.target.value)} />
+                    <div className="input-container d-flex flex-column" style={{width: 200}}>
+                        <label className='w-100 text-dark mb-3'>Offer & Tracking</label>
+                        <div className="search-button d-flex align-items-center">
+                            <input type="text" maxLength='30' placeholder='Filter Coupons'  value={filterValue} onChange={(event) => setFilterValue(event.target.value)} />
+                        </div>
                     </div>
                 </div>
-            </div>
-            ) : ""}
+                ) : ""}
                 
                 <div className="coupon-buttons d-flex justify-content-end align-items-center">
                     <button onClick={couponCreateShow}><img src={Plus} aly='plus' /> Create Coupon</button>
@@ -753,93 +760,46 @@ const CouponList = () => {
                             <FontAwesomeIcon icon={faClose} style={{ color: "#000", width: "25px", height: "25px"}} />
                         </button>
                         <form action="">
-                            {couponStatus == 2 ? (
-                                <div className="input-container" style={{padding: 0}}>
-                                    <label>Products Name</label>
-                                    <input
-                                        type="text"
-                                        placeholder={prodList?.length > 0 ? "---Select an option---" : "---No Products Available---"}
-                                        onClick={() => setShowList(true)}
-                                        value={selectedProductNames.join(', ')}
-                                    />
-                                    {showList && (
-                                        <ul>
-                                        {prodList?.map((name, i) => (
-                                            <li
-                                                key={i}
-                                                onClick={() => {
-                                                    if (!productName.includes(name.title)) {
-                                                        setProductName((prevValues) => [...prevValues, name.title]);
-                                                        // setProductIds((prevIds) => [...prevIds, name.id]);
-                                                        handleClick(name.title, name.id);
-                                                    }
-                                                    if (selectedProductNames.includes(name.title)) {
-                                                        setSelectedProductNames((prevValues) =>
-                                                            prevValues.filter((value) => value !== name.title)
-                                                        );
-                                                        setProductIds((prevIds) =>
-                                                            prevIds.filter((value) => value !== name.id)
-                                                        );
-                                                    } else {
-                                                        setSelectedProductNames((prevValues) =>
-                                                            [...prevValues, name.title]
-                                                        );
-                                                        // setProductIds((prevIds) => [...prevIds, name.id]);
-                                                    }
-                                                    setShowList(false)
-                                                }
-                                            }
-                                                className={productName.includes(name.title) ? "active-prod" : ""}
-                                            >
-                                                {name.title}
-                                            </li>
-                                            ))}
-                                        </ul>
-                                    )}
-                                </div>
-                            ):
-                            <div className="input-container">
+                        <div className="input-container tracking-container" style={{padding: 0}}>
                                 <label>Products Name</label>
                                 <input
-                                type="text"
-                                placeholder={prodList?.length > 0 ? "---Select an option---" : "---No Products Available---"}
-                                onClick={() => setShowProd(!showProd)}
-                                value={selectedProductNames.join(', ')}
-                                style={productName?.length > 0 ? {fontWeight: 'bold', color: '#6c6c6c'} : {}}
+                                    type="text"
+                                    placeholder={prodList?.length > 0 ? "---Select an option---" : "---No Products Available---"}
+                                    onClick={() => setShowList(true)}
+                                    value={selectedProductNames.join(', ')}
                                 />
-                                {showProd && (
-                                <ul>
+                                {showList && (
+                                    <ul>
                                     {prodList?.map((name, i) => (
-                                    <li
-                                        key={i}
-                                        onClick={() => {
-                                            if (!productName.includes(name.title)) {
-                                                setProductName((prevValues) => [...prevValues, name.title]);
-                                                handleClick(name.title, name.id);
-                                            }
-                                            if (selectedProductNames.includes(name.title)) {
-                                                setSelectedProductNames((prevValues) =>
-                                                    prevValues.filter((value) => value !== name.title)
-                                                );
-                                                setProductIds((prevIds) =>
-                                                    prevIds.filter((value) => value !== name.id)
-                                                );
-                                            } else {
-                                                setSelectedProductNames((prevValues) =>
-                                                    [...prevValues, name.title]
-                                                );
-                                            }
-                                            setShowList(false)
-                                        }}
-                                        className={productName.includes(name.title) ? "active-prod" : ""}
-                                    >
-                                        {name.title}
-                                    </li>
-                                    ))}
-                                </ul>
+                                            <li
+                                            key={i}
+                                            onClick={() => {
+                                                if (!productName.includes(name.title)) {
+                                                    setProductName((prevValues) => [...prevValues, name.title]);
+                                                    // setProductIds((prevIds) => [...prevIds, name.id]);
+                                                    handleClick(name.title, name.id);
+                                                }
+                                                if (selectedProductNames.includes(name.title)) {
+                                                    setSelectedProductNames((prevValues) =>
+                                                        prevValues.filter((value) => value !== name.title)
+                                                    );
+                                                    setProductIds((prevIds) =>
+                                                        prevIds.filter((value) => value !== name.id)
+                                                    );
+                                                } else {
+                                                    setSelectedProductNames((prevValues) =>
+                                                        [...prevValues, name.title]
+                                                    );
+                                                    // setProductIds((prevIds) => [...prevIds, name.id]);
+                                                }
+                                            }}
+                                        >
+                                            {name.title}
+                                        </li>
+                                        ))}
+                                    </ul>
                                 )}
                             </div>
-                            }
                             <div className="input-container">
                                 <label>Coupon</label>
                                 <input type="text" maxLength='30' value={couponDesc} onChange={handleCouponDesc} />
