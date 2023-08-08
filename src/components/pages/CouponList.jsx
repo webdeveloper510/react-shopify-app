@@ -161,6 +161,17 @@ const CouponList = () => {
             console.log("Coupon Created", response);
             setCouponData([...couponData, response.data]);
             toast.success("Coupon Created Successfully", { autoClose: 1000 });
+            axios.get(API.SHOPIFY_URL +  'coupon/list/',{
+                headers: {
+                    Authorization: `Token ${token}`
+            }})
+            .then(function (response) {
+                console.log("Coupon List", response);
+                setCouponData(response.data.coupon)
+            })
+            .catch(function (error) {
+                console.log(error);
+            })
             setCouponDesc('')
             setDiscountType('')
             setCouponAmount('')
