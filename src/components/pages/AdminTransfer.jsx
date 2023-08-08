@@ -16,7 +16,7 @@ function AdminTransfer() {
         setLoading(true);
         axios.get(API.BASE_URL + 'admintransfer/',{
             headers: {
-                Authorization: `Token ${token}`
+                Authorization: `Token 805f76f70ab0968379877ecdd1a11bfd0a4f896f`
             }
         })
         .then(function (response) {
@@ -46,7 +46,7 @@ function AdminTransfer() {
             sales: sales
         },{
             headers: {
-                Authorization: `Token ${token}`
+                Authorization: `Token 805f76f70ab0968379877ecdd1a11bfd0a4f896f`
             }
         })
         .then(function (response) {
@@ -54,7 +54,7 @@ function AdminTransfer() {
             toast.success("Money transfer Successfully", { autoClose: 1000 })
             axios.get(API.BASE_URL + 'admintransfer/',{
                 headers: {
-                    Authorization: `Token ${token}`
+                    Authorization: `Token 805f76f70ab0968379877ecdd1a11bfd0a4f896f`
                 }
             })
             .then(function (response) {
@@ -86,20 +86,22 @@ function AdminTransfer() {
             <table className='w-100 campaign'>
                 <tbody className='w-100'>
                     <tr className='headings'>
-                        <th>Campaign Id</th>
                         <th>Campaign Name</th>
                         <th>Sales</th>
                         <th>Commission</th>
+                        <th>Amount</th>
+                        <th>Amount Paid</th>
                         <th>Transfer</th>
                     </tr>
                         {transferData?.map((name, i) => {
                             return(
                                 <>
                                 <tr className='campaign-inputs'>
-                                    <td>{name.campaign_detail}</td>
                                     <td>{name.campaing_id}</td>
                                     <td>{name.sales}د.إ</td>
-                                    <td>{name.admin_fee}د.إ</td>
+                                    <td>{name.admin_fee}%</td>
+                                    <td>{name.amount}</td>
+                                    <td>{name.amount_paid != null ? name.amount_paid : 0}د.إ</td>
                                     <td><button type='button' onClick={(e) => {handleTransferShow(e, i)}}>Transfer</button></td>
                                 </tr>
                                 {transferShow === i &&  (
@@ -109,6 +111,10 @@ function AdminTransfer() {
                                                 <FontAwesomeIcon icon={faClose} style={{ color: "#000", width: "25px", height: "25px"}} />
                                             </button>
                                             <h2 className='mb-4'>Transfer</h2>
+                                            <div className="input-container">
+                                                <label htmlFor="">Name</label>
+                                                <input type="text" value={name.admin_name} disabled />
+                                            </div>
                                             <div className="input-container">
                                                 <label htmlFor="">Account Number</label>
                                                 <input type="text" value={name.account} disabled />

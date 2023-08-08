@@ -35,7 +35,7 @@ function Sales() {
     setLoading(true);
     axios.get(API.BASE_URL + 'analytics/', {
         headers: {
-          Authorization: `Token ${token}`,
+          Authorization: `Token 805f76f70ab0968379877ecdd1a11bfd0a4f896f`,
         },
       })
       .then(function (response) {
@@ -89,7 +89,7 @@ function Sales() {
 
       axios.get(API.BASE_URL + 'sale_coup/', {
         headers: {
-          Authorization: `Token ${token}`,
+          Authorization: `Token 805f76f70ab0968379877ecdd1a11bfd0a4f896f`,
         },
       })
       .then(function (response) {
@@ -137,7 +137,7 @@ function Sales() {
     setLoading(true);
     axios.get(API.BASE_URL + 'couponorder/', {
         headers: {
-          Authorization: `Token ${token}`,
+          Authorization: `Token 805f76f70ab0968379877ecdd1a11bfd0a4f896f`,
         },
       })
       .then(function (response) {

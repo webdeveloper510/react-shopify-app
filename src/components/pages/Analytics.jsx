@@ -20,7 +20,7 @@ function Analytics() {
         setLoading(true);
             axios.get(API.BASE_URL + 'sale_record/',  {
                 headers: { 
-                    Authorization: `Token ${token}` 
+                    Authorization: `Token 805f76f70ab0968379877ecdd1a11bfd0a4f896f` 
                 }
             }) 
             .then(function (response) {

@@ -22,7 +22,7 @@ function StripeDetails() {
             secret_key: secretKey,
         }, {
             headers: {
-                Authorization: `Token ${token}`
+                Authorization: `Token 805f76f70ab0968379877ecdd1a11bfd0a4f896f`
             }
         })
         .then(function (response) {
