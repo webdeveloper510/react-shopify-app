@@ -760,7 +760,7 @@ const CouponList = () => {
                             <FontAwesomeIcon icon={faClose} style={{ color: "#000", width: "25px", height: "25px"}} />
                         </button>
                         <form action="">
-                        <div className="input-container tracking-container" style={{padding: 0}}>
+                            <div className="input-container tracking-container" style={{padding: 0}}>
                                 <label>Products Name</label>
                                 <input
                                     type="text"
@@ -770,13 +770,12 @@ const CouponList = () => {
                                 />
                                 {showList && (
                                     <ul>
-                                    {prodList?.map((name, i) => (
+                                        {prodList?.map((name, i) => (
                                             <li
                                             key={i}
                                             onClick={() => {
                                                 if (!productName.includes(name.title)) {
                                                     setProductName((prevValues) => [...prevValues, name.title]);
-                                                    // setProductIds((prevIds) => [...prevIds, name.id]);
                                                     handleClick(name.title, name.id);
                                                 }
                                                 if (selectedProductNames.includes(name.title)) {
@@ -790,9 +789,9 @@ const CouponList = () => {
                                                     setSelectedProductNames((prevValues) =>
                                                         [...prevValues, name.title]
                                                     );
-                                                    // setProductIds((prevIds) => [...prevIds, name.id]);
                                                 }
                                             }}
+                                            className={selectedProductNames.includes(name.title) ? "active-prod" : ""}
                                         >
                                             {name.title}
                                         </li>
