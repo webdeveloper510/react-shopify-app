@@ -196,8 +196,8 @@ function Sales() {
         <div className="sales-container">
           <h2 className="my-5">Sales overview</h2>
           <div className="earnings-list d-flex flex-column justify-content-center align-items-center">
-            <div className="chart">
               <h3 className="text-left w-100 d-flex ps-5 mb-4">Campaign Sales</h3>
+            <div className="chart">
               <Chart 
               ref={chartPieRef} 
               type="pie" 
@@ -207,13 +207,13 @@ function Sales() {
               }} />
             </div>
 
-            <div className="chart my-5">
-              <h3 className='text-left w-100 d-flex ps-5 mb-4'>Sales Data</h3>
+            <h3 className='text-left w-100 d-flex ps-5 mt-5 mb-4'>Sales Data</h3>
+            <div className="chart mb-5">
               <Line ref={chartSalesRef} type="line" data={chartSalesData} options={options}></Line>
             </div>
 
-            <div className="chart my-5">
-              <h3 className='text-left w-100 d-flex ps-5 mb-4'>Coupon Order</h3>
+            <h3 className='text-left w-100 d-flex ps-5 mt-5 mb-4'>Coupon Order</h3>
+            <div className="chart mb-5">
               <Line ref={chartCouponRef} type="line" data={chartCouponData} options={options}></Line>
             </div>
           </div>
