@@ -16,7 +16,7 @@ function AdminTransfer() {
         setLoading(true);
         axios.get(API.BASE_URL + 'admintransfer/',{
             headers: {
-                Authorization: `Token 805f76f70ab0968379877ecdd1a11bfd0a4f896f`
+                Authorization: `Token ${token}`
             }
         })
         .then(function (response) {
@@ -46,7 +46,7 @@ function AdminTransfer() {
             sales: sales
         },{
             headers: {
-                Authorization: `Token 805f76f70ab0968379877ecdd1a11bfd0a4f896f`
+                Authorization: `Token ${token}`
             }
         })
         .then(function (response) {
@@ -54,7 +54,7 @@ function AdminTransfer() {
             toast.success("Money transfer Successfully", { autoClose: 1000 })
             axios.get(API.BASE_URL + 'admintransfer/',{
                 headers: {
-                    Authorization: `Token 805f76f70ab0968379877ecdd1a11bfd0a4f896f`
+                    Authorization: `Token ${token}`
                 }
             })
             .then(function (response) {

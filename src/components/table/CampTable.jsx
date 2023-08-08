@@ -60,7 +60,7 @@ const CampaignTable = ({
     axios
       .get("https://api.myrefera.com/campaign/influencer/list/", {
         headers: {
-            Authorization: `Token 805f76f70ab0968379877ecdd1a11bfd0a4f896f`
+            Authorization: `Token ${token}`
     }})
       .then((response) => {
         const influencerData = response.data.data;

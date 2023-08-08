@@ -32,7 +32,7 @@ function Subscription() {
             plan: plan
         }, {
             headers: {
-                Authorization: `Token 805f76f70ab0968379877ecdd1a11bfd0a4f896f`
+                Authorization: `Token ${token}`
         }})
         .then(function (response) {
             console.log("BuySubscription", response);
@@ -51,7 +51,7 @@ function Subscription() {
         if (localStorage.getItem("Session_Id") != null || localStorage.getItem("Session_Id") != '' || localStorage.getItem("Session_Id") != undefined) {
           axios.get(API.BASE_URL + 'checksubscritpion/', {
             headers: {
-              Authorization: `Token 805f76f70ab0968379877ecdd1a11bfd0a4f896f`
+              Authorization: `Token ${token}`
             }
           })
             .then(function (response) {
