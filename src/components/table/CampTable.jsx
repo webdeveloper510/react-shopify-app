@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPenToSquare, faClose, faCheck, faXmark, faEye } from "@fortawesome/free-solid-svg-icons";
+import { faPenToSquare, faClose, faCheck, faXmark, faEye, faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 import Delete from '../../assests/img/delete.svg';
 
 const CampaignTable = ({
@@ -35,6 +35,27 @@ const CampaignTable = ({
 }) => {
   const [usernameMap, setUsernameMap] = useState({});
   const token = localStorage.getItem('Token');
+  const [currentPage, setCurrentPage] = useState(1);
+  const ITEMS_PER_PAGE = 8;
+  const indexOfLastItem = currentPage * ITEMS_PER_PAGE;
+  const indexOfFirstItem = indexOfLastItem - ITEMS_PER_PAGE;
+  const currentItems = campList.slice(indexOfFirstItem, indexOfLastItem);
+
+  const totalPages = Math.ceil(campList.length / ITEMS_PER_PAGE);
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+  const handlePreviousPage = () => {
+      if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+      }
+  };
+
+  const handleNextPage = () => {
+      if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+      }
+  };
   useEffect(() => {
     axios
       .get("https://api.myrefera.com/campaign/influencer/list/", {
@@ -63,6 +84,7 @@ const CampaignTable = ({
     return username ? username : "N/A";
   };
   return (
+    <>
     <table className='w-100 campaign'>
       <tbody className='w-100'>
         <tr className='headings'>
@@ -84,7 +106,7 @@ const CampaignTable = ({
             <th>Actions</th>
           )}
         </tr>
-        {campList?.map((name, i) => {
+        {currentItems?.map((name, i) => {
           const username = getUsernameForCampaign(name.influencer_name);
           return (
             <>
@@ -294,6 +316,25 @@ const CampaignTable = ({
         })}
       </tbody>
     </table>
+    <div className="table-pagination d-flex justify-content-center align-items-center mt-4">
+    <button onClick={handlePreviousPage} disabled={currentPage === 1} className='page-btn' style={{marginRight: 10}}>
+        <FontAwesomeIcon icon={faChevronLeft} style={{ color: "#fff", width: "15px", height: "15px"}} />
+    </button>
+    {Array.from({ length: totalPages }, (_, index) => index + 1).map((pageNumber) => (
+    <button
+        key={pageNumber}
+        onClick={() => paginate(pageNumber)}
+        className={currentPage === pageNumber ? 'active page-num' : 'page-num'}
+        style={{margin: '0 5px'}}
+    >
+        {pageNumber}
+        </button>
+    ))}
+    <button onClick={handleNextPage} className='page-btn' disabled={currentPage === totalPages} style={{marginLeft: 10}}>
+        <FontAwesomeIcon icon={faChevronLeft} style={{ transform: 'rotate(180deg)', color: "#fff", width: "15px", height: "15px"}} />
+    </button>
+  </div>
+  </>
   );
 };
 

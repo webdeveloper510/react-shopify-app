@@ -705,7 +705,7 @@ $whiteColor: #FFFFFF;
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                min-width: 100px;
+                min-width: 130px;
                 padding: 10px 8px;
                 border: none;
                 border-radius: 15px;
@@ -1326,7 +1326,36 @@ $whiteColor: #FFFFFF;
     }
 }
 
+.table-pagination {
+    button {
+      border: none;
+      box-shadow: none;
+      outline: none;
+      transition: .3s ease;
+    }
+    button.page-btn {
+      background-color: #000;
+      height: 40px;
+      width: 40px;
+      border-radius: 50%;
+    }
 
+    button:disabled {
+        opacity: .5;
+    }
+  
+    button.page-num {
+      background: none;
+      color: #000000;
+      border-bottom: 1px solid transparent;
+    }
+  
+    button.page-num.active {
+      border-bottom: 1px solid;
+      transition: .3s ease;
+      border-radius: 0px;
+    }
+  }
 
 .active-prod {
     background: $blackColor;

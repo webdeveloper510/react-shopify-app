@@ -62,8 +62,8 @@ function Sales() {
               data: analyticsData.sales_data,
               tension: 0.2,
               backgroundColor: [
-                'red',
-                'blue',
+                '#FF9B9B',
+                '#CBFFA9',
               ],
             },
             {
@@ -71,11 +71,11 @@ function Sales() {
               data: analyticsData.order,
               tension: 0.2,
               backgroundColor: [
-                'teal',
-                'blue',
-                'purple',
-                'red',
-                'green'
+                '#FF9B9B',
+                '#CBFFA9',
+                '#FFFEC4',
+                '#78C1F3',
+                '#FFD6A5'
               ],
             },
           ],
@@ -109,10 +109,16 @@ function Sales() {
 
         const labelCount = Object.keys(campaignSalesData).length;
         const colors = [
-          'red',
-          'teal',
-          'blue',
-          'purple',
+          '#FF9B9B',
+          '#CD6688',
+          '#FFFEC4',
+          '#7A316F',
+          '#FFD6A5',
+          '#9BE8D8',
+          '#E966A0',
+          '#967E76',
+          '#C2DEDC',
+          '#ECE5C7'
         ];
     
         const updatedPieData = {
@@ -154,16 +160,16 @@ function Sales() {
               data: sales,
               tension: 0.2,
               backgroundColor: [
-                'red',
-                'blue',
-                'green',
-                'yellow',
-                'orange',
-                'teak',
-                'purple',
-                'brown',
-                'yellowgreen',
-                'tomato'
+                '#FF9B9B',
+                '#7A316F',
+                '#9575DE',
+                '#E966A0',
+                '#FFD6A5',
+                '#9BE8D8',
+                '#D7C0AE',
+                '#967E76',
+                '#C2DEDC',
+                '#ECE5C7'
               ],
             },
           ],

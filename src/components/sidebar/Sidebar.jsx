@@ -110,7 +110,7 @@ const SideBar = () => {
         {shownotification === true && (
             notifications?.length > 0 ? (
                     <>
-                        <button onClick={(e) => {handleClearNotifications(e)}}>clear all</button>
+                        <button onClick={(e) => {handleClearNotifications(e)}}>Clear all</button>
                         {notifications?.map((data) => {
                         return <li>{data.message}</li>;
                         })}

@@ -655,22 +655,22 @@ const CampaignManage = () => {
             <Col sm={12}>
             <Nav variant="pills" className="flex-row mb-2 tab-header">
                 <Nav.Item>
-                    <Nav.Link eventKey="first">Active Campaigns</Nav.Link>
+                    <Nav.Link eventKey="first">Active</Nav.Link>
                 </Nav.Item>
                 <Nav.Item>
-                    <Nav.Link eventKey="second">Pending Campaigns</Nav.Link>
+                    <Nav.Link eventKey="second">Pending</Nav.Link>
                 </Nav.Item>
                 <Nav.Item>
-                    <Nav.Link eventKey="third">Draft Campaigns</Nav.Link>
+                    <Nav.Link eventKey="third">Draft</Nav.Link>
                 </Nav.Item>
                 <Nav.Item>
-                    <Nav.Link eventKey="four">Approved Campaigns</Nav.Link>
+                    <Nav.Link eventKey="four">Awaiting</Nav.Link>
                 </Nav.Item>
                 <Nav.Item>
-                    <Nav.Link eventKey="five">Declined Campaigns</Nav.Link>
+                    <Nav.Link eventKey="five">Declined</Nav.Link>
                 </Nav.Item>
                 <Nav.Item>
-                    <Nav.Link eventKey="six">Expired Campaigns</Nav.Link>
+                    <Nav.Link eventKey="six">Expired</Nav.Link>
                 </Nav.Item>
             </Nav>
             </Col>

@@ -358,22 +358,22 @@ const CampaignMarket = () => {
                 <Col sm={12}>
                 <Nav variant="pills" className="flex-row mb-4 tab-header">
                     <Nav.Item>
-                        <Nav.Link eventKey="first">Pending Campaigns</Nav.Link>
+                        <Nav.Link eventKey="first">Pending</Nav.Link>
                     </Nav.Item>
                     <Nav.Item>
-                        <Nav.Link eventKey="second">Draft Campaigns</Nav.Link>
+                        <Nav.Link eventKey="second">Draft</Nav.Link>
                     </Nav.Item>
                     <Nav.Item>
-                        <Nav.Link eventKey="third">Active Campaigns</Nav.Link>
+                        <Nav.Link eventKey="third">Active</Nav.Link>
                     </Nav.Item>
                     <Nav.Item>
-                        <Nav.Link eventKey="four">Expired Campaigns</Nav.Link>
+                        <Nav.Link eventKey="four">Expired</Nav.Link>
                     </Nav.Item>
                     <Nav.Item>
-                        <Nav.Link eventKey="five">Approved Campaigns</Nav.Link>
+                        <Nav.Link eventKey="five">Awaiting</Nav.Link>
                     </Nav.Item>
                     <Nav.Item>
-                        <Nav.Link eventKey="six">Decline Campaigns</Nav.Link>
+                        <Nav.Link eventKey="six">Decline</Nav.Link>
                     </Nav.Item>
                 </Nav>
                 </Col>
