@@ -1085,13 +1085,10 @@ $whiteColor: #FFFFFF;
         .chart {
             display: flex;
             flex-direction: column;
-            width: 80%;
+            width: 100%;
             justify-content: center;
             align-items: center;
             margin: 0 auto;
-            &:nth-child(1) {
-                width: 60%;
-            }
         }
     }
 }

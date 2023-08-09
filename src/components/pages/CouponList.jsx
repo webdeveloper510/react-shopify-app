@@ -89,12 +89,18 @@ const CouponList = () => {
         })
     }, [token])
 
+    const filteredData = couponData.filter(
+        (coupon) =>
+            coupon.title?.toLowerCase().includes(filterValue.toLowerCase()) ||
+            coupon.email?.toLowerCase().includes(filterValue.toLowerCase())
+    );
+
     // Pagination logic
     const indexOfLastItem = currentPage * ITEMS_PER_PAGE;
     const indexOfFirstItem = indexOfLastItem - ITEMS_PER_PAGE;
-    const currentItems = couponData.slice(indexOfFirstItem, indexOfLastItem);
+    const currentItems = filteredData.slice(indexOfFirstItem, indexOfLastItem);
 
-    const totalPages = Math.ceil(couponData.length / ITEMS_PER_PAGE);
+    const totalPages = Math.ceil(filteredData.length / ITEMS_PER_PAGE);
 
     const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
@@ -118,7 +124,7 @@ const CouponList = () => {
             }
         })
         .then(function (response) {
-            console.log(response.data);
+            console.log("Productsss",response.data);
             setProdList(response.data.success.products)
         })
         .catch(function (error) {
@@ -495,6 +501,7 @@ const CouponList = () => {
     console.log("influencer list", influencerList)
     console.log("showList", showList)
     console.log("prodcut", productName)
+    console.log("policypiechart", prodList)
 
     return (
     <>
@@ -528,13 +535,7 @@ const CouponList = () => {
                             </tr>
                             </thead>
                             <tbody>
-                            {currentItems
-                                .filter(
-                                (coupon) =>
-                                    coupon.title?.toLowerCase().includes(filterValue.toLowerCase()) ||
-                                    coupon.email?.toLowerCase().includes(filterValue.toLowerCase())
-                                )
-                                .map((couponData, i) => {
+                            {currentItems.map((couponData, i) => {
                                 return (
                                     <tr key={i}>
                                     <td>{couponData.title}</td>
@@ -564,23 +565,24 @@ const CouponList = () => {
                             </tbody>
                         </table>
                         <div className="pagination d-flex justify-content-center align-items-center mt-4">
-                            <button onClick={handlePreviousPage} disabled={currentPage === 1} className='page-btn' style={{marginRight: 10}}>
-                                <FontAwesomeIcon icon={faChevronLeft} style={{ color: "#fff", width: "15px", height: "15px"}} />
-                            </button>
-                            {Array.from({ length: totalPages }, (_, index) => index + 1).map((pageNumber) => (
-                            <button
-                                key={pageNumber}
-                                onClick={() => paginate(pageNumber)}
-                                className={currentPage === pageNumber ? 'active page-num' : 'page-num'}
-                                style={{margin: '0 5px'}}
-                            >
-                                {pageNumber}
-                                </button>
-                            ))}
-                            <button onClick={handleNextPage} className='page-btn' disabled={currentPage === totalPages} style={{marginLeft: 10}}>
-                                <FontAwesomeIcon icon={faChevronLeft} style={{ transform: 'rotate(180deg)', color: "#fff", width: "15px", height: "15px"}} />
-                            </button>
-                        </div>
+    <button onClick={handlePreviousPage} disabled={currentPage === 1} className='page-btn' style={{marginRight: 10}}>
+        <FontAwesomeIcon icon={faChevronLeft} style={{ color: "#fff", width: "15px", height: "15px"}} />
+    </button>
+    {Array.from({ length: totalPages }, (_, index) => index + 1).map((pageNumber) => (
+        <button
+            key={pageNumber}
+            onClick={() => paginate(pageNumber)}
+            className={currentPage === pageNumber ? 'active page-num' : 'page-num'}
+            style={{margin: '0 5px'}}
+        >
+            {pageNumber}
+        </button>
+    ))}
+    <button onClick={handleNextPage} className='page-btn' disabled={currentPage === totalPages} style={{marginLeft: 10}}>
+        <FontAwesomeIcon icon={faChevronLeft} style={{ transform: 'rotate(180deg)', color: "#fff", width: "15px", height: "15px"}} />
+    </button>
+</div>
+
                     </div>
                 )
                 :
