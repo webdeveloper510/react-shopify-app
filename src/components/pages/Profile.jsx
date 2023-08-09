@@ -125,6 +125,9 @@ function Profile() {
             else if(error.response.data.password) {
                 toast.warn("Password must be more than 8 character")
             }
+            else if(error.response.data.image) {
+                toast.warn("The submitted data was not a file. Check the encoding type on the form.")
+            }
             else if(error.response.data.instagram_url) {
                 toast.warn("Instagram URL cannot be empty")
             }
