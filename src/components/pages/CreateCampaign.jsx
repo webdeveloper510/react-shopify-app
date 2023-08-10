@@ -133,7 +133,7 @@ const CreateCampaign = () => {
             date: selectedDate,
             coupon: selectedCouponNames.toString(),
             offer: influenceOffer,
-            product_name: productName,
+            product_name: [productName],
             product_discount: selectedCouponAmounts,
             influencer_visit: influencerVisit,
             influencer_fee: influenceFee,
@@ -223,7 +223,7 @@ const CreateCampaign = () => {
             coupon: selectedCouponNames.toString(),
             offer: influenceOffer,
             product_discount: selectedCouponAmounts,
-            product_name: productName,
+            product_name: [productName],
             influencer_fee: influenceFee,
             influencer_visit: influencerVisit,
             description: campaignDesc,
@@ -435,7 +435,7 @@ const CreateCampaign = () => {
             product_discount: selectedCouponAmounts,
             influencer_fee: influenceFee,
             date: selectedDate,
-            product_name: productName,
+            product_name: [productName],
             end_date: endDate,
             coupon_id: selectedInfluencer?.id
           },{
@@ -541,7 +541,7 @@ const CreateCampaign = () => {
             product_discount: selectedCouponsData?.undefined?.product_discount,
             influencer_fee: influenceFee,
             date: selectedDate,
-            product_name: productName,
+            product_name: [productName],
           },{
           headers: {
             Authorization: `Token ${token}`
@@ -607,13 +607,14 @@ const CreateCampaign = () => {
                 discout_type: [selectedInfluencer?.discout_type],
                 coupon_name: [selectedInfluencer?.coupon_name],
                 product_id: productIds.toString(),
-                product_name: productName.toString(),
+                product_name: [productName].toString(),
             }];
             setSelectedProd(newCombinedInfo);
         }
     }, [selectedInfluencer, productName]);
 
     console.log("PRDDDDDDDDD", productName)
+    console.log("selectedProduct", selectedProduct)
     console.log("Coupons Name", selectedCoupon)
     console.log("Product Id", productIds)
     console.log("Product Details", selectedCouponAmounts)
@@ -697,6 +698,7 @@ const CreateCampaign = () => {
                             <li
                                 key={i}
                                 onClick={() => {
+                                    setProductName(name.title);
                                 setSelectedProduct(name);
                                 setSelectedProductIds([name.id]);
                                 setShowList(false);
@@ -738,7 +740,7 @@ const CreateCampaign = () => {
 
                 
                 <div className="input-container d-flex coup flex-column mb-4 prod-couponss w-100 mt-5">
-                {productDetailsState?.length > 0 ? (
+                    {productDetailsState?.length > 0 ? (
                     <div className="coupons d-flex flex-column">
                         <ul className="coupons coupons-list">
                         {productDetailsState?.map((product, i) => {
