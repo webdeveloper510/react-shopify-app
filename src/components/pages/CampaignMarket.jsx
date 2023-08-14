@@ -340,7 +340,7 @@ const CampaignMarket = () => {
               console.log(error);
           })
           .finally(() => setLoading(false));
-      }
+    }
 
     console.log("Testing in Market", testing)
     console.log("productNames", productNames)
@@ -358,96 +358,28 @@ const CampaignMarket = () => {
                 <Col sm={12}>
                 <Nav variant="pills" className="flex-row mb-4 tab-header">
                     <Nav.Item>
-                        <Nav.Link eventKey="first">Pending</Nav.Link>
+                        <Nav.Link eventKey="first">Active</Nav.Link>
                     </Nav.Item>
                     <Nav.Item>
-                        <Nav.Link eventKey="second">Draft</Nav.Link>
+                        <Nav.Link eventKey="second">Pending</Nav.Link>
                     </Nav.Item>
                     <Nav.Item>
-                        <Nav.Link eventKey="third">Active</Nav.Link>
+                        <Nav.Link eventKey="third">Draft</Nav.Link>
                     </Nav.Item>
                     <Nav.Item>
-                        <Nav.Link eventKey="four">Expired</Nav.Link>
+                        <Nav.Link eventKey="four">Awaiting</Nav.Link>
                     </Nav.Item>
                     <Nav.Item>
-                        <Nav.Link eventKey="five">Awaiting</Nav.Link>
+                        <Nav.Link eventKey="five">Declined</Nav.Link>
                     </Nav.Item>
                     <Nav.Item>
-                        <Nav.Link eventKey="six">Decline</Nav.Link>
+                        <Nav.Link eventKey="six">Expired</Nav.Link>
                     </Nav.Item>
                 </Nav>
                 </Col>
                 <Col sm={12}>
                 <Tab.Content>
                     <Tab.Pane eventKey="first">
-                        {marketList?.length > 0 ? (
-                            <CampaignTable 
-                                campList={marketList}
-                                getSingleMarket={getSingleMarket}
-                                deleteConfirm={deleteConfirm}
-                                influencerSale = {true}
-                                getDeleteConfirm={getDeleteConfirm}
-                                getMarket={getMarket}
-                                couponCross={couponCross}
-                                getMarketInfo={getMarketInfo}
-                                handleProdDiscount={handleProdDiscount}
-                                prodDiscount={prodDiscount}
-                                handleInfluenceVisit={handleInfluenceVisit}
-                                influenceVisit={influenceVisit}
-                                deleteCampaign={deleteCampaign}
-                                getId={getId}
-                                approved={false}
-                                approvedButtons = {false}
-                                handleCampName={handleCampName}
-                                campName={campName}
-                                handleProdOffer={handleProdOffer}
-                            />
-                            ) :
-                            (
-                                <>
-                                    <img src={NoData} alt='no-data' style={{width: '100%', maxHeight: 220, marginTop: '4rem', objectFit: 'contain'}} />
-                                    <h3 className='mt-4 text-center'>No Pending Campaign</h3>
-                            
-                                </>
-                            )
-                        }
-                    </Tab.Pane>
-
-                    <Tab.Pane eventKey="second" className='campaign'>
-                        {marketDraftList?.length > 0 ? (
-                            <CampaignTable 
-                                campList={marketDraftList}
-                                getSingleMarket={getSingleMarket}
-                                deleteConfirm={deleteConfirm}
-                                getDeleteConfirm={getDeleteConfirm}
-                                getMarket={getMarket}
-                                influencerSale = {true}
-                                couponCross={couponCross}
-                                getMarketInfo={getMarketInfo}
-                                handleProdDiscount={handleProdDiscount}
-                                prodDiscount={prodDiscount}
-                                handleInfluenceVisit={handleInfluenceVisit}
-                                influenceVisit={influenceVisit}
-                                deleteCampaign={deleteCampaign}
-                                getId={getId}
-                                approved={false}
-                                approvedButtons = {false}
-                                handleCampName={handleCampName}
-                                campName={campName}
-                                handleProdOffer={handleProdOffer}
-                            />
-                            ) :
-                            (
-                                <>
-                                    <img src={NoData} alt='no-data' style={{width: '100%', maxHeight: 220, marginTop: '4rem', objectFit: 'contain'}} />
-                                    <h3 className='mt-4 text-center'>No Draft Campaign</h3>
-                            
-                                </>
-                            )
-                        }
-                    </Tab.Pane>
-
-                    <Tab.Pane eventKey="third">
                         {marketActive?.length > 0 ? (
                             <CampaignTable 
                                 campList={marketActive}
@@ -484,11 +416,10 @@ const CampaignMarket = () => {
                         }
                     </Tab.Pane>
 
-                    <Tab.Pane eventKey="four">
-                        {campExpiredList?.length > 0 ? (
+                    <Tab.Pane eventKey="second">
+                        {marketList?.length > 0 ? (
                             <CampaignTable 
-                                campList={campExpiredList}
-                                declineInflu = {false}
+                                campList={marketList}
                                 getSingleMarket={getSingleMarket}
                                 deleteConfirm={deleteConfirm}
                                 influencerSale = {true}
@@ -512,14 +443,48 @@ const CampaignMarket = () => {
                             (
                                 <>
                                     <img src={NoData} alt='no-data' style={{width: '100%', maxHeight: 220, marginTop: '4rem', objectFit: 'contain'}} />
-                                    <h3 className='mt-4 text-center'>No Expired Campaign</h3>
-                                    
+                                    <h3 className='mt-4 text-center'>No Pending Campaign</h3>
+                            
                                 </>
                             )
                         }
                     </Tab.Pane>
 
-                    <Tab.Pane eventKey="five">
+                    <Tab.Pane eventKey="third" className='campaign'>
+                        {marketDraftList?.length > 0 ? (
+                            <CampaignTable 
+                                campList={marketDraftList}
+                                getSingleMarket={getSingleMarket}
+                                deleteConfirm={deleteConfirm}
+                                getDeleteConfirm={getDeleteConfirm}
+                                getMarket={getMarket}
+                                influencerSale = {true}
+                                couponCross={couponCross}
+                                getMarketInfo={getMarketInfo}
+                                handleProdDiscount={handleProdDiscount}
+                                prodDiscount={prodDiscount}
+                                handleInfluenceVisit={handleInfluenceVisit}
+                                influenceVisit={influenceVisit}
+                                deleteCampaign={deleteCampaign}
+                                getId={getId}
+                                approved={false}
+                                approvedButtons = {false}
+                                handleCampName={handleCampName}
+                                campName={campName}
+                                handleProdOffer={handleProdOffer}
+                            />
+                            ) :
+                            (
+                                <>
+                                    <img src={NoData} alt='no-data' style={{width: '100%', maxHeight: 220, marginTop: '4rem', objectFit: 'contain'}} />
+                                    <h3 className='mt-4 text-center'>No Draft Campaign</h3>
+                            
+                                </>
+                            )
+                        }
+                    </Tab.Pane>
+
+                    <Tab.Pane eventKey="four">
                         {campApproval?.length > 0 ? (
                             <CampaignTable 
                             campList={campApproval}
@@ -555,7 +520,7 @@ const CampaignMarket = () => {
                         }
                     </Tab.Pane>
 
-                    <Tab.Pane eventKey="six">
+                    <Tab.Pane eventKey="five">
                         {campDecline?.length > 0 ? (
                             <CampaignTable 
                                 campList={campDecline}
@@ -586,6 +551,41 @@ const CampaignMarket = () => {
                                 <>
                                     <img src={NoData} alt='no-data' style={{width: '100%', maxHeight: 220, marginTop: '4rem', objectFit: 'contain'}} />
                                     <h3 className='mt-4 text-center'>No Declined Campaign</h3>
+                                    
+                                </>
+                            )
+                        }
+                    </Tab.Pane>
+
+                    <Tab.Pane eventKey="six">
+                        {campExpiredList?.length > 0 ? (
+                            <CampaignTable 
+                                campList={campExpiredList}
+                                declineInflu = {false}
+                                getSingleMarket={getSingleMarket}
+                                deleteConfirm={deleteConfirm}
+                                influencerSale = {true}
+                                getDeleteConfirm={getDeleteConfirm}
+                                getMarket={getMarket}
+                                couponCross={couponCross}
+                                getMarketInfo={getMarketInfo}
+                                handleProdDiscount={handleProdDiscount}
+                                prodDiscount={prodDiscount}
+                                handleInfluenceVisit={handleInfluenceVisit}
+                                influenceVisit={influenceVisit}
+                                deleteCampaign={deleteCampaign}
+                                getId={getId}
+                                approved={false}
+                                approvedButtons = {false}
+                                handleCampName={handleCampName}
+                                campName={campName}
+                                handleProdOffer={handleProdOffer}
+                            />
+                            ) :
+                            (
+                                <>
+                                    <img src={NoData} alt='no-data' style={{width: '100%', maxHeight: 220, marginTop: '4rem', objectFit: 'contain'}} />
+                                    <h3 className='mt-4 text-center'>No Expired Campaign</h3>
                                     
                                 </>
                             )
