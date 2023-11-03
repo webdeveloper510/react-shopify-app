@@ -15,10 +15,8 @@ function Thankyou() {
       }
     })
       .then(function (response) {
-        console.log("Success", response);
       })
       .catch(function (error) {
-        console.log(error);
       });
   }, [token]);
   return (

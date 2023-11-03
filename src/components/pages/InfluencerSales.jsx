@@ -25,11 +25,9 @@ function InfluencerSales() {
             }
           })
           .then(function (response) {
-            console.log("Influencer List", response);
             setInfluList(response.data.data)
         })
         .catch(function (error) {
-            console.log(error);
         })
         .finally(() => setLoading(false));
         
@@ -44,11 +42,9 @@ function InfluencerSales() {
             }
         })
         .then(function (response) {
-            console.log("Influencer Sales", response);
             setInfluSales(response.data.sale_details)
         })
         .catch(function (error) {
-            console.log(error)
         })
         .finally(() => setLoading(false));
         
@@ -68,7 +64,6 @@ function InfluencerSales() {
     }, [influList, influSales]);
 
     const handleTransferShow = (e, index, amount) => {
-        console.log("Amount", amount)
         e.preventDefault();
         setSelectedTransferIndex(index);
         if(amount >= 50 ) {
@@ -98,7 +93,6 @@ function InfluencerSales() {
             }
           },)
           .then(function (response) {
-            console.log("Influencer List", response);
             toast.success("Money transfer Successfully");
             axios.get(API.BASE_URL + 'influecercamsale/',{
                 headers: {
@@ -106,22 +100,17 @@ function InfluencerSales() {
                 }
             })
             .then(function (response) {
-                console.log("Influencer Sales", response);
                 setInfluSales(response.data.sale_details)
             })
             .catch(function (error) {
-                console.log(error)
             })
         })
         .catch(function (error) {
-            console.log(error);
             toast.error("Error transferring Amount")
         })
         .finally(() => setLoading(false));
     }
 
-    console.log("matchingFullnames", matchingFullnames);
-    console.log("selectedTransferIndex", selectedTransferIndex)
 
   return (
     <div className='p-4 page'>

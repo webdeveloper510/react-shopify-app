@@ -613,14 +613,7 @@ const CreateCampaign = () => {
         }
     }, [selectedInfluencer, productName]);
 
-    console.log("PRDDDDDDDDD", productName)
-    console.log("selectedProduct", selectedProduct)
-    console.log("Coupons Name", selectedCoupon)
-    console.log("Product Id", productIds)
-    console.log("Product Details", selectedCouponAmounts)
-    console.log("id",id)
-    console.log("selectedInfluencer", selectedInfluencer)
-    console.log("setSelectedProd", selectedProd)
+   
 
   return (
     <div className="campaign-new p-4 page">

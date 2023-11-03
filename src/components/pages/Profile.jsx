@@ -23,12 +23,8 @@ function Profile() {
     const navigatePath = useNavigate()
 
     const onFileChange = event => {
-        setSelectedFile(event.target.files[0]);
-        console.log(event.target.files[0])
-        
     };
 
-    console.log("Selected File", selectedFile)
 
     useEffect(() => {
         setLoading(true);
@@ -38,7 +34,6 @@ function Profile() {
             }
         })
         .then(function (response) {
-            console.log("Profile Details", response);
             setUserDetails(response.data);
             setUserName(response.data.username);
             setEmail(response.data.email)
@@ -47,7 +42,6 @@ function Profile() {
             setImagePath(response.data.url)
         })
         .catch(function (error) {
-            console.log(error);
         })
         .finally(() => setLoading(false));
     }, [token, imagePath])
@@ -62,9 +56,6 @@ function Profile() {
         formData.append("shopify_url", shopifyUrl)
         formData.append("instagram_url", instagramUrl)
         formData.append('type','normal');
-        console.log("FormData" ,formData)
-        console.log("selectedFile",selectedFile)
-        console.log("name", selectedFile?.name)
         
         e.preventDefault();
         axios.put(API.BASE_URL + 'profile/' + userId + '/', formData, {
@@ -75,7 +66,6 @@ function Profile() {
         }
         )
         .then(function (response) {
-            console.log("Profile", response);
             toast.success("Profile Edited Successfully!");
             setUserName('');
             setPassword('');
@@ -93,7 +83,6 @@ function Profile() {
                 }
             })
             .then(function (response) {
-                console.log("Profile Details", response);
                 setUserDetails(response.data);
                 setUserName(response.data.username);
                 setEmail(response.data.email)
@@ -103,12 +92,10 @@ function Profile() {
                 setImage(response.data.url);
             })
             .catch(function (error) {
-                console.log(error);
             })
 
         })
         .catch(function (error) {
-            console.log(error);
             if(error.response.data.username) {
                 toast.warn("Username may not be blank")
             }

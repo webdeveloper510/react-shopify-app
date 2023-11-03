@@ -20,17 +20,14 @@ function AdminTransfer() {
             }
         })
         .then(function (response) {
-            console.log("Admin Transfer", response.data.sale_details);
             setTransferData(response.data.sale_details)
         })
         .catch(function (error) {
-            console.log(error);
         })
         .finally(() => setLoading(false));
     }, [])
 
     const handleTransferShow = (e, i) => {
-        console.log("bnji",i)
         e.preventDefault();
         setTransferShow(i);
     }
@@ -50,7 +47,6 @@ function AdminTransfer() {
             }
         })
         .then(function (response) {
-            console.log("Admin Transfer", response.data);
             toast.success("Money transfer Successfully", { autoClose: 1000 })
             axios.get(API.BASE_URL + 'admintransfer/',{
                 headers: {
@@ -61,12 +57,10 @@ function AdminTransfer() {
                 setTransferData(response.data.sale_details)
             })
             .catch(function (error) {
-                console.log(error);
             })
             setTransferShow(false)
         })
         .catch(function (error) {
-            console.log(error);
             toast.error("Error Transferring Money", { autoClose: 1000 })
         })
         .finally(() => setLoading(false));

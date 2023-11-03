@@ -24,16 +24,13 @@ function Analytics() {
                 }
             }) 
             .then(function (response) {
-                console.log("Sales Details", response);
                 setGraphData(response.data)
             })
             .catch(function (error) {
-                console.log(error);
             })
         
         .finally(() => setLoading(false));
     }, [token])
-    console.log("graphData", graphData)
     const options = {
         title: {
             text: ""

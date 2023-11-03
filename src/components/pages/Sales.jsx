@@ -36,7 +36,6 @@ function Sales() {
         },
       })
       .then(function (response) {
-        console.log("Sales Data", response)
         const analyticsData = response.data;
         const updatedSalesData = {
           labels: [
@@ -81,7 +80,6 @@ function Sales() {
         setChartSalesData(updatedSalesData);
       })
       .catch(function (error) {
-        console.log(error);
       })
       .finally(() => setLoading(false));
   }, []);
@@ -93,7 +91,6 @@ function Sales() {
       },
     })
     .then(function (response) {
-      console.log("SALE COUP", response);
       const campaignSalesData = response.data.campaign_sales;
       const labels = [];
       const data = [];
@@ -128,7 +125,6 @@ function Sales() {
       setChartPieData(updatedPieData);
     })
     .catch(function (error) {
-      console.log(error);
     })
   })
 
@@ -140,7 +136,6 @@ function Sales() {
         },
       })
       .then(function (response) {
-        console.log("Sales Dataaaaaa", response)
         const analyticsData = response.data;
         const sales = analyticsData.map(item => item.count);
         const campaignNames = analyticsData.map(item => item.coupon_name);
@@ -171,7 +166,6 @@ function Sales() {
         setChartCouponData(updatedCouponData);
       })
       .catch(function (error) {
-        console.log(error);
       })
       .finally(() => setLoading(false));
   }, []);
