@@ -1,341 +1,294 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPenToSquare, faClose, faCheck, faXmark, faEye, faChevronLeft } from "@fortawesome/free-solid-svg-icons";
+import { faChevronLeft, faChevronRight, faEye, faPenToSquare } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import React, { useState } from 'react';
 import Delete from '../../assests/img/delete.svg';
+import { useNavigate } from 'react-router-dom';
+import { Modal } from 'react-bootstrap';
 
-const CampaignTable = ({
-  campList,
-  getSingleMarket,
-  deleteConfirm,
-  getDeleteConfirm,
-  getMarket,
-  couponCross,
-  getMarketInfo,
-  handleProdDiscount,
-  prodDiscount,
-  handleInfluenceVisit,
-  influenceVisit,
-  editCampaign,
-  deleteCampaign,
-  getId,
-  showMarket,
-  handleCampName,
-  campName,
-  handleProdOffer,
-  handleVendorAccept,
-  handleVendorDecline,
-  showButtons = true,
-  approved = true,
-  approvedButtons = true,
-  declineInflu = true,
-  showEdit = true,
-  marketData = false,
-  campEdit = false
-}) => {
-  const [usernameMap, setUsernameMap] = useState({});
-  const token = localStorage.getItem('Token');
+const CampTable = ({ list, name }) => {
+
   const [currentPage, setCurrentPage] = useState(1);
   const ITEMS_PER_PAGE = 8;
   const indexOfLastItem = currentPage * ITEMS_PER_PAGE;
   const indexOfFirstItem = indexOfLastItem - ITEMS_PER_PAGE;
-  const currentItems = campList.slice(indexOfFirstItem, indexOfLastItem);
-
-  const totalPages = Math.ceil(campList.length / ITEMS_PER_PAGE);
-
+  const currentItems = list?.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(list?.length / ITEMS_PER_PAGE);
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
+  const navigate = useNavigate()
+  const [delete_modal, setDeleteModal] = useState({ toggle: false, value: null })
+  const [view_modal, setViewModal] = useState({ toggle: false, value: null })
+
 
   const handlePreviousPage = () => {
-      if (currentPage > 1) {
+    if (currentPage > 1) {
       setCurrentPage(currentPage - 1);
-      }
+    }
   };
 
   const handleNextPage = () => {
-      if (currentPage < totalPages) {
+    if (currentPage < totalPages) {
       setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const productsListing = (list) => {
+    let text = "";
+    for (let i = 0; i < list?.length; i++) {
+      if (list[i]?.product_name !== null) {
+        text = text + list[i]?.product_name + ",\n"
       }
-  };
-  useEffect(() => {
-    axios
-      .get("https://api.myrefera.com/campaign/influencer/list/", {
-        headers: {
-            Authorization: `Token ${token}`
-    }})
-      .then((response) => {
-        const influencerData = response.data.data;
-        console.log("NKJNKNKNKNKJNJK", response)
+    }
+    return text !== "" && text !== null ? text : "None"
+  }
 
-        const map = {};
-        influencerData.forEach((influencer) => {
-          map[influencer.id] = influencer.username;
-        });
+  const couponListing = (list, field) => {
+    let coupontext = "";
+    let fixed = 0;
+    let percentage = 0;
+    for (let i = 0; i < list?.length; i++) {
+      if (list[i]?.product_name !== null) {
+        for (let j = 0; j < list[i]?.coupon_name?.length; j++) {
+          coupontext = coupontext + list[i]?.coupon_name[j] + ",\n"
+          if (list[i]?.discount_type[j] === "percentage") {
+            percentage = percentage + Number(list[i]?.amount[j])
+          } else if (list[i]?.discount_type[j] === "fixed_amount") {
+            fixed = fixed + Number(list[i]?.amount[j])
+          }
+        }
+      }
+    }
+    if (field === "coupons") {
+      return coupontext !== null && coupontext !== "" ? coupontext : "None"
+    } else {
+      return <>{fixed !== 0 ? fixed + "د.إ" : ""} {fixed !== 0 && percentage !== 0 ? "and" : fixed === 0 && percentage === 0 ? "none" : ""} {percentage !== 0 ? percentage + "%" : ""}</>
+    }
+  }
 
-        setUsernameMap(map);
-        console.log("setUsernameMap", usernameMap)
-      })
-      .catch((error) => {
-        console.error("Error fetching influencer data:", error);
-      });
-  }, [token]);
+  const editCamp = (id) => {
+    navigate(`/edit-campaign/${id}`)
+  }
 
-  const getUsernameForCampaign = (campaignId) => {
-    const username = usernameMap[campaignId];
-    return username ? username : "N/A";
-  };
-  return (
-    <>
-    <table className='w-100 campaign'>
-      <tbody className='w-100'>
+  const headRows = () => {
+    if (name === "active") {
+      return (
         <tr className='headings'>
           <th>Campaign Name</th>
-          {marketData == false && (!approvedButtons && (<th>Products</th>))}
-          {approved && (<th>Influencer</th>) || marketData == true && (<th>Influencer</th>)}
-          
-          {!approvedButtons && (
-            <>
-            <th>Coupons</th>
-            <th>Discount</th>
-            </>
-          )}
-          {declineInflu && (
-            <th>Actions</th>
-          )|| marketData == true &&(
-            <th>Actions</th>
-          ) || declineInflu == false && campEdit == true &&(
-            <th>Actions</th>
-          )}
+          <th>Influencer</th>
+          <th>Action</th>
         </tr>
-        {currentItems?.map((name, i) => {
-          const username = getUsernameForCampaign(name.influencer_name);
-          return (
-            <>
-                <tr key={i} className='campaign-inputs'>
-                <td>{name?.campaign_name}</td>
-                {!approvedButtons && marketData == false && (
-                  <td className='category'>
-                    {name.product?.map((name) =>
-                    name.product_name
-                    ).filter(Boolean).join(", ")}
-                  </td>
-                )}
-                {approvedButtons && (
-                  <td>{name.infl_name ? name.infl_name : name.username ? name.username: username }</td>
-                ) || marketData == true && (
-                  <td>{name.infl_name ? name.infl_name : name.username ? name.username: username}</td>
-                )}
-                {!approved && marketData == false && (
+      )
+    } else if (name === "pending") {
+      return (
+        <tr className='headings'>
+          <th>Campaign Name</th>
+          <th>Products</th>
+          <th>Coupons</th>
+          <th>Discount</th>
+          <th>Actions</th>
+        </tr>
+      )
+    } else if (name === "declined") {
+      return (
+        <tr className='headings'>
+          <th>Campaign Name</th>
+          <th>Influencer</th>
+        </tr>
+      )
+    } else {
+      return (
+        <tr className='headings'>
+          <th>Campaign Name</th>
+          <th>Products</th>
+          <th>Coupons</th>
+          <th>Discount</th>
+        </tr>
+      )
+    }
+  }
+
+  const contentRows = () => {
+    if (name === "active") {
+      return (
+        <>
+          {
+            currentItems?.length > 0 && currentItems?.map((item, index) => {
+              return (
+                <tr key={index} className='campaign-inputs'>
+                  <td>{item?.campaign_name}</td>
+                  <td>{item?.influencer_name}</td>
                   <td>
-                    {name.product?.map((name) =>
-                    name.coupon_name != null ? name.coupon_name : 'No coupons selected'
-                    ).filter(Boolean).join(", ")}
-                  </td>
-                ) || marketData == true && (
-                  <td>{name.coupon_name?.map((name) =>
-                    name != null ? name : 'No coupons selected'
-                    )}</td>
-                )}
-                {!approvedButtons && marketData == false && (
-                <td>
-                  {name.product?.map((product, index) => (
-                    <>
-                      {product.discount_type && Array.isArray(product.discount_type) ? (
-                        product.discount_type.map((discount, i) => (
-                          <>
-                            {Math.abs(product.amount[i])}
-                            {discount === 'percentage' ? '%' : 'Dhs'}
-                            {i < product.discount_type.length - 1 ? ' , ' : ''}
-                          </>
-                        ))
-                      ) : (
-                        product.amount && Array.isArray(product.amount) && (
-                          product.amount.map((amount, i) => (
-                            <>
-                              {Math.abs(amount)}
-                              {i < product.amount.length - 1 ? ' , ' : ''}
-                            </>
-                          ))
-                        )
-                      )}
-                    </>
-                  ))}
-                </td>
-              
-                ) || marketData == true && (
-                  <td>{name.amount?.map((name) =>
-                    name != null ? name : 'No coupons selected'
-                    )}</td>)}
-                {declineInflu && (
-                  showButtons == true ? (
-                    <td>
-                      {showEdit && (
-                        <button
-                        onClick={(event) => {
-                            getSingleMarket(name.campaignid_id, event);
-                        }}
-                        style={{ marginRight: 15 }}
-                        >
-                        <FontAwesomeIcon
-                            icon={faPenToSquare}
-                            style={{ color: "#fff", width: "15px", height: "15px" }}
-                        />
-                        </button>
-                      )}
-                      <button onClick={() => { deleteConfirm(name.campaignid_id) }}>
-                        <img src={Delete} alt='delete-icon' />
-                      </button>
-                  </td>
-                  ):
-                  (
-                  <td>
-                      <button
-                      type="button"
+                    <button
+                      onClick={() => {
+                        setViewModal({ toggle: true, value: item })
+                      }}
                       style={{ marginRight: 15 }}
-                      data-toggle="tooltip"
-                      data-placement="top"
-                      title="Accept"
-                      onClick={() => {handleVendorAccept(name.campaignid_id, name.influencer_name ?name.influencer_name : name.username, name.coupon_name, name.amount)}}
                     >
                       <FontAwesomeIcon
-                        icon={faCheck}
-                        style={{
-                          color: "#fff",
-                          width: "15px",
-                          height: "15px",
-                        }}
+                        icon={faEye}
+                        style={{ color: "#fff", width: "15px", height: "15px" }}
                       />
                     </button>
+                  </td>
+                </tr>
+              )
+            })
+          }
+        </>
+      )
+    } else if (name === "pending") {
+      return (
+        <>
+          {
+            currentItems?.length > 0 && currentItems?.map((item, index) => {
+              return (
+                <tr key={index} className='campaign-inputs'>
+                  <td>{item?.campaign_name}</td>
+                  <td>{productsListing(item?.product)}</td>
+                  <td>
+                    {couponListing(item?.product, "coupons")}
+                  </td>
+                  <td>
+                    {couponListing(item?.product, "discount")}
+                  </td>
+                  <td>
                     <button
                       type="button"
-                      data-toggle="tooltip"
-                      data-placement="top"
+                      onClick={() => {
+                        editCamp(item?.campaignid_id)
+                      }}
                       style={{ marginRight: 15 }}
-                      title="Decline"
-                      onClick={() => {handleVendorDecline(name.campaignid_id, name.influencer_name ?name.influencer_name : name.username, name.coupon_name, name.amount)}}
                     >
                       <FontAwesomeIcon
-                        icon={faXmark}
-                        style={{
-                          color: "#fff",
-                          width: "15px",
-                          height: "15px",
-                        }}
+                        icon={faPenToSquare}
+                        style={{ color: "#fff", width: "15px", height: "15px" }}
                       />
                     </button>
+                    <button onClick={() => { setDeleteModal({ toggle: true, value: item?.campaignid_id }) }}>
+                      <img src={Delete} alt='delete-icon' />
+                    </button>
                   </td>
-                  
-                  )
-                  
-                )}
-                {declineInflu == false && campEdit == true && (
-                  <td>
-                  <button
-                  onClick={(event) => {
-                      showMarket(event, name.campaignid_id);
-                  }}
-                  style={{ marginRight: 15 }}
-                  >
-                  <FontAwesomeIcon
-                      icon={faEye}
-                      style={{ color: "#fff", width: "15px", height: "15px" }}
-                  />
-                  </button>
-                </td>
-                )}
                 </tr>
-                {getDeleteConfirm && 
-                    <div className="get-coupon">
-                        <div className="get-coupon-contianer">
-                            <button className='close' onClick={couponCross}>
-                                <FontAwesomeIcon icon={faClose} style={{ color: "$blackColor", width: "25px", height: "25px"}} />
-                            </button>
-                            <div className="confirm">
-                                <h4 className='mb-4 text-center'>Delete Campaign?</h4>
-                                <div className="buttons d-flex justify-content-center align-items-center">
-                                    <button onClick={() => { deleteCampaign(getId)}} className='btn btn-danger w-25 me-4'>Confirm</button>
-                                    <button onClick={couponCross} className='btn w-25 btn-primary'>Cancel</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                }
-                {getMarket && 
-                    <div className="get-coupon">
-                        <div className="get-coupon-contianer">
-                        <h3>Campaign Info</h3>
-                        <button className='close' onClick={couponCross}>
-                            <FontAwesomeIcon icon={faClose} style={{ color: "000", width: "25px", height: "25px"}} />
-                        </button>
-                        <div className="get-coupon-info"></div>
-                        <form action="">
-                            <div className="input-container">
-                                <label>Campaign Name: <strong className="ms-2">{getMarketInfo?.campaign_name}</strong></label>
-                            </div>
-                            <div className="input-container">
-                                <label>Product Name: <strong className="ms-2">{getMarketInfo?.product_name}</strong></label>
-                            </div>
-                            <div className="input-container">
-                                <label>Date: <strong className="ms-2">{getMarketInfo?.date}</strong></label>
-                            </div>
-                            <div className="input-container">
-                                <label>End Date: <strong className="ms-2">{getMarketInfo?.end_data}</strong></label>
-                            </div>
-                            <div className="input-container">
-                              <label htmlFor="">Influencer: <strong className="ms-2">{name.username ? name.username : username}</strong></label>
-                            </div>
-                            <div className="input-container">
-                                <label>Influencer Fee: <strong className="ms-2">{getMarketInfo?.influencer_fee}{getMarketInfo?.offer == 'percentage' ? "%" : "د.إ"}</strong></label>
-                            </div>
-                            <div className="input-container">
-                                <label>Influencer Visit: <strong className="ms-2">{getMarketInfo?.influencer_visit}</strong></label>
-                            </div>
-                            <div className="input-container">
-                                <label>Coupon: <strong className="ms-2">{getMarketInfo?.product?.map((coupon) => coupon.coupon_name)}</strong></label>
-                            </div>
-                            <div className="input-container">
-                            <label>
-                              Discount:{' '}
-                              <strong className="ms-2">
-                                {getMarketInfo?.product?.map((coupon) => (
-                                  <span>
-                                    {Math.abs(coupon.amount)}
-                                  </span>
-                                ))}
-                              </strong>
-                            </label>
-                            </div>
-                            <div className="input-container">
-                                <label>Description: <strong className="ms-2">{getMarketInfo?.description}</strong></label>
-                            </div>
-                        </form>
-                        </div>
-                    </div>
-                }
-            </>
-          );
-        })}
-      </tbody>
-    </table>
-    <div className="table-pagination d-flex justify-content-center align-items-center mt-4">
-    <button onClick={handlePreviousPage} disabled={currentPage === 1} className='page-btn' style={{marginRight: 10}}>
-        <FontAwesomeIcon icon={faChevronLeft} style={{ color: "#fff", width: "15px", height: "15px"}} />
-    </button>
-    {Array.from({ length: totalPages }, (_, index) => index + 1).map((pageNumber) => (
-    <button
-        key={pageNumber}
-        onClick={() => paginate(pageNumber)}
-        className={currentPage === pageNumber ? 'active page-num' : 'page-num'}
-        style={{margin: '0 5px'}}
-    >
-        {pageNumber}
-        </button>
-    ))}
-    <button onClick={handleNextPage} className='page-btn' disabled={currentPage === totalPages} style={{marginLeft: 10}}>
-        <FontAwesomeIcon icon={faChevronLeft} style={{ transform: 'rotate(180deg)', color: "#fff", width: "15px", height: "15px"}} />
-    </button>
-  </div>
-  </>
-  );
-};
+              )
+            })
+          }
+        </>
+      )
+    } else if (name === "declined") {
+      return (
+        <>
+          {
+            currentItems?.length > 0 && currentItems?.map((item, index) => {
+              return (
+                <tr key={index} className='campaign-inputs'>
+                  <td>{item?.campaign_name}</td>
+                  <td>{item?.influencer_name}</td>
+                </tr>
+              )
+            })
+          }
+        </>
+      )
+    } else {
+      return (
+        <>
+          {
+            currentItems?.length > 0 && currentItems?.map((item, index) => {
+              return (
+                <tr key={index} className='campaign-inputs'>
+                  <td>{item?.campaign_name}</td>
+                  <td>{productsListing(item?.product)}</td>
+                  <td>
+                    {couponListing(item?.product, "coupons")}
+                  </td>
+                  <td>
+                    {couponListing(item?.product, "discount")}
+                  </td>
+                </tr>
+              )
+            })
+          }
+        </>
+      )
+    }
+  }
 
-export default CampaignTable;
+  return (
+    <>
+      <table className='w-100 campaign'>
+        <thead className='w-100'>
+          {headRows()}
+        </thead>
+        <tbody className='w-100'>
+          {contentRows()}
+        </tbody>
+      </table>
+      <div className="table-pagination d-flex justify-content-center align-items-center mt-4">
+        <button onClick={handlePreviousPage} disabled={currentPage === 1} className='page-btn' style={{ marginRight: 10 }}>
+          <FontAwesomeIcon icon={faChevronLeft} style={{ color: "#fff", width: "15px", height: "15px" }} />
+        </button>
+        {Array.from({ length: totalPages }, (_, index) => index + 1).map((pageNumber) => (
+          <button
+            key={pageNumber}
+            onClick={() => paginate(pageNumber)}
+            className={currentPage === pageNumber ? 'active page-num' : 'page-num'}
+            style={{ margin: '0 5px' }}
+          >
+            {pageNumber}
+          </button>
+        ))}
+        <button onClick={handleNextPage} className='page-btn' disabled={currentPage === totalPages} style={{ marginLeft: 10 }}>
+          <FontAwesomeIcon icon={faChevronRight} style={{ color: "#fff", width: "15px", height: "15px" }} />
+        </button>
+      </div>
+      <DeleteModal data={delete_modal} handler={() => { setDeleteModal({ toggle: false, value: null }) }} />
+      <ViewModal data={view_modal} handler={() => { setViewModal({ toggle: false, value: null }) }} productsListing={(value) => productsListing(value)} couponListing={(value, type) => couponListing(value, type)} />
+    </>
+  )
+}
+
+
+const DeleteModal = ({ data, handler }) => {
+  const deleteCampaign = (id) => {
+    console.log(id)
+  }
+  return (
+    <Modal show={data.toggle} backdrop={"static"} centered onHide={() => handler()}>
+      <Modal.Header closeButton>
+        <h4 className='fw-bold'>Delete Campaign</h4>
+      </Modal.Header>
+      <Modal.Body>
+        Are you sure to delete this campaign?
+      </Modal.Body>
+      <Modal.Footer>
+        <button onClick={() => { deleteCampaign(data?.value) }} className='btn btn-danger w-25 me-4'>Confirm</button>
+        <button onClick={() => handler()} className='btn w-25 btn-primary'>Cancel</button>
+      </Modal.Footer>
+    </Modal>
+  )
+}
+
+const ViewModal = ({ data, handler, productsListing, couponListing }) => {
+  return (
+    <Modal show={data.toggle} backdrop={"static"} centered onHide={() => handler()}>
+      <Modal.Header closeButton>
+        <h4 className='fw-bold'>Campaign Info</h4>
+      </Modal.Header>
+      <Modal.Body>
+        <ul style={{ listStyleType: "none" }}>
+          <li className="my-2">Campaign Name: <span className="fw-bold text-capitalize">{data?.value?.campaign_name}</span></li>
+          <li className="my-2">Product Name: <span className="fw-bold text-capitalize">{productsListing(data?.value?.product)}</span></li>
+          <li className="my-2">Date: <span className="fw-bold text-capitalize">{data?.value?.date}</span></li>
+          <li className="my-2">End Date: <span className="fw-bold text-capitalize">{data?.value?.end_date}</span></li>
+          <li className="my-2">Influencer: <span className="fw-bold text-capitalize">{data?.value?.influencer_name}</span></li>
+          <li className="my-2">Influencer Fee: <span className="fw-bold text-capitalize">{data?.value?.influencer_fee}</span></li>
+          <li className="my-2">Influencer Visit: <span className="fw-bold text-capitalize">{data?.value?.influencer_visit}</span></li>
+          <li className="my-2">Coupon: <span className="fw-bold text-capitalize">{couponListing(data?.value?.product, "coupons")}</span></li>
+          <li className="my-2">Discount: <span className="fw-bold text-capitalize">{couponListing(data?.value?.product, "discount")}</span></li>
+          <li className="my-2">Description: <span className="fw-bold text-capitalize">{data?.value?.description}</span></li>
+        </ul>
+      </Modal.Body>
+    </Modal>
+  )
+}
+
+export default CampTable

@@ -26,10 +26,8 @@ function StripeDetails() {
             }
         })
         .then(function (response) {
-            console.log("Payment", response);
         })
         .catch(function (error) {
-            console.log(error);
             if(error.response.data.publishable_key) {
                 toast.warn("Publish key should not be empty", { autoClose: 1000 })
             }

@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useContext} from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import MenuBar from '../navbar/Navbar';
 import Col from 'react-bootstrap/Col';
 import Nav from 'react-bootstrap/Nav';
@@ -18,873 +18,873 @@ import SideBar from '../sidebar/Sidebar';
 import './pages.scss';
 
 const CampaignManage = () => {
-    const {userToken, marketData, campList, setCampList, campListPending, setCampListPending, countCamp, setCountCamp, draftList, setDraftList} = useContext(UserContext);
-    const [campName, setCampName] = useState('');
-    const [influenceVisit, setInfluenceVisit] = useState('');
-    const [prodDiscount, setProdDiscount] = useState('');
-    const [prodOffer, setProdOffer] = useState('');
-    const [getMarketInfo, setGetMarketInfo] = useState([]);
-    const [getMarket, setGetMarket] = useState(false);
-    const [getDeleteConfirm, setDeleteConfirm] = useState(false);
-    const [influencerList, setInfluencerList] = useState([]);
-    const [loading, setLoading] = useState(false);
-    const [pendingId, setPendingId] = useState([]);
-    const [activeId, setActiveId] = useState([]);
-    const [approvedList, setApprovedList] = useState([]);
-    const [expiredList, setExpiredList] = useState([])
-    const [productNames, setProductNames] = useState([]);
-    const [pendingNames, setPendingNames] = useState([]);
-    const [activeNames, setActiveNames] = useState([]);
-    const [vendorDecline, setVendorDecline] = useState([]);
-    const [vendorDeclineList, setVendorDeclineList] = useState([]);
-    const [getId, setGetId] = useState('');
-    const token = localStorage.getItem('Token');
-    const navigate = useNavigate();
+  const { userToken, marketData, campList, setCampList, campListPending, setCampListPending, countCamp, setCountCamp, draftList, setDraftList } = useContext(UserContext);
+  const [campName, setCampName] = useState('');
+  const [influenceVisit, setInfluenceVisit] = useState('');
+  const [prodDiscount, setProdDiscount] = useState('');
+  const [prodOffer, setProdOffer] = useState('');
+  const [getMarketInfo, setGetMarketInfo] = useState([]);
+  const [getMarket, setGetMarket] = useState(false);
+  const [getDeleteConfirm, setDeleteConfirm] = useState(false);
+  const [influencerList, setInfluencerList] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [pendingId, setPendingId] = useState([]);
+  const [activeId, setActiveId] = useState([]);
+  const [approvedList, setApprovedList] = useState([]);
+  const [expiredList, setExpiredList] = useState([])
+  const [productNames, setProductNames] = useState([]);
+  const [pendingNames, setPendingNames] = useState([]);
+  const [activeNames, setActiveNames] = useState([]);
+  const [vendorDecline, setVendorDecline] = useState([]);
+  const [vendorDeclineList, setVendorDeclineList] = useState([]);
+  const [getId, setGetId] = useState('');
+  const token = localStorage.getItem('Token');
+  const navigate = useNavigate();
 
-    const handleCampName = (event) => {
-        setCampName(event.target.value);
+  const handleCampName = (event) => {
+    setCampName(event.target.value);
+  }
+
+  const handleInfluenceVisit = (event) => {
+    setInfluenceVisit(event.target.value);
+  }
+
+  const handleProdDiscount = (event) => {
+    setProdDiscount(event.target.value);
+  }
+
+  const handleProdOffer = (event) => {
+    setProdOffer(event.target.value);
+  }
+
+  const fetchData = async () => {
+    try {
+      const [influencerResponse, approvalResponse] = await Promise.all([
+        axios.get(API.BASE_URL + 'influencer/list/', {
+          headers: {
+            Authorization: `Token ${token}`
+          }
+        }),
+        axios.get(API.BASE_URL + 'vendor_approval/', {
+          headers: {
+            Authorization: `Token ${token}`
+          }
+        })
+      ]);
+
+      console.log("Influencer List", influencerResponse.data.data);
+      setInfluencerList(influencerResponse.data.data);
+
+      console.log("Approved List", approvalResponse.data.data);
+      setApprovedList(approvalResponse.data.data);
+
+      const updatedApprovedList = approvalResponse.data.data.map((approved) => {
+        const matchingInfluencer = influencerResponse.data.data.find(
+          (influencer) => influencer.id === approved.influencer_name
+        );
+        if (matchingInfluencer) {
+          return { ...approved, username: matchingInfluencer.username };
+        }
+        return approved;
+      });
+      setApprovedList(updatedApprovedList);
+      console.log("Approved Names", updatedApprovedList);
+
+    } catch (error) {
+      console.log(error);
     }
+  };
 
-    const handleInfluenceVisit = (event) => {
-        setInfluenceVisit(event.target.value);
+  const fetchActiveData = async () => {
+    try {
+      const [influencerResponse, activeResponse] = await Promise.all([
+        axios.get(API.BASE_URL + 'influencer/list/', {
+          headers: {
+            Authorization: `Token ${token}`
+          }
+        }),
+        axios.get(API.BASE_URL + 'active/', {
+          headers: {
+            Authorization: `Token ${token}`
+          }
+        })
+      ]);
+
+      console.log("Influencer List", influencerResponse.data.data);
+      setInfluencerList(influencerResponse.data.data);
+
+      console.log("Active List", activeResponse.data.data);
+      setCampList(activeResponse.data.data);
+
+      const updatedActiveList = activeResponse.data.data.map((approved) => {
+        const matchingInfluencer = influencerResponse.data.data.find(
+          (influencer) => influencer.id === approved.influencer_name
+        );
+        if (matchingInfluencer) {
+          return { ...approved, username: matchingInfluencer.username };
+        }
+        return approved;
+      });
+      setCampList(updatedActiveList);
+      console.log("Active Names", updatedActiveList);
+
+    } catch (error) {
+      console.log(error);
     }
+  };
 
-    const handleProdDiscount = (event) => {
-        setProdDiscount(event.target.value);
+  const fetchDeclineData = async () => {
+    try {
+      const [influencerResponse, declineResponse] = await Promise.all([
+        axios.get(API.BASE_URL + 'influencer/list/', {
+          headers: {
+            Authorization: `Token ${token}`
+          }
+        }),
+        axios.get(API.BASE_URL + 'vendor_decline/', {
+          headers: {
+            Authorization: `Token ${token}`
+          }
+        })
+      ]);
+
+      console.log("Influencer List", influencerResponse.data.data);
+      setInfluencerList(influencerResponse.data.data);
+
+      console.log("Decline List", declineResponse.data.data);
+      setVendorDecline(declineResponse.data.data);
+
+      const updatedDeclinedList = declineResponse.data.data.map((approved) => {
+        const matchingInfluencer = influencerResponse.data.data.find(
+          (influencer) => influencer.id === approved.influencer_name
+        );
+        if (matchingInfluencer) {
+          return { ...approved, username: matchingInfluencer.username };
+        }
+        return approved;
+      });
+      setVendorDeclineList(updatedDeclinedList);
+      console.log("Approved Names", updatedDeclinedList);
+
+    } catch (error) {
+      console.log(error);
     }
+  };
 
-    const handleProdOffer = (event) => {
-        setProdOffer(event.target.value);
+  const fetchUpdatedDeclineData = async () => {
+    try {
+      const [influencerResponse, updatedDeclineResponse] = await Promise.all([
+        axios.get(API.BASE_URL + 'influencer/list/', {
+          headers: {
+            Authorization: `Token ${token}`
+          }
+        }),
+        axios.get(API.BASE_URL + 'vendor_decline/', {
+          headers: {
+            Authorization: `Token ${token}`
+          }
+        })
+      ]);
+
+      console.log("Influencer List", influencerResponse.data.data);
+      setInfluencerList(influencerResponse.data.data);
+
+      console.log("Active List", updatedDeclineResponse.data.data);
+      setVendorDeclineList(updatedDeclineResponse.data.data);
+
+      const updatedDeclineList = updatedDeclineResponse.data.data.map((approved) => {
+        const matchingInfluencer = influencerResponse.data.data.find(
+          (influencer) => influencer.id === approved.influencer_name
+        );
+        if (matchingInfluencer) {
+          return { ...approved, username: matchingInfluencer.username };
+        }
+        return approved;
+      });
+      setVendorDeclineList(updatedDeclineList);
+      console.log("Active Names", updatedDeclineList);
+
+    } catch (error) {
+      console.log(error);
     }
+  };
 
-    useEffect(() => {
+  useEffect(() => {
+
+    fetchData();
+    fetchActiveData();
+    fetchDeclineData();
+    fetchUpdatedDeclineData();
+
+    axios.get(API.BASE_URL + 'pending/', {
+      headers: {
+        Authorization: `Token ${token}`
+      }
+    })
+      .then(function (response) {
+        setCampListPending(response.data.data);
+        setPendingId(response.data.product_id);
+        console.log("Pending", response.data)
+      })
+      .catch(function (error) {
+        console.log(error);
+      })
+
+    axios.get(API.BASE_URL + 'product/list/', {
+      headers: {
+        Authorization: `Token ${token}`
+      }
+    })
+      .then(function (response) {
+        setProductNames(response.data.success.products);
+      })
+      .catch(function (error) {
+        console.log(error);
+      })
+
+    axios.get(API.BASE_URL + 'draft/list/', {
+      headers: {
+        Authorization: `Token ${token}`
+      }
+    })
+      .then(function (response) {
+        console.log("Draft List", response);
+        setDraftList(response.data.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      })
+
+    axios.get(API.BASE_URL + 'campaignexp/', {
+      headers: {
+        Authorization: `Token ${token}`
+      }
+    })
+      .then(function (response) {
+        console.log("Expired List", response.data.data);
+        setExpiredList(response.data.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      })
+  }, [token])
+
+  function deleteCampaign(value) {
+    setLoading(true);
+    axios.delete(API.BASE_URL + 'delete/' + value + '/', {
+      headers: {
+        Authorization: `Token ${token}`
+      }
+    })
+      .then(function (response) {
+        console.log("Delete", response)
+        toast.success("Campaign Deleted!", { autoClose: 1000 });
+        setCampList(campList.filter(campaign => campaign.campaignid_id !== value));
+        setCampListPending(campListPending.filter(campaign => campaign.campaignid_id !== value));
+        setDraftList(draftList.filter(campaign => campaign.campaignid_id !== value))
+        setDeleteConfirm(false);
+      })
+      .catch(function (error) {
+        console.log(error);
+        toast.warn("Cannot Delete right now. Please try again later", { autoClose: 1000 })
+      })
+      .finally(() => setLoading(false));
+  }
+
+  function deleteConfirm(value) {
+    console.log(value);
+    setGetId(value);
+    setDeleteConfirm(true);
+  }
+
+  const getSingleMarket = (value, event) => {
+    console.log("VLSE", value)
+    event.preventDefault();
+    setLoading(true);
+    axios.get(API.BASE_URL + 'single/' + value + '/', {
+      headers: {
+        Authorization: `Token ${token}`
+      }
+    })
+      .then(function (response) {
+        console.log("Single Market Data", response.data.data)
+        setGetMarketInfo(response.data.data[0])
+        // setGetMarket(true);
+        setCampName(response.data.data.campaign_name)
+        setProdOffer(response.data.data.offer)
+        setProdDiscount(response.data.data.product_discount)
+        setInfluenceVisit(response.data.data.description)
+        navigate(`/create-influencer/${response.data.data[0].campaignid_id}`)
+      })
+      .catch(function (error) {
+        console.log(error);
+      })
+      .finally(() => setLoading(false));
+  }
+
+  const showMarketCampaign = (event, value) => {
+    event.preventDefault();
+    setLoading(true);
+    axios.get(API.BASE_URL + 'single/' + value + '/', {
+      headers: {
+        Authorization: `Token ${token}`
+      }
+    })
+      .then(function (response) {
+        console.log("Single Market Data", response.data.data)
+        setGetMarket(true);
+        setGetMarketInfo(response.data.data[0])
+        setCampName(response.data.data.campaign_name)
+        setProdOffer(response.data.data.offer)
+        setProdDiscount(response.data.data.product_discount)
+        setInfluenceVisit(response.data.data.description)
+      })
+      .catch(function (error) {
+        console.log(error);
+      })
+      .finally(() => setLoading(false));
+  }
+
+  const editCampaign = (value, event) => {
+    console.log(value)
+    event.preventDefault();
+    setLoading(true);
+    axios.put(API.BASE_URL + 'update/' + value + '/', {
+      campaign_name: campName,
+      description: influenceVisit,
+      offer: prodOffer,
+      product_discount: prodDiscount
+    }, {
+      headers: {
+        Authorization: `Token ${token}`
+      }
+    })
+      .then(function (response) {
+        couponCross();
+        toast.success("Campaign Edited!", { autoClose: 1000 });
+        axios.get(API.BASE_URL + 'active/', {
+          headers: {
+            Authorization: `Token ${token}`
+          }
+        })
+          .then(function (response) {
+            setCampList(response.data.data);
+            axios.get(API.BASE_URL + 'active/', {
+              headers: {
+                Authorization: `Token ${token}`
+              }
+            })
+              .then(function (response) {
+                setCampList(response.data.data);
+                setActiveId(response.data.product_id)
+              })
+              .catch(function (error) {
+                console.log(error);
+              })
+
+            axios.get(API.BASE_URL + 'pending/', {
+              headers: {
+                Authorization: `Token ${token}`
+              }
+            })
+              .then(function (response) {
+                setCampListPending(response.data.data);
+                setPendingId(response.data.product_id)
+              })
+              .catch(function (error) {
+                console.log(error);
+              })
+
+            axios.get(API.BASE_URL + 'product/list/', {
+              headers: {
+                Authorization: `Token ${token}`
+              }
+            })
+              .then(function (response) {
+                setProductNames(response.data.success.products);
+              })
+              .catch(function (error) {
+                console.log(error);
+              })
+
+            axios.get(API.BASE_URL + 'draft/list/', {
+              headers: {
+                Authorization: `Token ${token}`
+              }
+            })
+              .then(function (response) {
+                console.log("Draft List", response)
+                setDraftList(response.data.data);
+              })
+              .catch(function (error) {
+                console.log(error);
+              })
+          })
+          .catch(function (error) {
+            console.log(error);
+          })
+
+        axios.get(API.BASE_URL + 'pending/', {
+          headers: {
+            Authorization: `Token ${token}`
+          }
+        })
+          .then(function (response) {
+            setCampListPending(response.data.data);
+          })
+          .catch(function (error) {
+            console.log(error);
+          })
+      })
+      .catch(function (error) {
+        console.log(error);
+      })
+      .finally(() => setLoading(false));
+  }
+
+  const couponCross = () => {
+    setGetMarket(false)
+    setDeleteConfirm(false)
+  }
+
+  const getPendingProduct = () => {
+    const names = [];
+    pendingId?.forEach((ids) => {
+      const productNamesArr = [];
+      ids.forEach((id) => {
+        const product = productNames.find((p) => p.id === id);
+        if (product) {
+          productNamesArr.push(product.title);
+        }
+      });
+      names.push(productNamesArr);
+    });
+    setPendingNames(names);
+  };
+
+  const getActiveProduct = () => {
+    const names = [];
+    activeId?.forEach((ids) => {
+      const productNamesArr = [];
+      ids.forEach((id) => {
+        const product = productNames.find((p) => p.id === id);
+        if (product) {
+          productNamesArr.push(product.title);
+        }
+      });
+      names.push(productNamesArr);
+    });
+    setActiveNames(names);
+  };
+
+  const handleVendorAccept = (value, idValue) => {
+    setLoading(true);
+    axios.post(API.BASE_URL + 'vendor/accept/' + value + '/' + idValue + '/', {}, {
+      headers: {
+        Authorization: `Token ${token}`
+      }
+    })
+      .then(function (response) {
+        console.log("Accepted", response)
+        toast.success("Campaign Accepted!", { autoClose: 1000 });
+        setCampList(campList.filter(campaign => campaign.campaignid_id !== value));
+        setCampListPending(campListPending.filter(campaign => campaign.campaignid_id !== value));
+        setDraftList(draftList.filter(campaign => campaign.campaignid_id !== value))
         const fetchData = async () => {
-            try {
-              const [influencerResponse, approvalResponse] = await Promise.all([
-                axios.get(API.BASE_URL + 'influencer/list/', {
-                  headers: {
-                    Authorization: `Token ${token}`
-                  }
-                }),
-                axios.get(API.BASE_URL + 'vendor_approval/', {
-                  headers: {
-                    Authorization: `Token ${token}`
-                  }
-                })
-              ]);
-        
-              console.log("Influencer List", influencerResponse.data.data);
-              setInfluencerList(influencerResponse.data.data);
-        
-              console.log("Approved List", approvalResponse.data.data);
-              setApprovedList(approvalResponse.data.data);
-        
-              const updatedApprovedList = approvalResponse.data.data.map((approved) => {
-                const matchingInfluencer = influencerResponse.data.data.find(
-                  (influencer) => influencer.id === approved.influencer_name
-                );
-                if (matchingInfluencer) {
-                  return { ...approved, username: matchingInfluencer.username };
+          try {
+            const [influencerResponse, approvalResponse] = await Promise.all([
+              axios.get(API.BASE_URL + 'influencer/list/', {
+                headers: {
+                  Authorization: `Token ${token}`
                 }
-                return approved;
-              });
-              setApprovedList(updatedApprovedList);
-              console.log("Approved Names", updatedApprovedList);
-        
-            } catch (error) {
-              console.log(error);
-            }
+              }),
+              axios.get(API.BASE_URL + 'vendor_approval/', {
+                headers: {
+                  Authorization: `Token ${token}`
+                }
+              })
+            ]);
+
+            console.log("Influencer List", influencerResponse.data.data);
+            setInfluencerList(influencerResponse.data.data);
+
+            console.log("Approved List", approvalResponse.data.data);
+            setApprovedList(approvalResponse.data.data);
+
+            const updatedApprovedList = approvalResponse.data.data.map((approved) => {
+              const matchingInfluencer = influencerResponse.data.data.find(
+                (influencer) => influencer.id === approved.influencer_name
+              );
+              if (matchingInfluencer) {
+                return { ...approved, username: matchingInfluencer.username };
+              }
+              return approved;
+            });
+            setApprovedList(updatedApprovedList);
+            console.log("Approved Names", updatedApprovedList);
+
+          } catch (error) {
+            console.log(error);
+          }
         };
-        
         fetchData();
 
         const fetchActiveData = async () => {
-            try {
-              const [influencerResponse, activeResponse] = await Promise.all([
-                axios.get(API.BASE_URL + 'influencer/list/', {
-                  headers: {
-                    Authorization: `Token ${token}`
-                  }
-                }),
-                axios.get(API.BASE_URL + 'active/', {
-                  headers: {
-                    Authorization: `Token ${token}`
-                  }
-                })
-              ]);
-        
-              console.log("Influencer List", influencerResponse.data.data);
-              setInfluencerList(influencerResponse.data.data);
-        
-              console.log("Active List", activeResponse.data.data);
-              setCampList(activeResponse.data.data);
-        
-              const updatedActiveList = activeResponse.data.data.map((approved) => {
-                const matchingInfluencer = influencerResponse.data.data.find(
-                  (influencer) => influencer.id === approved.influencer_name
-                );
-                if (matchingInfluencer) {
-                  return { ...approved, username: matchingInfluencer.username };
+          try {
+            const [influencerResponse, activeResponse] = await Promise.all([
+              axios.get(API.BASE_URL + 'influencer/list/', {
+                headers: {
+                  Authorization: `Token ${token}`
                 }
-                return approved;
-              });
-              setCampList(updatedActiveList);
-              console.log("Active Names", updatedActiveList);
-        
-            } catch (error) {
-              console.log(error);
-            }
+              }),
+              axios.get(API.BASE_URL + 'active/', {
+                headers: {
+                  Authorization: `Token ${token}`
+                }
+              })
+            ]);
+
+            console.log("Influencer List", influencerResponse.data.data);
+            setInfluencerList(influencerResponse.data.data);
+
+            console.log("Active List", activeResponse.data.data);
+            setCampList(activeResponse.data.data);
+
+            const updatedActiveList = activeResponse.data.data.map((approved) => {
+              const matchingInfluencer = influencerResponse.data.data.find(
+                (influencer) => influencer.id === approved.influencer_name
+              );
+              if (matchingInfluencer) {
+                return { ...approved, username: matchingInfluencer.username };
+              }
+              return approved;
+            });
+            setCampList(updatedActiveList);
+            console.log("Active Names", updatedActiveList);
+
+          } catch (error) {
+            console.log(error);
+          }
         };
-        
         fetchActiveData();
 
-        const fetchDeclineData = async () => {
-            try {
-              const [influencerResponse, declineResponse] = await Promise.all([
-                axios.get(API.BASE_URL + 'influencer/list/', {
-                  headers: {
-                    Authorization: `Token ${token}`
-                  }
-                }),
-                axios.get(API.BASE_URL + 'vendor_decline/',{
-                    headers: {
-                        Authorization: `Token ${token}`
-                    }
-                })
-              ]);
-        
-              console.log("Influencer List", influencerResponse.data.data);
-              setInfluencerList(influencerResponse.data.data);
-        
-              console.log("Decline List", declineResponse.data.data);
-              setVendorDecline(declineResponse.data.data);
-        
-              const updatedDeclinedList = declineResponse.data.data.map((approved) => {
-                const matchingInfluencer = influencerResponse.data.data.find(
-                  (influencer) => influencer.id === approved.influencer_name
-                );
-                if (matchingInfluencer) {
-                  return { ...approved, username: matchingInfluencer.username };
+      })
+      .catch(function (error) {
+        console.log(error);
+        toast.warn("Cannot Accept right now. Please try again later", { autoClose: 1000 })
+      })
+      .finally(() => setLoading(false));
+  }
+
+  const handleVendorDecline = (value, idValue) => {
+    setLoading(true);
+    axios.post(API.BASE_URL + 'vendor/decline/' + value + '/' + idValue + '/', {}, {
+      headers: {
+        Authorization: `Token ${token}`
+      }
+    })
+      .then(function (response) {
+        console.log("Decline", response)
+        toast.success("Campaign Declined!", { autoClose: 1000 });
+        setCampList(campList.filter(campaign => campaign.campaignid_id !== value));
+        setCampListPending(campListPending.filter(campaign => campaign.campaignid_id !== value));
+        setDraftList(draftList.filter(campaign => campaign.campaignid_id !== value));
+        console.log("Approve Listttt", approvedList);
+        const fetchData = async () => {
+          try {
+            const [influencerResponse, approvalResponse] = await Promise.all([
+              axios.get(API.BASE_URL + 'influencer/list/', {
+                headers: {
+                  Authorization: `Token ${token}`
                 }
-                return approved;
-              });
-              setVendorDeclineList(updatedDeclinedList);
-              console.log("Approved Names", updatedDeclinedList);
-        
-            } catch (error) {
-              console.log(error);
-            }
-        };
-        
-        fetchDeclineData();
-
-        const fetchUpdatedDeclineData = async () => {
-            try {
-              const [influencerResponse, updatedDeclineResponse] = await Promise.all([
-                axios.get(API.BASE_URL + 'influencer/list/', {
-                  headers: {
-                    Authorization: `Token ${token}`
-                  }
-                }),
-                axios.get(API.BASE_URL + 'vendor_decline/', {
-                  headers: {
-                    Authorization: `Token ${token}`
-                  }
-                })
-              ]);
-        
-              console.log("Influencer List", influencerResponse.data.data);
-              setInfluencerList(influencerResponse.data.data);
-        
-              console.log("Active List", updatedDeclineResponse.data.data);
-              setVendorDeclineList(updatedDeclineResponse.data.data);
-        
-              const updatedDeclineList = updatedDeclineResponse.data.data.map((approved) => {
-                const matchingInfluencer = influencerResponse.data.data.find(
-                  (influencer) => influencer.id === approved.influencer_name
-                );
-                if (matchingInfluencer) {
-                  return { ...approved, username: matchingInfluencer.username };
+              }),
+              axios.get(API.BASE_URL + 'vendor_approval/', {
+                headers: {
+                  Authorization: `Token ${token}`
                 }
-                return approved;
-              });
-              setVendorDeclineList(updatedDeclineList);
-              console.log("Active Names", updatedDeclineList);
-        
-            } catch (error) {
-              console.log(error);
-            }
-        };
-        
-        fetchUpdatedDeclineData();
+              })
+            ]);
 
-        axios.get(API.BASE_URL + 'pending/',{
-            headers: {
-                Authorization: `Token ${token}`
-            }
-        })
-        .then(function (response) {
-            setCampListPending(response.data.data);
-            setPendingId(response.data.product_id);
-            console.log("Pending", response.data)
-        })
-        .catch(function (error) {
+            console.log("Influencer List", influencerResponse.data.data);
+            setInfluencerList(influencerResponse.data.data);
+
+            console.log("Approved List", approvalResponse.data.data);
+            setApprovedList(approvalResponse.data.data);
+
+            const updatedApprovedList = approvalResponse.data.data.map((approved) => {
+              const matchingInfluencer = influencerResponse.data.data.find(
+                (influencer) => influencer.id === approved.influencer_name
+              );
+              if (matchingInfluencer) {
+                return { ...approved, username: matchingInfluencer.username };
+              }
+              return approved;
+            });
+            setApprovedList(updatedApprovedList);
+            console.log("Approved Names", updatedApprovedList);
+
+          } catch (error) {
             console.log(error);
-        })
-
-        axios.get(API.BASE_URL + 'product/list/',{
-            headers: {
-                Authorization: `Token ${token}`
-            }
-        })
-        .then(function (response) {
-            setProductNames(response.data.success.products);
-        })
-        .catch(function (error) {
-            console.log(error);
-        })
-
-        axios.get(API.BASE_URL + 'draft/list/',{
-            headers: {
-                Authorization: `Token ${token}`
-            }
-        })
-        .then(function (response) {
-            console.log("Draft List",response);
-            setDraftList(response.data.data);
-        })
-        .catch(function (error) {
-            console.log(error);
-        })
-
-        axios.get(API.BASE_URL + 'campaignexp/',{
-          headers: {
-              Authorization: `Token ${token}`
           }
-        })
-        .then(function (response) {
-            console.log("Expired List",response.data.data);
-            setExpiredList(response.data.data);
-        })
-        .catch(function (error) {
-            console.log(error);
-        })
-    }, [token])
+        };
 
-    function deleteCampaign(value) {
-        setLoading(true);
-        axios.delete(API.BASE_URL + 'delete/' + value + '/',{
-            headers: {
-                Authorization: `Token ${token}`
-            }
-        })
-        .then(function (response) {
-            console.log("Delete" ,response)
-            toast.success("Campaign Deleted!", { autoClose: 1000 });
-            setCampList(campList.filter(campaign => campaign.campaignid_id !== value));
-            setCampListPending(campListPending.filter(campaign => campaign.campaignid_id !== value));
-            setDraftList(draftList.filter(campaign => campaign.campaignid_id !== value))
-            setDeleteConfirm(false);
-        })
-        .catch(function (error) {
-            console.log(error);
-            toast.warn("Cannot Delete right now. Please try again later", { autoClose: 1000 })
-        })
-        .finally(() => setLoading(false));
-    }
+        fetchData();
+      })
+      .catch(function (error) {
+        console.log(error);
+        toast.warn("Cannot Decline right now. Please try again later", { autoClose: 1000 })
+      })
+      .finally(() => setLoading(false));
+  }
 
-    function deleteConfirm(value) {
-        console.log(value);
-        setGetId(value);
-        setDeleteConfirm(true);
-    }
+  useEffect(() => {
+    getPendingProduct()
+    getActiveProduct()
+  }, [])
 
-    const getSingleMarket = (value, event) => {
-        console.log("VLSE", value)
-        event.preventDefault();
-        setLoading(true);
-        axios.get(API.BASE_URL +  'single/' + value + '/', {
-            headers: {
-                Authorization: `Token ${token}`
-        }})
-        .then(function (response) {
-            console.log("Single Market Data" ,response.data.data)
-            setGetMarketInfo(response.data.data[0])
-            // setGetMarket(true);
-            setCampName(response.data.data.campaign_name)
-            setProdOffer(response.data.data.offer)
-            setProdDiscount(response.data.data.product_discount)
-            setInfluenceVisit(response.data.data.description)
-            navigate(`/create-influencer/${response.data.data[0].campaignid_id}`)
-        })
-        .catch(function (error) {
-            console.log(error);
-        })
-        .finally(() => setLoading(false));
-    }
+  console.log("CampList", approvedList);
 
-    const showMarketCampaign = (event, value) => {
-      event.preventDefault();
-      setLoading(true);
-        axios.get(API.BASE_URL +  'single/' + value + '/', {
-            headers: {
-                Authorization: `Token ${token}`
-        }})
-        .then(function (response) {
-            console.log("Single Market Data" ,response.data.data)
-            setGetMarket(true);
-            setGetMarketInfo(response.data.data[0])
-            setCampName(response.data.data.campaign_name)
-            setProdOffer(response.data.data.offer)
-            setProdDiscount(response.data.data.product_discount)
-            setInfluenceVisit(response.data.data.description)
-        })
-        .catch(function (error) {
-            console.log(error);
-        })
-        .finally(() => setLoading(false));
-    }
-
-    const editCampaign = (value, event) => {
-        console.log(value)
-        event.preventDefault();
-        setLoading(true);
-        axios.put(API.BASE_URL + 'update/' + value + '/',{
-            campaign_name: campName,
-            description: influenceVisit,
-            offer: prodOffer,
-            product_discount: prodDiscount
-        },{
-            headers: { 
-                Authorization: `Token ${token}` 
-            }
-        })
-        .then(function (response) {
-            couponCross();
-            toast.success("Campaign Edited!", { autoClose: 1000 });
-            axios.get(API.BASE_URL + 'active/',{
-                headers: { 
-                    Authorization: `Token ${token}` 
-                }
-            })
-            .then(function (response) {
-                setCampList(response.data.data);
-                axios.get(API.BASE_URL + 'active/',{
-                    headers: { 
-                        Authorization: `Token ${token}` 
-                    }
-                })
-                .then(function (response) {
-                    setCampList(response.data.data);
-                    setActiveId(response.data.product_id)
-                })
-                .catch(function (error) {
-                    console.log(error);
-                })
-        
-                axios.get(API.BASE_URL + 'pending/',{
-                    headers: { 
-                        Authorization: `Token ${token}` 
-                    }
-                })
-                .then(function (response) {
-                    setCampListPending(response.data.data);
-                    setPendingId(response.data.product_id)
-                })
-                .catch(function (error) {
-                    console.log(error);
-                })
-        
-                axios.get(API.BASE_URL + 'product/list/',{
-                    headers: { 
-                        Authorization: `Token ${token}` 
-                    }
-                })
-                .then(function (response) {
-                    setProductNames(response.data.success.products);
-                })
-                .catch(function (error) {
-                    console.log(error);
-                })
-        
-                axios.get(API.BASE_URL + 'draft/list/',{
-                    headers: { 
-                        Authorization: `Token ${token}` 
-                    }
-                })
-                .then(function (response) {
-                    console.log("Draft List",response)
-                    setDraftList(response.data.data);
-                })
-                .catch(function (error) {
-                    console.log(error);
-                })
-            })
-            .catch(function (error) {
-                console.log(error);
-            })
-    
-            axios.get(API.BASE_URL + 'pending/',{
-                headers: { 
-                    Authorization: `Token ${token}` 
-                }
-            })
-            .then(function (response) {
-                setCampListPending(response.data.data);
-            })
-            .catch(function (error) {
-                console.log(error);
-            })
-        })
-        .catch(function (error) {
-            console.log(error);
-        })
-        .finally(() => setLoading(false));
-    }
-
-    const couponCross = () => {
-        setGetMarket(false)
-        setDeleteConfirm(false)
-    }
-
-    const getPendingProduct = () => {
-        const names = [];
-        pendingId?.forEach((ids) => {
-            const productNamesArr = [];
-            ids.forEach((id) => {
-                const product = productNames.find((p) => p.id === id);
-                if (product) {
-                    productNamesArr.push(product.title);
-                }
-            });
-            names.push(productNamesArr);
-        });
-        setPendingNames(names);
-    };
-
-    const getActiveProduct = () => {
-        const names = [];
-        activeId?.forEach((ids) => {
-            const productNamesArr = [];
-            ids.forEach((id) => {
-                const product = productNames.find((p) => p.id === id);
-                if (product) {
-                    productNamesArr.push(product.title);
-                }
-            });
-            names.push(productNamesArr);
-        });
-        setActiveNames(names);
-    };
-
-    const handleVendorAccept = (value, idValue) => {
-        setLoading(true);
-        axios.post(API.BASE_URL + 'vendor/accept/' + value + '/' + idValue + '/',{},{
-            headers: { 
-                Authorization: `Token ${token}` 
-            }
-        })
-        .then(function (response) {
-            console.log("Accepted" ,response)
-            toast.success("Campaign Accepted!", { autoClose: 1000 });
-            setCampList(campList.filter(campaign => campaign.campaignid_id !== value));
-            setCampListPending(campListPending.filter(campaign => campaign.campaignid_id !== value));
-            setDraftList(draftList.filter(campaign => campaign.campaignid_id !== value))
-            const fetchData = async () => {
-                try {
-                  const [influencerResponse, approvalResponse] = await Promise.all([
-                    axios.get(API.BASE_URL + 'influencer/list/', {
-                      headers: { 
-                        Authorization: `Token ${token}` 
-                      }
-                    }),
-                    axios.get(API.BASE_URL + 'vendor_approval/', {
-                      headers: { 
-                        Authorization: `Token ${token}` 
-                      }
-                    })
-                  ]);
-            
-                  console.log("Influencer List", influencerResponse.data.data);
-                  setInfluencerList(influencerResponse.data.data);
-            
-                  console.log("Approved List", approvalResponse.data.data);
-                  setApprovedList(approvalResponse.data.data);
-            
-                  const updatedApprovedList = approvalResponse.data.data.map((approved) => {
-                    const matchingInfluencer = influencerResponse.data.data.find(
-                      (influencer) => influencer.id === approved.influencer_name
-                    );
-                    if (matchingInfluencer) {
-                      return { ...approved, username: matchingInfluencer.username };
-                    }
-                    return approved;
-                  });
-                  setApprovedList(updatedApprovedList);
-                  console.log("Approved Names", updatedApprovedList);
-            
-                } catch (error) {
-                  console.log(error);
-                }
-            };
-            fetchData();
-    
-            const fetchActiveData = async () => {
-                try {
-                  const [influencerResponse, activeResponse] = await Promise.all([
-                    axios.get(API.BASE_URL + 'influencer/list/', {
-                      headers: { 
-                        Authorization: `Token ${token}` 
-                      }
-                    }),
-                    axios.get(API.BASE_URL + 'active/', {
-                      headers: { 
-                        Authorization: `Token ${token}` 
-                      }
-                    })
-                  ]);
-            
-                  console.log("Influencer List", influencerResponse.data.data);
-                  setInfluencerList(influencerResponse.data.data);
-            
-                  console.log("Active List", activeResponse.data.data);
-                  setCampList(activeResponse.data.data);
-            
-                  const updatedActiveList = activeResponse.data.data.map((approved) => {
-                    const matchingInfluencer = influencerResponse.data.data.find(
-                      (influencer) => influencer.id === approved.influencer_name
-                    );
-                    if (matchingInfluencer) {
-                      return { ...approved, username: matchingInfluencer.username };
-                    }
-                    return approved;
-                  });
-                  setCampList(updatedActiveList);
-                  console.log("Active Names", updatedActiveList);
-            
-                } catch (error) {
-                  console.log(error);
-                }
-            };
-            fetchActiveData();
-            
-        })
-        .catch(function (error) {
-            console.log(error);
-            toast.warn("Cannot Accept right now. Please try again later", { autoClose: 1000 })
-        })
-        .finally(() => setLoading(false));
-    }
-
-    const handleVendorDecline = (value, idValue) => {
-        setLoading(true);
-        axios.post(API.BASE_URL + 'vendor/decline/' + value + '/' + idValue + '/',{},{
-            headers: { 
-                Authorization: `Token ${token}` 
-            }
-        })
-        .then(function (response) {
-            console.log("Decline" ,response)
-            toast.success("Campaign Declined!", { autoClose: 1000 });
-            setCampList(campList.filter(campaign => campaign.campaignid_id !== value));
-            setCampListPending(campListPending.filter(campaign => campaign.campaignid_id !== value));
-            setDraftList(draftList.filter(campaign => campaign.campaignid_id !== value));
-            console.log("Approve Listttt", approvedList);
-            const fetchData = async () => {
-                try {
-                  const [influencerResponse, approvalResponse] = await Promise.all([
-                    axios.get(API.BASE_URL + 'influencer/list/', {
-                      headers: {
-                        Authorization: `Token ${token}`
-                      }
-                    }),
-                    axios.get(API.BASE_URL + 'vendor_approval/', {
-                      headers: {
-                        Authorization: `Token ${token}`
-                      }
-                    })
-                  ]);
-            
-                  console.log("Influencer List", influencerResponse.data.data);
-                  setInfluencerList(influencerResponse.data.data);
-            
-                  console.log("Approved List", approvalResponse.data.data);
-                  setApprovedList(approvalResponse.data.data);
-            
-                  const updatedApprovedList = approvalResponse.data.data.map((approved) => {
-                    const matchingInfluencer = influencerResponse.data.data.find(
-                      (influencer) => influencer.id === approved.influencer_name
-                    );
-                    if (matchingInfluencer) {
-                      return { ...approved, username: matchingInfluencer.username };
-                    }
-                    return approved;
-                  });
-                  setApprovedList(updatedApprovedList);
-                  console.log("Approved Names", updatedApprovedList);
-            
-                } catch (error) {
-                  console.log(error);
-                }
-            };
-            
-            fetchData();
-        })
-        .catch(function (error) {
-            console.log(error);
-            toast.warn("Cannot Decline right now. Please try again later", { autoClose: 1000 })
-        })
-        .finally(() => setLoading(false));
-    }
-
-    useEffect(() => {
-        getPendingProduct()
-        getActiveProduct()
-    }, [])
-
-    console.log("CampList", approvedList);
-
-    console.log("campListPending", campListPending)
+  console.log("campListPending", campListPending)
 
   return (
     <>
-    <div className="campaign-manage-container p-4 page">
+      <div className="campaign-manage-container p-4 page">
         {loading && <div className='d-flex loader-container flex-column'><div className='loader'><span></span></div> <p className='text-white'>Processing...</p></div>}
         <h2 className='my-5'>Manage Campaign</h2>
         <Tab.Container id="left-tabs-example" defaultActiveKey="first">
-            <Col sm={12}>
+          <Col sm={12}>
             <Nav variant="pills" className="flex-row mb-2 tab-header">
-                <Nav.Item>
-                    <Nav.Link eventKey="first">Active</Nav.Link>
-                </Nav.Item>
-                <Nav.Item>
-                    <Nav.Link eventKey="second">Pending</Nav.Link>
-                </Nav.Item>
-                <Nav.Item>
-                    <Nav.Link eventKey="third">Draft</Nav.Link>
-                </Nav.Item>
-                <Nav.Item>
-                    <Nav.Link eventKey="four">Awaiting</Nav.Link>
-                </Nav.Item>
-                <Nav.Item>
-                    <Nav.Link eventKey="five">Declined</Nav.Link>
-                </Nav.Item>
-                <Nav.Item>
-                    <Nav.Link eventKey="six">Expired</Nav.Link>
-                </Nav.Item>
+              <Nav.Item>
+                <Nav.Link eventKey="first">Active</Nav.Link>
+              </Nav.Item>
+              <Nav.Item>
+                <Nav.Link eventKey="second">Pending</Nav.Link>
+              </Nav.Item>
+              <Nav.Item>
+                <Nav.Link eventKey="third">Draft</Nav.Link>
+              </Nav.Item>
+              <Nav.Item>
+                <Nav.Link eventKey="four">Awaiting</Nav.Link>
+              </Nav.Item>
+              <Nav.Item>
+                <Nav.Link eventKey="five">Declined</Nav.Link>
+              </Nav.Item>
+              <Nav.Item>
+                <Nav.Link eventKey="six">Expired</Nav.Link>
+              </Nav.Item>
             </Nav>
-            </Col>
-            <Col sm={12}>
+          </Col>
+          <Col sm={12}>
             <Tab.Content>
-                <Tab.Pane eventKey="first">
-                    {campList?.length > 0 ? (
-                        <CampaignTable campList={campList}
-                            showMarket={showMarketCampaign}
-                            getDeleteConfirm={getDeleteConfirm}
-                            getMarket={getMarket}
-                            influencerSale = {true}
-                            couponCross={couponCross}
-                            getMarketInfo={getMarketInfo}
-                            handleProdDiscount={handleProdDiscount}
-                            prodDiscount={prodDiscount}
-                            handleInfluenceVisit={handleInfluenceVisit}
-                            influenceVisit={influenceVisit}
-                            approved={true}
-                            declineInflu={false}
-                            campEdit = {true}
-                            approvedButtons = {true}
-                            editCampaign={editCampaign}
-                            deleteCampaign={deleteCampaign}
-                            getId={getId}
-                            handleCampName={handleCampName}
-                            campName={campName}
-                            handleProdOffer={handleProdOffer}
-                            showEdit={false}
-                        />
-                    )
-                    :
-                    (
-                        <>
-                            <img src={NoData} alt='no-data' style={{width: '100%', maxHeight: 220, marginTop: '4rem', objectFit: 'contain'}} />
-                            <h5 className='mt-4 text-center'>No Active Campaigns right now</h5>
-                        </>
-                    )}
-                </Tab.Pane>
-                <Tab.Pane eventKey="second" className='campaign'>
-                    {campListPending?.length > 0 ? (
-                        <CampaignTable 
-                            campList={campListPending}
-                            getSingleMarket={getSingleMarket}
-                            deleteConfirm={deleteConfirm}
-                            getDeleteConfirm={getDeleteConfirm}
-                            getMarket={getMarket}
-                            influencerSale = {true}
-                            couponCross={couponCross}
-                            getMarketInfo={getMarketInfo}
-                            handleProdDiscount={handleProdDiscount}
-                            prodDiscount={prodDiscount}
-                            handleInfluenceVisit={handleInfluenceVisit}
-                            influenceVisit={influenceVisit}
-                            approved={false}
-                            approvedButtons = {false}
-                            editCampaign={editCampaign}
-                            deleteCampaign={deleteCampaign}
-                            getId={getId}
-                            handleCampName={handleCampName}
-                            campName={campName}
-                            handleProdOffer={handleProdOffer}
-                        />
-                    ) 
-                    : 
-                    (
-                        <>
-                      <img src={NoData} alt='no-data' style={{width: '100%', maxHeight: 220, marginTop: '4rem', objectFit: 'contain'}} />
-                    <h5 className='mt-4 text-center'>No Pending Campaigns right now</h5>
+              <Tab.Pane eventKey="first">
+                {campList?.length > 0 ? (
+                  <CampaignTable campList={campList}
+                    showMarket={showMarketCampaign}
+                    getDeleteConfirm={getDeleteConfirm}
+                    getMarket={getMarket}
+                    influencerSale={true}
+                    couponCross={couponCross}
+                    getMarketInfo={getMarketInfo}
+                    handleProdDiscount={handleProdDiscount}
+                    prodDiscount={prodDiscount}
+                    handleInfluenceVisit={handleInfluenceVisit}
+                    influenceVisit={influenceVisit}
+                    approved={true}
+                    declineInflu={false}
+                    campEdit={true}
+                    approvedButtons={true}
+                    editCampaign={editCampaign}
+                    deleteCampaign={deleteCampaign}
+                    getId={getId}
+                    handleCampName={handleCampName}
+                    campName={campName}
+                    handleProdOffer={handleProdOffer}
+                    showEdit={false}
+                  />
+                )
+                  :
+                  (
+                    <>
+                      <img src={NoData} alt='no-data' style={{ width: '100%', maxHeight: 220, marginTop: '4rem', objectFit: 'contain' }} />
+                      <h5 className='mt-4 text-center'>No Active Campaigns right now</h5>
                     </>
-                    )}
-                </Tab.Pane>
-                <Tab.Pane eventKey="third" className='campaign'>
-                    {draftList?.length > 0 ? (
-                        <CampaignTable 
-                        campList={draftList}
-                        getSingleMarket={getSingleMarket}
-                        deleteConfirm={deleteConfirm}
-                        getDeleteConfirm={getDeleteConfirm}
-                        getMarket={getMarket}
-                        influencerSale = {true}
-                        couponCross={couponCross}
-                        getMarketInfo={getMarketInfo}
-                        handleProdDiscount={handleProdDiscount}
-                        prodDiscount={prodDiscount}
-                        handleInfluenceVisit={handleInfluenceVisit}
-                        influenceVisit={influenceVisit}
-                        editCampaign={editCampaign}
-                        deleteCampaign={deleteCampaign}
-                        getId={getId}
-                        approved={false}
-                        approvedButtons = {false}
-                        handleCampName={handleCampName}
-                        campName={campName}
-                        handleProdOffer={handleProdOffer}
-                    />
-                    ) 
-                    : 
-                    (
-                        <>
-                    <img src={NoData} alt='no-data' style={{width: '100%', maxHeight: 220, marginTop: '4rem', objectFit: 'contain'}} />
-                    <h5 className='mt-4 text-center'>No Campaigns in Draft right now</h5>
+                  )}
+              </Tab.Pane>
+              <Tab.Pane eventKey="second" className='campaign'>
+                {campListPending?.length > 0 ? (
+                  <CampaignTable
+                    campList={campListPending}
+                    getSingleMarket={getSingleMarket}
+                    deleteConfirm={deleteConfirm}
+                    getDeleteConfirm={getDeleteConfirm}
+                    getMarket={getMarket}
+                    influencerSale={true}
+                    couponCross={couponCross}
+                    getMarketInfo={getMarketInfo}
+                    handleProdDiscount={handleProdDiscount}
+                    prodDiscount={prodDiscount}
+                    handleInfluenceVisit={handleInfluenceVisit}
+                    influenceVisit={influenceVisit}
+                    approved={false}
+                    approvedButtons={false}
+                    editCampaign={editCampaign}
+                    deleteCampaign={deleteCampaign}
+                    getId={getId}
+                    handleCampName={handleCampName}
+                    campName={campName}
+                    handleProdOffer={handleProdOffer}
+                  />
+                )
+                  :
+                  (
+                    <>
+                      <img src={NoData} alt='no-data' style={{ width: '100%', maxHeight: 220, marginTop: '4rem', objectFit: 'contain' }} />
+                      <h5 className='mt-4 text-center'>No Pending Campaigns right now</h5>
                     </>
-                    )}
-                </Tab.Pane>
-                <Tab.Pane eventKey="four" className='campaign'>
-                    {approvedList?.length > 0 ? (
-                        <CampaignTable 
-                            campList={approvedList}
-                            getSingleMarket={getSingleMarket}
-                            deleteConfirm={deleteConfirm}
-                            getDeleteConfirm={getDeleteConfirm}
-                            getMarket={getMarket}
-                            influencerSale = {true}
-                            couponCross={couponCross}
-                            getMarketInfo={getMarketInfo}
-                            handleProdDiscount={handleProdDiscount}
-                            prodDiscount={prodDiscount}
-                            handleInfluenceVisit={handleInfluenceVisit}
-                            influenceVisit={influenceVisit}
-                            editCampaign={editCampaign}
-                            deleteCampaign={deleteCampaign}
-                            getId={getId}
-                            handleCampName={handleCampName}
-                            campName={campName}
-                            handleProdOffer={handleProdOffer}
-                            showButtons={false}
-                            handleVendorAccept={handleVendorAccept}
-                            handleVendorDecline={handleVendorDecline}
-                        />
-                    ) 
-                    : 
-                    (
-                        <>
-                    <img src={NoData} alt='no-data' style={{width: '100%', maxHeight: 220, marginTop: '4rem', objectFit: 'contain'}} />
-                    <h5 className='mt-4 text-center'>No Campaigns in Approved right now</h5>
+                  )}
+              </Tab.Pane>
+              <Tab.Pane eventKey="third" className='campaign'>
+                {draftList?.length > 0 ? (
+                  <CampaignTable
+                    campList={draftList}
+                    getSingleMarket={getSingleMarket}
+                    deleteConfirm={deleteConfirm}
+                    getDeleteConfirm={getDeleteConfirm}
+                    getMarket={getMarket}
+                    influencerSale={true}
+                    couponCross={couponCross}
+                    getMarketInfo={getMarketInfo}
+                    handleProdDiscount={handleProdDiscount}
+                    prodDiscount={prodDiscount}
+                    handleInfluenceVisit={handleInfluenceVisit}
+                    influenceVisit={influenceVisit}
+                    editCampaign={editCampaign}
+                    deleteCampaign={deleteCampaign}
+                    getId={getId}
+                    approved={false}
+                    approvedButtons={false}
+                    handleCampName={handleCampName}
+                    campName={campName}
+                    handleProdOffer={handleProdOffer}
+                  />
+                )
+                  :
+                  (
+                    <>
+                      <img src={NoData} alt='no-data' style={{ width: '100%', maxHeight: 220, marginTop: '4rem', objectFit: 'contain' }} />
+                      <h5 className='mt-4 text-center'>No Campaigns in Draft right now</h5>
                     </>
-                    )}
-                </Tab.Pane>
-                <Tab.Pane eventKey="five" className='campaign'>
-                    {vendorDeclineList?.length > 0 ? (
-                        <CampaignTable 
-                            campList={vendorDeclineList}
-                            declineInflu = {false}
-                            getSingleMarket={getSingleMarket}
-                            deleteConfirm={deleteConfirm}
-                            getDeleteConfirm={getDeleteConfirm}
-                            getMarket={getMarket}
-                            couponCross={couponCross}
-                            influencerSale = {true}
-                            getMarketInfo={getMarketInfo}
-                            handleProdDiscount={handleProdDiscount}
-                            prodDiscount={prodDiscount}
-                            handleInfluenceVisit={handleInfluenceVisit}
-                            influenceVisit={influenceVisit}
-                            editCampaign={editCampaign}
-                            deleteCampaign={deleteCampaign}
-                            getId={getId}
-                            handleCampName={handleCampName}
-                            campName={campName}
-                            handleProdOffer={handleProdOffer}
-                            showButtons={false}
-                            handleVendorAccept={handleVendorAccept}
-                            handleVendorDecline={handleVendorDecline}
-                        />
-                    ) 
-                    : 
-                    (
-                        <>
-                    <img src={NoData} alt='no-data' style={{width: '100%', maxHeight: 220, marginTop: '4rem', objectFit: 'contain'}} />
-                    <h5 className='mt-4 text-center'>No Campaigns in Decline right now</h5>
+                  )}
+              </Tab.Pane>
+              <Tab.Pane eventKey="four" className='campaign'>
+                {approvedList?.length > 0 ? (
+                  <CampaignTable
+                    campList={approvedList}
+                    getSingleMarket={getSingleMarket}
+                    deleteConfirm={deleteConfirm}
+                    getDeleteConfirm={getDeleteConfirm}
+                    getMarket={getMarket}
+                    influencerSale={true}
+                    couponCross={couponCross}
+                    getMarketInfo={getMarketInfo}
+                    handleProdDiscount={handleProdDiscount}
+                    prodDiscount={prodDiscount}
+                    handleInfluenceVisit={handleInfluenceVisit}
+                    influenceVisit={influenceVisit}
+                    editCampaign={editCampaign}
+                    deleteCampaign={deleteCampaign}
+                    getId={getId}
+                    handleCampName={handleCampName}
+                    campName={campName}
+                    handleProdOffer={handleProdOffer}
+                    showButtons={false}
+                    handleVendorAccept={handleVendorAccept}
+                    handleVendorDecline={handleVendorDecline}
+                  />
+                )
+                  :
+                  (
+                    <>
+                      <img src={NoData} alt='no-data' style={{ width: '100%', maxHeight: 220, marginTop: '4rem', objectFit: 'contain' }} />
+                      <h5 className='mt-4 text-center'>No Campaigns in Approved right now</h5>
                     </>
-                    )}
-                </Tab.Pane>
-                <Tab.Pane eventKey="six" className='campaign'>
-                    {expiredList?.length > 0 ? (
-                        <CampaignTable 
-                          campList={expiredList}
-                          getSingleMarket={getSingleMarket}
-                          declineInflu = {false}
-                          deleteConfirm={deleteConfirm}
-                          getDeleteConfirm={getDeleteConfirm}
-                          getMarket={getMarket}
-                          influencerSale = {true}
-                          couponCross={couponCross}
-                          getMarketInfo={getMarketInfo}
-                          handleProdDiscount={handleProdDiscount}
-                          prodDiscount={prodDiscount}
-                          handleInfluenceVisit={handleInfluenceVisit}
-                          influenceVisit={influenceVisit}
-                          approved={false}
-                          approvedButtons = {false}
-                          editCampaign={editCampaign}
-                          deleteCampaign={deleteCampaign}
-                          getId={getId}
-                          handleCampName={handleCampName}
-                          campName={campName}
-                          handleProdOffer={handleProdOffer}
-                      />
-                    ) 
-                    : 
-                    (
-                        <>
-                    <img src={NoData} alt='no-data' style={{width: '100%', maxHeight: 220, marginTop: '4rem', objectFit: 'contain'}} />
-                    <h5 className='mt-4 text-center'>No Expired Campaigns right now</h5>
-                            
+                  )}
+              </Tab.Pane>
+              <Tab.Pane eventKey="five" className='campaign'>
+                {vendorDeclineList?.length > 0 ? (
+                  <CampaignTable
+                    campList={vendorDeclineList}
+                    declineInflu={false}
+                    getSingleMarket={getSingleMarket}
+                    deleteConfirm={deleteConfirm}
+                    getDeleteConfirm={getDeleteConfirm}
+                    getMarket={getMarket}
+                    couponCross={couponCross}
+                    influencerSale={true}
+                    getMarketInfo={getMarketInfo}
+                    handleProdDiscount={handleProdDiscount}
+                    prodDiscount={prodDiscount}
+                    handleInfluenceVisit={handleInfluenceVisit}
+                    influenceVisit={influenceVisit}
+                    editCampaign={editCampaign}
+                    deleteCampaign={deleteCampaign}
+                    getId={getId}
+                    handleCampName={handleCampName}
+                    campName={campName}
+                    handleProdOffer={handleProdOffer}
+                    showButtons={false}
+                    handleVendorAccept={handleVendorAccept}
+                    handleVendorDecline={handleVendorDecline}
+                  />
+                )
+                  :
+                  (
+                    <>
+                      <img src={NoData} alt='no-data' style={{ width: '100%', maxHeight: 220, marginTop: '4rem', objectFit: 'contain' }} />
+                      <h5 className='mt-4 text-center'>No Campaigns in Decline right now</h5>
                     </>
-                    )}
-                </Tab.Pane>
+                  )}
+              </Tab.Pane>
+              <Tab.Pane eventKey="six" className='campaign'>
+                {expiredList?.length > 0 ? (
+                  <CampaignTable
+                    campList={expiredList}
+                    getSingleMarket={getSingleMarket}
+                    declineInflu={false}
+                    deleteConfirm={deleteConfirm}
+                    getDeleteConfirm={getDeleteConfirm}
+                    getMarket={getMarket}
+                    influencerSale={true}
+                    couponCross={couponCross}
+                    getMarketInfo={getMarketInfo}
+                    handleProdDiscount={handleProdDiscount}
+                    prodDiscount={prodDiscount}
+                    handleInfluenceVisit={handleInfluenceVisit}
+                    influenceVisit={influenceVisit}
+                    approved={false}
+                    approvedButtons={false}
+                    editCampaign={editCampaign}
+                    deleteCampaign={deleteCampaign}
+                    getId={getId}
+                    handleCampName={handleCampName}
+                    campName={campName}
+                    handleProdOffer={handleProdOffer}
+                  />
+                )
+                  :
+                  (
+                    <>
+                      <img src={NoData} alt='no-data' style={{ width: '100%', maxHeight: 220, marginTop: '4rem', objectFit: 'contain' }} />
+                      <h5 className='mt-4 text-center'>No Expired Campaigns right now</h5>
+
+                    </>
+                  )}
+              </Tab.Pane>
             </Tab.Content>
-            </Col>
+          </Col>
         </Tab.Container>
-        
-    </div>
+
+      </div>
     </>
   );
 }
