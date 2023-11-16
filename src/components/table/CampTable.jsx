@@ -156,7 +156,7 @@ console.log('list',list)
                     {couponListing(item?.product, "discount")}
                   </td>
                   <td>
-                    <button
+                    {/* <button
                       type="button"
                       onClick={() => {
                         editCamp(item?.campaignid_id)
@@ -167,7 +167,7 @@ console.log('list',list)
                         icon={faPenToSquare}
                         style={{ color: "#fff", width: "15px", height: "15px" }}
                       />
-                    </button>
+                    </button> */}
                     <button onClick={() => { setDeleteModal({ toggle: true, value: item?.campaignid_id }) }}>
                       <img src={Delete} alt='delete-icon' />
                     </button>

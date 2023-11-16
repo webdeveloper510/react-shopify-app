@@ -266,6 +266,7 @@ const CreateCampaign = () => {
                 setIsVisitChecked(false);
                 setIsOfferChecked(false);
                 countList()
+                // toast.warn("Campaign Name may not be blank.", { autoClose: 1000 });
                 navigate('/market')
             })
             .catch(function (error) {
@@ -297,9 +298,9 @@ const CreateCampaign = () => {
                 else if (error.response.data.error == "Product field may not be blank.") {
                     toast.warn("Product field may not be blank.", { autoClose: 1000 });
                 }
-                else if (error.response.data.error == "Coupon field may not be blank.") {
-                    toast.warn("Coupon field may not be blank.", { autoClose: 1000 });
-                }
+                // else if (error.response.data.error == "Coupon field may not be blank.") {
+                //     toast.warn("Coupon field may not be blank.", { autoClose: 1000 });
+                // }
                 else if (error.response.data.coupon) {
                     toast.warn("Coupon may not be blank.", { autoClose: 1000 });
                 }
