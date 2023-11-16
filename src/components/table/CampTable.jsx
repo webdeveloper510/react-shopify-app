@@ -5,25 +5,27 @@ import Delete from '../../assests/img/delete.svg';
 import { useNavigate } from 'react-router-dom';
 import { Modal } from 'react-bootstrap';
 
-const CampTable = ({ list, name }) => {
-
+const CampTable = ({ list, additionalProp,name }) => {
+console.log('list',list)
+  console.log('name',additionalProp);
   const [currentPage, setCurrentPage] = useState(1);
   const ITEMS_PER_PAGE = 8;
+  const currentItems = list;
   const indexOfLastItem = currentPage * ITEMS_PER_PAGE;
   const indexOfFirstItem = indexOfLastItem - ITEMS_PER_PAGE;
-  const currentItems = list?.slice(indexOfFirstItem, indexOfLastItem);
   const totalPages = Math.ceil(list?.length / ITEMS_PER_PAGE);
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
   const navigate = useNavigate()
   const [delete_modal, setDeleteModal] = useState({ toggle: false, value: null })
   const [view_modal, setViewModal] = useState({ toggle: false, value: null })
 
-
   const handlePreviousPage = () => {
     if (currentPage > 1) {
       setCurrentPage(currentPage - 1);
     }
   };
+
+  console.log("currentItems ======>>>>>>>" , currentItems)
 
   const handleNextPage = () => {
     if (currentPage < totalPages) {
@@ -69,7 +71,8 @@ const CampTable = ({ list, name }) => {
   }
 
   const headRows = () => {
-    if (name === "active") {
+    if (additionalProp == "active") {
+     
       return (
         <tr className='headings'>
           <th>Campaign Name</th>
@@ -77,7 +80,7 @@ const CampTable = ({ list, name }) => {
           <th>Action</th>
         </tr>
       )
-    } else if (name === "pending") {
+    } else if (additionalProp == "pending") {
       return (
         <tr className='headings'>
           <th>Campaign Name</th>
@@ -87,7 +90,7 @@ const CampTable = ({ list, name }) => {
           <th>Actions</th>
         </tr>
       )
-    } else if (name === "declined") {
+    } else if (additionalProp == "declined") {
       return (
         <tr className='headings'>
           <th>Campaign Name</th>
@@ -107,7 +110,7 @@ const CampTable = ({ list, name }) => {
   }
 
   const contentRows = () => {
-    if (name === "active") {
+    if (additionalProp == "active") {
       return (
         <>
           {
@@ -135,7 +138,7 @@ const CampTable = ({ list, name }) => {
           }
         </>
       )
-    } else if (name === "pending") {
+    } else if (additionalProp == "pending") {
       return (
         <>
           {
@@ -143,7 +146,9 @@ const CampTable = ({ list, name }) => {
               return (
                 <tr key={index} className='campaign-inputs'>
                   <td>{item?.campaign_name}</td>
-                  <td>{productsListing(item?.product)}</td>
+                  <td>
+                    {productsListing(item?.product)}
+                    </td>
                   <td>
                     {couponListing(item?.product, "coupons")}
                   </td>
@@ -173,7 +178,7 @@ const CampTable = ({ list, name }) => {
           }
         </>
       )
-    } else if (name === "declined") {
+    } else if (additionalProp == "declined") {
       return (
         <>
           {

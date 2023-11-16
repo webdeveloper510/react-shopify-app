@@ -80,32 +80,48 @@ const CreateCampaign = () => {
         setEndDate(event.target.value);
     }
 
-    useEffect(() => {
-        axios.get(API.BASE_URL + 'product/list/', {
-            headers: {
-                Authorization: `Token ${token}`
-            }
-        })
-            .then(function (response) {
-                console.log("Product List", response);
-                setProdList(response.data.success.products)
+    const fetchProductList = async () => {
+        try {
+            axios.get(API.BASE_URL + 'product/list/', {
+                headers: {
+                    Authorization: `Token ${token}`
+                }
             })
-            .catch(function (error) {
-                console.log(error);
-            })
+                .then(function (response) {
+                    console.log("Product List", response);
+                    setProdList(response.data.success.products)
+                })
+                .catch(function (error) {
+                    console.log(error);
+                })
+        } catch (error) {
+            console.error("Error:", error);
+        }
+    };
 
-        axios.get(API.BASE_URL + 'influencer/list/', {
-            headers: {
-                Authorization: `Token ${token}`
-            }
-        })
-            .then(function (response) {
-                console.log("Influencer List", response.data.data);
-                setInfluencerList(response.data.data)
+    const fetchInfluencer = async () => {
+        try {
+            axios.get(API.BASE_URL + 'influencer/list/', {
+                headers: {
+                    Authorization: `Token ${token}`
+                }
             })
-            .catch(function (error) {
-                console.log(error);
-            })
+                .then(function (response) {
+                    console.log("Influencer List", response.data.data);
+                    setInfluencerList(response.data.data)
+                })
+                .catch(function (error) {
+                    console.log(error);
+                })
+        } catch (error) {
+            console.error("Error:", error);
+        }
+    };
+  
+
+    useEffect(() => {
+        fetchProductList();
+        fetchInfluencer();       
     }, [token])
 
     const countList = () => {
@@ -505,40 +521,49 @@ const CreateCampaign = () => {
             .finally(() => setLoading(false));
     }
 
-    useEffect(() => {
-        if (id?.length > 0) {
-            axios.get(API.BASE_URL + 'single/' + id + '/', {
-                headers: {
-                    Authorization: `Token ${token}`
-                }
-            })
-                .then(function (response) {
-                    console.log("Single Market Data", response.data.data);
-                    setCampaignName(response.data.data[0].campaign_name);
-                    setSelectedDate(response.data.data[0].date);
-                    setEndDate(response.data.data[0].end_data)
-                    setInfluenceOffer(response.data.data[0].offer);
-                    setInfluencerVisit(response.data.data[0].influencer_visit);
-                    const products = response.data.data[0].product;
-                    const amount = products.map(product => product.amount[0]);
-                    const productNames = products.map(product => product.product_name);
-                    const productIds = products.map(product => product.product_id.toString());
-                    const couponNames = products.map(product => product.coupon_name);
-                    console.log("amount", amount)
-                    console.log("couponNames", couponNames)
-                    setProductName(productNames);
-                    setProductIds(productIds);
-                    setSelectedCouponNames(couponNames);
-                    setUserData(response.data.data[0]);
-                    setSelectedCouponAmounts(response.data.data[0].product)
-                    setInfluenceFee(response.data.data[0].influencer_fee)
-                    setCampaignDesc(response.data.data[0].description)
-                    handleProductSelection({ id: productIds });
+    const fetchSingle = async () => {
+        try {
+            if (id?.length > 0) {
+                axios.get(API.BASE_URL + 'single/' + id + '/', {
+                    headers: {
+                        Authorization: `Token ${token}`
+                    }
                 })
-                .catch(function (error) {
-                    console.log(error)
-                })
+                    .then(function (response) {
+                        console.log("Single Market Data", response.data.data);
+                        setCampaignName(response.data.data[0].campaign_name);
+                        setSelectedDate(response.data.data[0].date);
+                        setEndDate(response.data.data[0].end_data)
+                        setInfluenceOffer(response.data.data[0].offer);
+                        setInfluencerVisit(response.data.data[0].influencer_visit);
+                        const products = response.data.data[0].product;
+                        const amount = products.map(product => product.amount[0]);
+                        const productNames = products.map(product => product.product_name);
+                        const productIds = products.map(product => product.product_id.toString());
+                        const couponNames = products.map(product => product.coupon_name);
+                        console.log("amount", amount)
+                        console.log("couponNames", couponNames)
+                        setProductName(productNames);
+                        setProductIds(productIds);
+                        setSelectedCouponNames(couponNames);
+                        setUserData(response.data.data[0]);
+                        setSelectedCouponAmounts(response.data.data[0].product)
+                        setInfluenceFee(response.data.data[0].influencer_fee)
+                        setCampaignDesc(response.data.data[0].description)
+                        handleProductSelection({ id: productIds });
+                    })
+                    .catch(function (error) {
+                        console.log(error)
+                    })
+            }
+        } catch (error) {
+            console.error("Error:", error);
         }
+    };
+  
+
+    useEffect(() => {
+        fetchSingle();
     }, [id])
 
     const changeStatus = (event) => {
@@ -980,7 +1005,7 @@ const CreateCampaign = () => {
                             </>
                             :
                             <>
-                                <button className='button button-black' onClick={createNewCampaignDraft}>Save in draft</button>
+                                {/* <button className='button button-black' onClick={createNewCampaignDraft}>Save in draft</button> */}
                                 <button className='button ms-4' onClick={createNewCampaign}>Send to MarketPlace</button>
                             </>}
                     </div>

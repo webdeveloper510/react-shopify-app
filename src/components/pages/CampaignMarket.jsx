@@ -34,124 +34,187 @@ const CampaignMarket = () => {
     const [campActive, setCampActive] = useState([]);
     const [campDecline, setCampDecline] = useState([]);
     const [campApproval, setCampApproval] = useState([]);
+    const [campApproval12, setCampApproval12] = useState([]);
+    const [active, setActive] = useState([]);
+    const [pending, setPending] = useState([]);
+    const [expire, setExpire] = useState([]);
+    const [awaiting, setAwaiting] = useState([]);
     const {testing, setTesting, marketData,  marketDraftId, setMarketDraftId, marketDraftList, setMarketDraftList, marketList, setMarketList, marketId, setMarketId, declineInflu, showButtons} = useContext(UserContext);
     const navigate = useNavigate()
     
+    const fetchMarketList = async () => {
+        try {
+            axios.get(API.BASE_URL + 'market/list/',{
+                headers: {
+                    Authorization: `Token ${token}`
+                }
+            })
+            .then(function (response) {
+                console.log("MARKET LIST", response.data)
+                setMarketList(response.data.data);
+                setMarketId(response.data.product_id);
+            })
+            .catch(function (error) {
+                console.log(error);
+            })
+        } catch (error) {
+            console.error("Error:", error);
+        }
+    };
+    
+    const fetchMarkdraftList = async () => {
+        try {
+            axios.get(API.BASE_URL + 'markdraft/list/',{
+                headers: {
+                    Authorization: `Token ${token}`
+                }
+            })
+            .then(function (response) {
+                console.log("MARKET DRAFT LIST", response.data)
+                setMarketDraftList(response.data.data);
+                setMarketDraftId(response.data.product_id);
+            })
+            .catch(function (error) {
+                console.log(error);
+            })
+        } catch (error) {
+            console.error("Error:", error);
+        }
+    };
+
+    const fetchProductList = async () => {
+        try {
+            axios.get(API.BASE_URL + 'product/list/',{
+                headers: {
+                    Authorization: `Token ${token}`
+                }
+            })
+            .then(function (response) {
+                setProductNames(response.data.success.products);
+            })
+            .catch(function (error) {
+                console.log(error);
+            })
+        } catch (error) {
+            console.error("Error:", error);
+        }
+    };
+
+    const fetchMarketcampaignexp = async () => {
+        try {
+            axios.get(API.BASE_URL + 'marketcampaignexp/',{
+                headers: {
+                    Authorization: `Token ${token}`
+                }
+            })
+            .then(function (response) {
+                console.log("Market Expired List",response.data);
+                setCampExpiredList(response.data.data);
+            })
+            .catch(function (error) {
+                console.log(error);
+            })
+        } catch (error) {
+            console.error("Error:", error);
+        }
+    };
+
+    const fetchMarketapproval = async () => {
+        try {
+            axios.get(API.BASE_URL + 'marketapproval/',{
+                headers: {
+                    Authorization: `Token ${token}`
+                }
+            })
+            .then(function (response) {
+                console.log("Market Approval List",response.data);
+                setCampActive(response.data.data);
+                setCampApproval(response.data.data);
+            })
+            .catch(function (error) {
+                console.log(error);
+            })
+        } catch (error) {
+            console.error("Error:", error);
+        }
+    };
+    
+    const fetchMarket_decline = async () => {
+        try {
+            axios.get(API.BASE_URL + 'market_decline/',{
+                headers: {
+                    Authorization: `Token ${token}`
+                }
+            })
+            .then(function (response) {
+                console.log("Market Decline List",response.data);
+                setCampDecline(response.data.data);
+            })
+            .catch(function (error) {
+                console.log(error);
+            })
+        } catch (error) {
+            console.error("Error:", error);
+        }
+    };
+    const fetchMarketList12 = async () => {
+        try {
+            const response = await axios.get(API.BASE_URL + 'marketcampaign/',{
+                headers: {
+                    Authorization: `Token ${token}`
+                }
+            })
+            
+            console.log("Market camperrrrr List ==============>>>>>>",response.data.data);
+            const actives = Object.values(response.data.data).filter(data => data.expiry_status == true);
+            const Expire = Object.values(response.data.data).filter(data => data.expiry_status == false);
+            const activeCampaigns = Object.values(actives).filter(data => data.status == '2');
+            const awaitingCampaigns = Object.values(actives).filter(data => data.status == '3');
+            const inactiveCampaigns = Object.values(actives).filter(data => data.status == '0');
+            setCampApproval12(activeCampaigns);
+            setActive(activeCampaigns);
+            setPending(inactiveCampaigns);
+            setExpire(Expire);
+            setAwaiting(awaitingCampaigns);
+            console.log("activeCampaigns ------ 2" , activeCampaigns)
+            console.log("inactiveCampaigns ------ 0" , inactiveCampaigns)
+                console.log("Market camperrrrr List ==============>>>>>>");
+           } catch (error) {
+            console.error('Error fetching data:', error);
+    } };
+
+    const fetchMarket_approval = async () => {
+        try {
+            axios.get(API.BASE_URL + 'market_approval/',{
+                headers: {
+                    Authorization: `Token ${token}`
+                }
+            })
+            .then(function (response) {
+                console.log("Market Active List",response.data);
+                setMarketActive(response.data.data);
+            })
+            .catch(function (error) {
+                console.log(error);
+            })
+        } catch (error) {
+            console.error("Error:", error);
+        }
+    };
+
+
+
     useEffect(() => {
-        axios.get(API.BASE_URL + 'market/list/',{
-            headers: {
-                Authorization: `Token ${token}`
-            }
-        })
-        .then(function (response) {
-            console.log("MARKET LIST", response.data)
-            setMarketList(response.data.data);
-            setMarketId(response.data.product_id);
-        })
-        .catch(function (error) {
-            console.log(error);
-        })
-
-        axios.get(API.BASE_URL + 'markdraft/list/',{
-            headers: {
-                Authorization: `Token ${token}`
-            }
-        })
-        .then(function (response) {
-            console.log("MARKET DRAFT LIST", response.data)
-            setMarketDraftList(response.data.data);
-            setMarketDraftId(response.data.product_id);
-        })
-        .catch(function (error) {
-            console.log(error);
-        })
-
-        axios.get(API.BASE_URL + 'product/list/',{
-            headers: {
-                Authorization: `Token ${token}`
-            }
-        })
-        .then(function (response) {
-            setProductNames(response.data.success.products);
-        })
-        .catch(function (error) {
-            console.log(error);
-        })
-
-        axios.get(API.BASE_URL + 'marketcampaignexp/',{
-            headers: {
-                Authorization: `Token ${token}`
-            }
-        })
-        .then(function (response) {
-            console.log("Market Expired List",response.data);
-            setCampExpiredList(response.data.data);
-        })
-        .catch(function (error) {
-            console.log(error);
-        })
-
-        axios.get(API.BASE_URL + 'marketapproval/',{
-            headers: {
-                Authorization: `Token ${token}`
-            }
-        })
-        .then(function (response) {
-            console.log("Market Approval List",response.data);
-            setCampActive(response.data.data);
-        })
-        .catch(function (error) {
-            console.log(error);
-        })
-
-        axios.get(API.BASE_URL + 'market_decline/',{
-            headers: {
-                Authorization: `Token ${token}`
-            }
-        })
-        .then(function (response) {
-            console.log("Market Decline List",response.data);
-            setCampDecline(response.data.data);
-        })
-        .catch(function (error) {
-            console.log(error);
-        })
-       
+        fetchMarketList12();
+        fetchMarketList();
+        fetchMarket_approval();
+        fetchMarket_decline();
+        fetchMarketcampaignexp();
+        fetchMarketapproval();
+        fetchProductList();
+        fetchMarkdraftList();
     }, [token])
 
-    useEffect(() => {
-
-        axios.get(API.BASE_URL + 'marketapproval/',{
-            headers: {
-                Authorization: `Token ${token}`
-            }
-        })
-        .then(function (response) {
-            console.log("Market Approval List",response.data);
-            setCampApproval(response.data.data);
-        })
-        .catch(function (error) {
-            console.log(error);
-        })
-       
-    }, [token])
-
-    useEffect(() => {
-
-        axios.get(API.BASE_URL + 'market_approval/',{
-            headers: {
-                Authorization: `Token ${token}`
-            }
-        })
-        .then(function (response) {
-            console.log("Market Active List",response.data);
-            setMarketActive(response.data.data);
-        })
-        .catch(function (error) {
-            console.log(error);
-        })
-       
-    }, [token])
 
     const handleCampName = (event) => {
         setCampName(event.target.value);
@@ -363,9 +426,9 @@ const CampaignMarket = () => {
                     <Nav.Item>
                         <Nav.Link eventKey="second">Pending</Nav.Link>
                     </Nav.Item>
-                    <Nav.Item>
+                    {/* <Nav.Item>
                         <Nav.Link eventKey="third">Draft</Nav.Link>
-                    </Nav.Item>
+                    </Nav.Item> */}
                     <Nav.Item>
                         <Nav.Link eventKey="four">Awaiting</Nav.Link>
                     </Nav.Item>
@@ -380,30 +443,10 @@ const CampaignMarket = () => {
                 <Col sm={12}>
                 <Tab.Content>
                     <Tab.Pane eventKey="first">
-                        {marketActive?.length > 0 ? (
+                        {active?.length > 0 ? (
                             <CampaignTable 
-                                campList={marketActive}
-                                showMarket={showMarketCampaign}
-                                getDeleteConfirm={getDeleteConfirm}
-                                getMarket={getMarket}
-                                influencerSale = {true}
-                                couponCross={couponCross}
-                                getMarketInfo={getMarketInfo}
-                                handleProdDiscount={handleProdDiscount}
-                                prodDiscount={prodDiscount}
-                                handleInfluenceVisit={handleInfluenceVisit}
-                                influenceVisit={influenceVisit}
-                                approved={true}
-                                declineInflu={false}
-                                campEdit = {true}
-                                approvedButtons = {true}
-                                // editCampaign={editCampaign}
-                                deleteCampaign={deleteCampaign}
-                                getId={getId}
-                                handleCampName={handleCampName}
-                                campName={campName}
-                                handleProdOffer={handleProdOffer}
-                                showEdit={false}
+                                list={active}
+                                additionalProp="active"
                             />
                             ) :
                             (
@@ -417,27 +460,10 @@ const CampaignMarket = () => {
                     </Tab.Pane>
 
                     <Tab.Pane eventKey="second">
-                        {marketList?.length > 0 ? (
+                        {pending?.length > 0 ? (
                             <CampaignTable 
-                                campList={marketList}
-                                getSingleMarket={getSingleMarket}
-                                deleteConfirm={deleteConfirm}
-                                influencerSale = {true}
-                                getDeleteConfirm={getDeleteConfirm}
-                                getMarket={getMarket}
-                                couponCross={couponCross}
-                                getMarketInfo={getMarketInfo}
-                                handleProdDiscount={handleProdDiscount}
-                                prodDiscount={prodDiscount}
-                                handleInfluenceVisit={handleInfluenceVisit}
-                                influenceVisit={influenceVisit}
-                                deleteCampaign={deleteCampaign}
-                                getId={getId}
-                                approved={false}
-                                approvedButtons = {false}
-                                handleCampName={handleCampName}
-                                campName={campName}
-                                handleProdOffer={handleProdOffer}
+                                list={pending}
+                                additionalProp="pending"
                             />
                             ) :
                             (
@@ -450,28 +476,10 @@ const CampaignMarket = () => {
                         }
                     </Tab.Pane>
 
-                    <Tab.Pane eventKey="third" className='campaign'>
+                    {/* <Tab.Pane eventKey="third" className='campaign'>
                         {marketDraftList?.length > 0 ? (
                             <CampaignTable 
-                                campList={marketDraftList}
-                                getSingleMarket={getSingleMarket}
-                                deleteConfirm={deleteConfirm}
-                                getDeleteConfirm={getDeleteConfirm}
-                                getMarket={getMarket}
-                                influencerSale = {true}
-                                couponCross={couponCross}
-                                getMarketInfo={getMarketInfo}
-                                handleProdDiscount={handleProdDiscount}
-                                prodDiscount={prodDiscount}
-                                handleInfluenceVisit={handleInfluenceVisit}
-                                influenceVisit={influenceVisit}
-                                deleteCampaign={deleteCampaign}
-                                getId={getId}
-                                approved={false}
-                                approvedButtons = {false}
-                                handleCampName={handleCampName}
-                                campName={campName}
-                                handleProdOffer={handleProdOffer}
+                                list={marketDraftList}
                             />
                             ) :
                             (
@@ -482,32 +490,13 @@ const CampaignMarket = () => {
                                 </>
                             )
                         }
-                    </Tab.Pane>
+                    </Tab.Pane> */}
 
                     <Tab.Pane eventKey="four">
-                        {campApproval?.length > 0 ? (
+                        {awaiting?.length > 0 ? (
                             <CampaignTable 
-                            campList={campApproval}
-                            getSingleMarket={getSingleMarket}
-                            deleteConfirm={deleteConfirm}
-                            getDeleteConfirm={getDeleteConfirm}
-                            getMarket={getMarket}
-                            showEdit={false}
-                            influencerSale = {true}
-                            couponCross={couponCross}
-                            getMarketInfo={getMarketInfo}
-                            handleProdDiscount={handleProdDiscount}
-                            prodDiscount={prodDiscount}
-                            handleInfluenceVisit={handleInfluenceVisit}
-                            influenceVisit={influenceVisit}
-                            deleteCampaign={deleteCampaign}
-                            getId={getId}
-                            handleCampName={handleCampName}
-                            campName={campName}
-                            handleProdOffer={handleProdOffer}
-                            showButtons={false}
-                            handleVendorAccept={handleVendorAccept}
-                            handleVendorDecline={handleVendorDecline}
+                            list={awaiting}
+                            additionalProp="awaiting"
                         />
                             ) :
                             (
@@ -523,28 +512,9 @@ const CampaignMarket = () => {
                     <Tab.Pane eventKey="five">
                         {campDecline?.length > 0 ? (
                             <CampaignTable 
-                                campList={campDecline}
-                                showMarket={showMarketCampaign}
-                                getDeleteConfirm={getDeleteConfirm}
-                                getMarket={getMarket}
-                                influencerSale = {true}
-                                couponCross={couponCross}
-                                getMarketInfo={getMarketInfo}
-                                handleProdDiscount={handleProdDiscount}
-                                prodDiscount={prodDiscount}
-                                handleInfluenceVisit={handleInfluenceVisit}
-                                influenceVisit={influenceVisit}
-                                approved={true}
-                                declineInflu={false}
-                                campEdit = {true}
-                                approvedButtons = {true}
-                                // editCampaign={editCampaign}
-                                deleteCampaign={deleteCampaign}
-                                getId={getId}
-                                handleCampName={handleCampName}
-                                campName={campName}
-                                handleProdOffer={handleProdOffer}
-                                showEdit={false}
+                                list={campDecline}
+                                additionalProp="campDecline"
+
                             />
                             ) :
                             (
@@ -558,28 +528,10 @@ const CampaignMarket = () => {
                     </Tab.Pane>
 
                     <Tab.Pane eventKey="six">
-                        {campExpiredList?.length > 0 ? (
+                        {expire?.length > 0 ? (
                             <CampaignTable 
-                                campList={campExpiredList}
-                                declineInflu = {false}
-                                getSingleMarket={getSingleMarket}
-                                deleteConfirm={deleteConfirm}
-                                influencerSale = {true}
-                                getDeleteConfirm={getDeleteConfirm}
-                                getMarket={getMarket}
-                                couponCross={couponCross}
-                                getMarketInfo={getMarketInfo}
-                                handleProdDiscount={handleProdDiscount}
-                                prodDiscount={prodDiscount}
-                                handleInfluenceVisit={handleInfluenceVisit}
-                                influenceVisit={influenceVisit}
-                                deleteCampaign={deleteCampaign}
-                                getId={getId}
-                                approved={false}
-                                approvedButtons = {false}
-                                handleCampName={handleCampName}
-                                campName={campName}
-                                handleProdOffer={handleProdOffer}
+                                list={expire}
+                                additionalProp="expire"
                             />
                             ) :
                             (
