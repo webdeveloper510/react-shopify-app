@@ -103,7 +103,7 @@ const CreateInfluencer = () => {
                 },
             })
                 .then(function (response) {
-                    toast.success(response.success, { autoClose: 1000 })
+                    toast.success(response.data.success, { autoClose: 1000 })
                 })
                 .catch(function (error) {
                 })

@@ -10,7 +10,7 @@ console.log('list',list)
   console.log('name',additionalProp);
   const [currentPage, setCurrentPage] = useState(1);
   const ITEMS_PER_PAGE = 8;
-  const currentItems = list;
+  const currentItems = list.reverse();
   const indexOfLastItem = currentPage * ITEMS_PER_PAGE;
   const indexOfFirstItem = indexOfLastItem - ITEMS_PER_PAGE;
   const totalPages = Math.ceil(list?.length / ITEMS_PER_PAGE);
