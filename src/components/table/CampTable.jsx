@@ -143,6 +143,7 @@ console.log('list',list)
         <>
           {
             currentItems?.length > 0 && currentItems?.map((item, index) => {
+              console.log(currentItems)
               return (
                 <tr key={index} className='campaign-inputs'>
                   <td>{item?.campaign_name}</td>
@@ -150,7 +151,8 @@ console.log('list',list)
                     {productsListing(item?.product)}
                     </td>
                   <td>
-                    {couponListing(item?.product, "coupons")}
+                    {/* { item?.product.split(",").join("") } */}
+                    { couponListing(JSON.parse(item?.product), "coupons")}
                   </td>
                   <td>
                     {couponListing(item?.product, "discount")}

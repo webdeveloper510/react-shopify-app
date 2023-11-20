@@ -25,8 +25,9 @@ const CreateInfluencer = () => {
     const [form_data, setFormData] = useState({ campaign_name: '', influencer_visit: '', date: '', end_date: '', product: [], description: '', product_name: [], influencer_name: '', coupon: [] })
     const [influencer, setInfluencer] = useState(null)
     const [product_list, setProductList] = useState([])
-    const [coupon_list, setCouponList] = useState({ coupons: [], product_titles: [] })
+    const [coupon_list, setCouponList] = useState({ coupons: [], product_id: [] })
     const [url_list, setUrlList] = useState([])
+    const [coupon_name, setCoupon_name] = useState([])
     const [selected_coupons, setSelectedCoupon] = useState([])
 
 
@@ -44,6 +45,8 @@ const CreateInfluencer = () => {
             }
         })
     }, [])
+
+    
 
     useEffect(() => {
 
@@ -83,8 +86,11 @@ const CreateInfluencer = () => {
     const updateCampaign = () => {
         console.log("update")
     }
-    console.log('my list --->>>',form_data)
-
+    const handleClick =(e) => {
+            console.log('coupon seleted ====== >>>' .e)
+            setCoupon_name(e);
+    }
+console.log('coupon ==== >>>',coupon_list);
     const createRequest = async () => {
         try {
             axios.post(API.BASE_URL + 'request/', {
@@ -94,9 +100,10 @@ const CreateInfluencer = () => {
                 description: form_data.description,
                 influencer_name: JSON.stringify(ids),
                 influencer_visit: form_data.influencer_visit,
-                product_discount: [],
+                product_discount: [coupon_name],
                 product: form_data.product,
-                product_name: coupon_list.product_titles
+                product_name: coupon_list.product_titles,
+                 product_id: form_data.product,                
             }, {
                 headers: {
                     Authorization: `Token ${token}`,
@@ -271,11 +278,11 @@ const CreateInfluencer = () => {
                                                             coupon_list?.coupons?.length > 0 ? coupon_list?.coupons?.map((item, i) => {
                                                                 if (title === item?.product_name) {
                                                                     return (
-                                                                        <div key={i} className='d-flex flex-column justify-content-center align-items-center'>
+                                                                        <div key={i} className={`d-flex flex-column justify-content-center align-items-center `}>
                                                                             {/* <span className='text-center' style={{ margin: '0 10px' }}>{influencer?.fullname}</span> */}
                                                                             <p
-                                                                                className={`d-flex flex-column mb-0 `}
-                                                                            // onClick={handleClick}
+                                                                                className={`d-flex flex-column mb-0 ${item.coupon_name == coupon_name.coupon_name ? 'selected' : ''}`}
+                                                                            onClick={() => handleClick(item)}
                                                                             >
                                                                                 {item?.coupon_name} - {Math.abs(parseInt(item?.amount))}
                                                                                 {item?.discount_type !== 'fixed_amount' ? "%" : "د.إ"}
