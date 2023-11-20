@@ -204,6 +204,7 @@ const CouponList = () => {
                 setDiscountType('')
                 setCouponAmount('')
                 couponCross()
+                fetchCoupon();
             })
             .catch(function (error) {
                 console.log(error);
@@ -526,7 +527,7 @@ const CouponList = () => {
     console.log("selectedInfluencer", selectedInfluencer)
     console.log("matching Influencer", matchingInfluencers)
     console.log("influencer list", influencerList)
-    console.log("showList", showList)
+    console.log("showList------>>>", couponData)
     console.log("prodcut", productName)
     console.log("policypiechart", prodList)
 
@@ -552,6 +553,8 @@ const CouponList = () => {
                         <button><img src={Download} aly='download' /> Export Coupon</button>
                     </div>
                     {couponData.length > 0 ? (
+                        <>
+                        {couponData.length > 0 ? (
                         <div>
                             <table className="coupon-table w-100">
                                 <thead>
@@ -611,7 +614,7 @@ const CouponList = () => {
                             </div>
 
                         </div>
-                    )
+                        )
                         :
                         (
                             <>
@@ -620,6 +623,11 @@ const CouponList = () => {
                                 <h3 className='text-center'>No Data Found</h3>
                             </>
                         )}
+                        </>
+                    ) : (
+                        <></>
+                    ) }
+                    
                     {couponList && (
                         <div className="coupon-list">
                             <div className="coupon-list-container">
