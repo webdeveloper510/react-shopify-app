@@ -43,7 +43,7 @@ const Influencers = () => {
     const handlePrev = () => {
         navigate(-1)
     }
-
+console.log('influencer_list =======>>>>>>>>>>>>>>' , influencer_list)
 
     // -------- Return --------
     return (
@@ -72,7 +72,7 @@ const Influencers = () => {
                                             </div>
                                             <p className='d-flex flex-column align-items-center col-md-3'><strong>{(item?.follower / 1000000).toFixed(2)} M </strong> <span>Followers</span> </p>
                                             <p className='d-flex flex-column align-items-center col-md-3'><strong>{(item?.engagements / 1000000).toFixed(2) + "M"}<span className='ms-1'>({item.engagement_rate.toFixed(2)}%)</span></strong> <span>Engagement</span> </p>
-                                            <div className='d-flex flex-column align-items-end col-md-2'><strong>AED {item?.influencerid_id__fee || "N/A"}</strong><button className='btn btn-dark' onClick={() => { handlePay(item) }}>{is_paid === item?.influencerid_id ? "Continue" : "Pay"}</button></div>
+                                            <div className='d-flex flex-column align-items-end col-md-2'><strong>AED {item?.influencerid_id__fee || "N/A"}</strong>{item?.influencerid_id__fee === null ? (<></>) :(<button className='btn btn-dark' onClick={() => { handlePay(item) }}>{is_paid === item?.influencerid_id ? "Continue" : "Pay"}</button>)}</div>
                                         </div>
                                     ))}
                                 </div>
