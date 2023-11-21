@@ -81,10 +81,12 @@ const Subscription = () => {
           <p className='text-white'>Processing...</p>
         </div>
       ) : (
-        <div className="container mt-5">
+<>
+{plan_list?.length > 0 ? (
+  <>
+    <div className="container mt-5">
           <div className="row">
-            {
-              plan_list?.length > 0 && plan_list?.map((item, index) => {
+            {plan_list?.length > 0 && plan_list?.map((item, index) => {
                 return (
                   <div key={index} className="col-lg-4 col-md-6 mb-3">
                     <div className="card py-4 px-lg-5 h-100">
@@ -127,6 +129,11 @@ const Subscription = () => {
             }
           </div>
         </div>
+        </> ) : (
+  <></>
+)}
+      
+        </>
       )}
 
     </div>

@@ -86,15 +86,15 @@ console.log('influencer_list =======>>>>>>>>>>>>>>' , influencer_list)
                                                      {item.paid_status === true ? (
                                                         <>
                                                             <button className='btn btn-dark' onClick={() => { handlePay(item) }}>
-                                                            {is_paid === item?.influencerid_id ? "Continue" : "Pay"}
+                                                            {item.paid_status ? "Continue" : "Pay"}
                                                             </button>
                                                         </>
                                                         ) : (
                                                         <>
-                                                        {item.paid_status === false && item.paid_status == true ? (
+                                                        {item.paid_status === false || item.paid_status == true ? (
                                                             <>
                                                                 <button className='btn btn-dark' onClick={() => { handlePay(item) }}>
-                                                                {is_paid === item?.influencerid_id ? "Continue" : "Pay"}
+                                                                {item.paid_status ? "Continue" : "Pay"}
                                                                 </button>
                                                             </>
                                                         ) : (

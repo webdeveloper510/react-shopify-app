@@ -328,7 +328,7 @@ const CreateInfluencer = () => {
                                                                         <div key={i} className={`d-flex flex-column justify-content-center align-items-center `}>
                                                                             {/* <span className='text-center' style={{ margin: '0 10px' }}>{influencer?.fullname}</span> */}
                                                                             <p
-                                                                                className={`d-flex flex-column mb-0 ${item.coupon_name == coupon_name.coupon_name ? 'selected' : ''}`}
+                                                                                className={`d-flex flex-column mb-0 ${item.coupon_name == selected_coupons.coupon_name ? 'selected' : ''}`}
                                                                                 onClick={() => handleClick(item)}
                                                                             >
                                                                                 {item?.coupon_name} - {Math.abs(parseInt(item?.amount))}

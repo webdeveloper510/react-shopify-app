@@ -39,6 +39,7 @@ const CampaignManage = () => {
   const [vendorDeclineList, setVendorDeclineList] = useState([]);
   const [getId, setGetId] = useState('');
   const token = localStorage.getItem('Token');
+
   const navigate = useNavigate();
 
   const handleCampName = (event) => {
@@ -75,7 +76,7 @@ const CampaignManage = () => {
       console.log("Influencer List", influencerResponse.data.data);
       setInfluencerList(influencerResponse.data.data);
 
-      console.log("Approved List", approvalResponse.data.data);
+      console.log("Approved List ==========>>>", approvalResponse.data.data);
       setApprovedList(approvalResponse.data.data);
 
       const updatedApprovedList = approvalResponse.data.data.map((approved) => {
@@ -88,7 +89,7 @@ const CampaignManage = () => {
         return approved;
       });
       setApprovedList(updatedApprovedList);
-      console.log("Approved Names", updatedApprovedList);
+      
 
     } catch (error) {
       console.log(error);
@@ -679,9 +680,9 @@ const CampaignManage = () => {
               <Tab.Pane eventKey="first">
                 {campList?.length > 0 ? (
                   <CampaignTable 
-                   list={campList}
-                   additionalProp="active"
-                  campList={campList}
+                    list={campList}
+                    additionalProp="active"
+                    campList={campList}
                     showMarket={showMarketCampaign}
                     getDeleteConfirm={getDeleteConfirm}
                     getMarket={getMarket}
