@@ -4,10 +4,13 @@ import React, { useState } from 'react';
 import Delete from '../../assests/img/delete.svg';
 import { useNavigate } from 'react-router-dom';
 import { Modal } from 'react-bootstrap';
+import axios from 'axios';
+import { toast } from 'react-toastify';
 
 const CampTable = ({ list, additionalProp,name }) => {
 console.log('list',list)
   console.log('name',additionalProp);
+ 
   const [currentPage, setCurrentPage] = useState(1);
   const ITEMS_PER_PAGE = 8;
   const currentItems = list.reverse();
@@ -25,6 +28,7 @@ console.log('list',list)
     }
   };
 
+  
   console.log("currentItems ======>>>>>>>" , currentItems)
 
   const handleNextPage = () => {
@@ -43,6 +47,8 @@ console.log('list',list)
     return text !== "" && text !== null ? text : "None"
   }
 
+ 
+
   const couponListing = (list, field) => {
     let coupontext = "";
     let fixed = 0;
@@ -60,6 +66,7 @@ console.log('list',list)
       }
     }
     if (field === "coupons") {
+      // return "text"
       return coupontext !== null && coupontext !== "" ? coupontext : "None"
     } else {
       return <>{fixed !== 0 ? fixed + "د.إ" : ""} {fixed !== 0 && percentage !== 0 ? "and" : fixed === 0 && percentage === 0 ? "none" : ""} {percentage !== 0 ? percentage + "%" : ""}</>
@@ -69,7 +76,7 @@ console.log('list',list)
   const editCamp = (id) => {
     navigate(`/edit-campaign/${id}`)
   }
-
+// console.log("================>>>>>>>>>",item?.product)
   const headRows = () => {
     if (additionalProp == "active") {
      
@@ -143,7 +150,7 @@ console.log('list',list)
         <>
           {
             currentItems?.length > 0 && currentItems?.map((item, index) => {
-              console.log(currentItems)
+              console.log(item.product)
               return (
                 <tr key={index} className='campaign-inputs'>
                   <td>{item?.campaign_name}</td>
@@ -152,7 +159,7 @@ console.log('list',list)
                     </td>
                   <td>
                     {/* { item?.product.split(",").join("") } */}
-                    { couponListing(JSON.parse(item?.product), "coupons")}
+                    { couponListing(item?.product, "coupons")}
                   </td>
                   <td>
                     {couponListing(item?.product, "discount")}
@@ -255,8 +262,23 @@ console.log('list',list)
 
 
 const DeleteModal = ({ data, handler }) => {
-  const deleteCampaign = (id) => {
-    console.log(id)
+   const token = localStorage.getItem("Token");
+  const handleDelete = (id) => {
+    // e.preventDefault();
+        // setLoading(true);
+        axios.delete('https://api.myrefera.com/campaign/delete/' + id+"/", {
+            headers: {
+                Authorization: `Token ${token}`
+            }
+        })
+            .then(function (response) {              
+                toast.success("Campaign Deleted Successfully", { autoClose: 1000 })
+                handler();
+            })
+            .catch(function (error) {
+                console.log(error);
+                toast.warn("Unable to Delete the Coupon", { autoClose: 1000 })
+            })
   }
   return (
     <Modal show={data.toggle} backdrop={"static"} centered onHide={() => handler()}>
@@ -267,7 +289,7 @@ const DeleteModal = ({ data, handler }) => {
         Are you sure to delete this campaign?
       </Modal.Body>
       <Modal.Footer>
-        <button onClick={() => { deleteCampaign(data?.value) }} className='btn btn-danger w-25 me-4'>Confirm</button>
+        <button onClick={() =>  handleDelete(data?.value) } className='btn btn-danger w-25 me-4'>Confirm</button>
         <button onClick={() => handler()} className='btn w-25 btn-primary'>Cancel</button>
       </Modal.Footer>
     </Modal>

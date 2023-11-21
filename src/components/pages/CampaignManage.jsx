@@ -660,9 +660,9 @@ const CampaignManage = () => {
               <Nav.Item>
                 <Nav.Link eventKey="second">Pending</Nav.Link>
               </Nav.Item>
-              <Nav.Item>
+              {/* <Nav.Item>
                 <Nav.Link eventKey="third">Draft</Nav.Link>
-              </Nav.Item>
+              </Nav.Item> */}
               <Nav.Item>
                 <Nav.Link eventKey="four">Awaiting</Nav.Link>
               </Nav.Item>
@@ -678,7 +678,10 @@ const CampaignManage = () => {
             <Tab.Content>
               <Tab.Pane eventKey="first">
                 {campList?.length > 0 ? (
-                  <CampaignTable campList={campList}
+                  <CampaignTable 
+                   list={campList}
+                   additionalProp="active"
+                  campList={campList}
                     showMarket={showMarketCampaign}
                     getDeleteConfirm={getDeleteConfirm}
                     getMarket={getMarket}
@@ -713,6 +716,8 @@ const CampaignManage = () => {
               <Tab.Pane eventKey="second" className='campaign'>
                 {campListPending?.length > 0 ? (
                   <CampaignTable
+                  list={campListPending}
+                  additionalProp="pending"
                     campList={campListPending}
                     getSingleMarket={getSingleMarket}
                     deleteConfirm={deleteConfirm}
@@ -743,9 +748,11 @@ const CampaignManage = () => {
                     </>
                   )}
               </Tab.Pane>
-              <Tab.Pane eventKey="third" className='campaign'>
+              {/* <Tab.Pane eventKey="third" className='campaign'>
                 {draftList?.length > 0 ? (
                   <CampaignTable
+                  list={draftList}
+                  additionalProp="pending"
                     campList={draftList}
                     getSingleMarket={getSingleMarket}
                     deleteConfirm={deleteConfirm}
@@ -775,10 +782,12 @@ const CampaignManage = () => {
                       <h5 className='mt-4 text-center'>No Campaigns in Draft right now</h5>
                     </>
                   )}
-              </Tab.Pane>
+              </Tab.Pane> */}
               <Tab.Pane eventKey="four" className='campaign'>
                 {approvedList?.length > 0 ? (
                   <CampaignTable
+                  list={approvedList}
+                  additionalProp="await"
                     campList={approvedList}
                     getSingleMarket={getSingleMarket}
                     deleteConfirm={deleteConfirm}
@@ -813,6 +822,8 @@ const CampaignManage = () => {
               <Tab.Pane eventKey="five" className='campaign'>
                 {vendorDeclineList?.length > 0 ? (
                   <CampaignTable
+                  additionalProp="declined"
+                  list={vendorDeclineList}
                     campList={vendorDeclineList}
                     declineInflu={false}
                     getSingleMarket={getSingleMarket}
@@ -848,6 +859,8 @@ const CampaignManage = () => {
               <Tab.Pane eventKey="six" className='campaign'>
                 {expiredList?.length > 0 ? (
                   <CampaignTable
+                  additionalProp="expire"
+                  list={expiredList}
                     campList={expiredList}
                     getSingleMarket={getSingleMarket}
                     declineInflu={false}

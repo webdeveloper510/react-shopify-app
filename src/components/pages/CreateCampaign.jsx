@@ -383,7 +383,7 @@ const CreateCampaign = () => {
         const selectedCoupon = {
             coupon_name: [selectedProduct.coupon_name[couponIndex]],
             amount: [selectedProduct.amount[couponIndex].toString()],
-            discout_type: [selectedProduct.discout_type[couponIndex]],
+            discount_type: [selectedProduct.discount_type[couponIndex]],
             coupon_id: [selectedProduct.coupon_id[couponIndex]],
             product_id: selectedProduct.product_id,
             product_name: selectedProduct.product_name,
@@ -424,7 +424,7 @@ const CreateCampaign = () => {
 
     const fetchmarketplace = async () => {
         try {
-            axios.get(API.BASE_URL + "marketplace/url/", {
+            await axios.post(API.BASE_URL + "marketplace/url/", {
                 headers: {
                     Authorization: `Token ${token}`,
                 },

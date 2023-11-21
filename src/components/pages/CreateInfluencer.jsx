@@ -28,6 +28,7 @@ const CreateInfluencer = () => {
     const [coupon_list, setCouponList] = useState({ coupons: [], product_id: [] })
     const [url_list, setUrlList] = useState([])
     const [coupon_name, setCoupon_name] = useState([])
+    const [selected_products, setSelectedProducts] = useState([])
     const [selected_coupons, setSelectedCoupon] = useState([])
 
 
@@ -46,7 +47,7 @@ const CreateInfluencer = () => {
         })
     }, [])
 
-    
+
 
     useEffect(() => {
 
@@ -86,13 +87,49 @@ const CreateInfluencer = () => {
     const updateCampaign = () => {
         console.log("update")
     }
-    const handleClick =(e) => {
-            console.log('coupon seleted ====== >>>' .e)
-            setCoupon_name(e);
-    }
-console.log('coupon ==== >>>',coupon_list);
+    const handleClick = (e) => {
+        if (selected_coupons.length > 0) {
+            let arr = selected_coupons
+            let isExist = false
+            for (let i = 0; i < selected_coupons.length; i++) {
+                if (selected_coupons[i].coupon_id === e.coupon_id) {
+                    isExist = i
+                }
+            }
+            if (isExist) {
+                arr.splice(isExist, 1)
+            } else {
+                arr.push(e)
+            }
+            setSelectedCoupon(arr)
+        } else {
+            setSelectedCoupon([e])
+        }
+    };
+
     const createRequest = async () => {
         try {
+
+            // {amount: [], coupon_id: [],coupon_name: [], discout_type: [], product_name:''}
+            let product_discount = [];
+            for (let i = 0; i < selected_products.length; i++) {
+                product_discount.push({
+                    product_name:selected_products[i],
+                    amount:[],
+                    discout_type:[],
+                    coupon_name:[],
+                    coupon_id:[]
+                })
+                for (let j = 0; j < selected_coupons.length; j++) {
+                    if(selected_coupons[j].product_name === product_discount[i].product_name){
+                        product_discount[i].amount.push(selected_coupons[j].amount)
+                        product_discount[i].coupon_name.push(selected_coupons[j].coupon_name)
+                        product_discount[i].coupon_id.push(selected_coupons[j].coupon_id)
+                        product_discount[i].discout_type.push(selected_coupons[j].discout_type)
+                    }
+                }
+            }
+
             axios.post(API.BASE_URL + 'request/', {
                 campaign_name: form_data.campaign_name,
                 date: form_data.date,
@@ -100,10 +137,10 @@ console.log('coupon ==== >>>',coupon_list);
                 description: form_data.description,
                 influencer_name: JSON.stringify(ids),
                 influencer_visit: form_data.influencer_visit,
-                product_discount: [coupon_name],
+                product_discount: product_discount,
                 product: form_data.product,
                 product_name: coupon_list.product_titles,
-                 product_id: form_data.product,                
+                product_id: form_data.product,
             }, {
                 headers: {
                     Authorization: `Token ${token}`,
@@ -159,15 +196,26 @@ console.log('coupon ==== >>>',coupon_list);
                 })
         } catch (error) {
             console.error("Error:", error);
-            
+
         }
     };
+
 
     const handleProductSelection = (e) => {
         setFormData({ ...form_data, product: e })
         let data = {
             products: e?.toString()
         }
+        let arr = []
+        for (let i = 0; i < product_list.length; i++) {
+            for (let j = 0; j < e.length; j++) {
+                if (e[j] === product_list[i]?.value) {
+                    arr.push(product_list[i]?.label)
+                }
+            }
+        }
+        setSelectedProducts(arr)
+
         getDataByProduct(data).then(res => {
             if (res?.product_url) {
                 setUrlList(res?.product_url)
@@ -201,7 +249,7 @@ console.log('coupon ==== >>>',coupon_list);
                                         <label htmlFor="yes">Yes</label>
                                     </span>
                                     <span className='d-flex align-items-center justify-content-center'>
-                                        <input type="radio" id="no" name="influencer_visit" value={"no"} checked={form_data?.influencer_visit== 'no'} onChange={handleChange} />
+                                        <input type="radio" id="no" name="influencer_visit" value={"no"} checked={form_data?.influencer_visit == 'no'} onChange={handleChange} />
                                         <label htmlFor="no">No</label>
                                     </span>
                                 </div>
@@ -213,7 +261,7 @@ console.log('coupon ==== >>>',coupon_list);
                             </div>
                             <div className="input-container d-flex flex-column mb-4">
                                 <label className="mb-3">Campaign end date</label>
-                                <input type="date" name="end_date" min={form_data?.date !== "" ? form_data?.date : today} onChange={handleChange} value=  {form_data?.end_date} />
+                                <input type="date" name="end_date" min={form_data?.date !== "" ? form_data?.date : today} onChange={handleChange} value={form_data?.end_date} />
                             </div>
                             <div className="w-full mb-4 col-md-6">
                                 <label className="mb-3">Product</label> <br />
@@ -274,18 +322,17 @@ console.log('coupon ==== >>>',coupon_list);
                                                 <li key={index} className='d-flex flex-row align-items-center mb-2'>
                                                     <span>{title}:- </span>
                                                     <div className='d-flex align-items-center'>
-                                                        {
-                                                            coupon_list?.coupons?.length > 0 ? coupon_list?.coupons?.map((item, i) => {
+                                                        {coupon_list?.coupons?.length > 0 ? coupon_list?.coupons?.map((item, i) => {
                                                                 if (title === item?.product_name) {
                                                                     return (
                                                                         <div key={i} className={`d-flex flex-column justify-content-center align-items-center `}>
                                                                             {/* <span className='text-center' style={{ margin: '0 10px' }}>{influencer?.fullname}</span> */}
                                                                             <p
                                                                                 className={`d-flex flex-column mb-0 ${item.coupon_name == coupon_name.coupon_name ? 'selected' : ''}`}
-                                                                            onClick={() => handleClick(item)}
+                                                                                onClick={() => handleClick(item)}
                                                                             >
                                                                                 {item?.coupon_name} - {Math.abs(parseInt(item?.amount))}
-                                                                                {item?.discount_type !== 'fixed_amount' ? "%" : "د.إ"}
+                                                                                {item?.discout_type !== 'fixed_amount' ? "%" : "د.إ"}
                                                                             </p>
                                                                         </div>
                                                                     )

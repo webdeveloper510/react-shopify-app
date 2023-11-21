@@ -17,6 +17,7 @@ const Influencers = () => {
 
     //-------States----------
     const [loading, setLoading] = useState(false);
+    const [paidId, setPaidId] = useState('');
     const [open_modal, setOpenModal] = useState({ toggle: null, value: { name: null, cost: null }, id: null });
     const [influencer_list, setInfluencerList] = useState(null);
     const [is_paid, setIsPaid] = useState(false)
@@ -34,7 +35,8 @@ const Influencers = () => {
     }, []);
 
     const handlePay = (item) => {
-        if (is_paid) {
+        if (item.paid_status === true) {
+        
             navigate(`/new-campaign/`, { state: { influencer_id: item?.influencerid_id, id: item?.id } })
         } else {
             setOpenModal({ toggle: true, value: { name: item?.fullname, cost: item?.influencerid_id__fee || "40" }, id: item?.influencerid_id })
@@ -75,36 +77,39 @@ console.log('influencer_list =======>>>>>>>>>>>>>>' , influencer_list)
                                             <p className='d-flex flex-column align-items-center col-md-3'><strong>{(item?.engagements / 1000000).toFixed(2) + "M"}<span className='ms-1'>({item.engagement_rate.toFixed(2)}%)</span></strong> <span>Engagement</span> </p>
                                             <div className='d-flex flex-column align-items-end col-md-2'>
                                                 <strong>AED {item?.influencerid_id__fee || "N/A"}</strong>
-                                                {item?.influencerid_id__fee === null ? (
-                                                    <></>
+
+                                                {item?.influencerid_id__fee == null ? (
+                                                    <>
+                                                    </>
                                                 ) : (
                                                     <>
-                                                    {influencer_list.influencer_id === item?.influencerid_id && item?.influencerid_id ? (
-                                                        <>
-                                                        <button className='btn btn-dark' onClick={() => { handlePay(item) }}>
-                                                            {is_paid === item?.influencerid_id ? "Continue" : "Pay"}
-                                                        </button>
-                                                        </>
-                                                    ) : (
-                                                        <>
-                                                        {is_paid === item?.influencerid_id ? (
+                                                     {item.paid_status === true ? (
                                                         <>
                                                             <button className='btn btn-dark' onClick={() => { handlePay(item) }}>
-                                                                {is_paid === item?.influencerid_id ? "Continue" : "Pay"}
+                                                            {is_paid === item?.influencerid_id ? "Continue" : "Pay"}
                                                             </button>
                                                         </>
-                                                        ) : ( 
+                                                        ) : (
+                                                        <>
+                                                        {item.paid_status === false && item.paid_status == true ? (
                                                             <>
-                                                            <button className='btn btn-dark' disabled>
-                                                                Pay
-                                                            </button>
-                                                        </>
+                                                                <button className='btn btn-dark' onClick={() => { handlePay(item) }}>
+                                                                {is_paid === item?.influencerid_id ? "Continue" : "Pay"}
+                                                                </button>
+                                                            </>
+                                                        ) : (
+                                                            <>
+                                                               
+                                                         <button className='btn btn-dark' disabled>
+                                                                    Pay
+                                                                </button>
+                                                            </>
                                                         )}
-                                                       
                                                         </>
-                                                    )}
+                                                     )}
                                                     </>
                                                 )}
+                                               
                                             </div>
                                         </div>
                                     ))}
@@ -164,6 +169,8 @@ const InputElement = ({ payRef, handler, data, setIsPaid }) => {
             payInfluencer({ token: token?.token?.id, influencerid_id: data.id, influencerid_id__fee: data?.value?.cost }).then(res => {
                 setIsPaid(data?.id)
                 console.log(data?.id)
+                // setPaidId(data?.id)
+                toast.success('Payment Success', { autoClose: 1000 })
             })
             handler({ toggle: false, value: null, id: null })
         } else if (token.error.code === "card_declined") {

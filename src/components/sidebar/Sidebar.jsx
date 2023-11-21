@@ -57,7 +57,7 @@ const SideBar = () => {
                 })
                 .catch(function (error) {
                 })
-        }, 5000);
+        }, 5000035200);
         return () => clearInterval(intervalId);
     }, [])
 
@@ -166,10 +166,10 @@ const SideBar = () => {
                                 <img src={Payment} style={{ height: 21, width: 21 }} className="me-2 black-img" alt='menu-img' />
                                 Stripe Details
                             </NavLink>
-                            <NavLink to='/transfer' className='text-black py-2'>
+                            {/* <NavLink to='/transfer' className='text-black py-2'>
                                 <img src={MoneyTransfer} style={{ height: 21, width: 21 }} className="me-2 black-img" alt='menu-img' />
                                 Transfer
-                            </NavLink>
+                            </NavLink> */}
                             <NavLink to='/profile' className='text-black py-2'>
                                 <img src={ProfileImg} className="me-2" alt='menu-img' />
                                 Profile

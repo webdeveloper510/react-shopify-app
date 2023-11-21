@@ -59,7 +59,7 @@ const CouponList = () => {
 
     const fetchCoupon = async () => {
         try {
-            axios.get(API.SHOPIFY_URL + 'coupon/list/', {
+            await axios.get(API.SHOPIFY_URL + 'coupon/list/', {
                 headers: {
                     Authorization: `Token ${token}`
                 }
@@ -188,6 +188,7 @@ const CouponList = () => {
                 console.log("Coupon Created", response);
                 setCouponData([...couponData, response.data]);
                 toast.success("Coupon Created Successfully", { autoClose: 1000 });
+                fetchCoupon();
                 axios.get(API.SHOPIFY_URL + 'coupon/list/', {
                     headers: {
                         Authorization: `Token ${token}`
@@ -196,6 +197,7 @@ const CouponList = () => {
                     .then(function (response) {
                         console.log("Coupon List", response);
                         setCouponData(response.data.coupon)
+                    fetchCoupon();
                     })
                     .catch(function (error) {
                         console.log(error);
@@ -204,7 +206,6 @@ const CouponList = () => {
                 setDiscountType('')
                 setCouponAmount('')
                 couponCross()
-                fetchCoupon();
             })
             .catch(function (error) {
                 console.log(error);
@@ -260,21 +261,8 @@ const CouponList = () => {
                 setCouponDesc('')
                 setDiscountType('')
                 setCouponAmount('')
-                axios.get(API.SHOPIFY_URL + 'coupon/list/', {
-                    headers: {
-
-                        Authorization: `Token ${token}`
-
-                    }
-                })
-                    .then(function (response) {
-                        console.log("Coupon List", response);
-                        setCouponData(response.data.coupon);
-                    })
-                    .catch(function (error) {
-                        console.log(error);
-                    })
                 couponCross()
+                fetchCoupon();
             })
             .catch(function (error) {
                 console.log(error);
@@ -319,20 +307,7 @@ const CouponList = () => {
                 setDiscountType('')
                 setCouponAmount('')
                 setProductIds('')
-                axios.get(API.SHOPIFY_URL + 'coupon/list/', {
-                    headers: {
-
-                        Authorization: `Token ${token}`
-
-                    }
-                })
-                    .then(function (response) {
-                        console.log("Coupon List", response);
-                        setCouponData(response.data.coupon);
-                    })
-                    .catch(function (error) {
-                        console.log(error);
-                    })
+                fetchCoupon();
                 couponCross()
             })
             .catch(function (error) {
@@ -550,7 +525,7 @@ const CouponList = () => {
 
                     <div className="coupon-buttons d-flex justify-content-end align-items-center">
                         <button onClick={() => couponCreateShow()}><img src={Plus} aly='plus' /> Create Coupon</button>
-                        <button><img src={Download} aly='download' /> Export Coupon</button>
+                        {/* <button><img src={Download} aly='download' /> Export Coupon</button> */}
                     </div>
                     {couponData.length > 0 ? (
                         <>
