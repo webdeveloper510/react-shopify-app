@@ -332,7 +332,7 @@ const CreateInfluencer = () => {
                                                                                 onClick={() => handleClick(item)}
                                                                             >
                                                                                 {item?.coupon_name} - {Math.abs(parseInt(item?.amount))}
-                                                                                {item?.discout_type !== 'fixed_amount' ? "%" : "د.إ"}
+                                                                                {item?.discount_type !== 'fixed_amount' ? "%" : "د.إ"}
                                                                             </p>
                                                                         </div>
                                                                     )
