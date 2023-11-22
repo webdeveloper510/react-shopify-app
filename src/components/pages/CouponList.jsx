@@ -234,7 +234,7 @@ const CouponList = () => {
                     toast.warn("Value should be less than 100", { autoClose: 1000 })
                 }
                 else {
-                    toast.error("Could not create a coupon right now", { autoClose: 1000 })
+                    toast.error("Server is busy please try again ", { autoClose: 1000 })
                 }
             })
             .finally(() => setLoading(false));

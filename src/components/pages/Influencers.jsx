@@ -21,22 +21,29 @@ const Influencers = () => {
     const [open_modal, setOpenModal] = useState({ toggle: null, value: { name: null, cost: null }, id: null });
     const [influencer_list, setInfluencerList] = useState(null);
     const [is_paid, setIsPaid] = useState(false)
+    const [disabled, setDisabled] = useState(null)
 
     //-------Handlers--------
     useEffect(() => {
         setLoading(true);
         getInfluencerList().then(res => {
             setLoading(false);
-            let data=res?.data
+            let data = res?.data
             if (res?.data) {
+                for (let i = 0; i < res?.data?.length; i++) {
+                    if (res?.data[i]?.paid_status === true) {
+                        setDisabled(res?.data[i]?.influencerid_id)
+                        break;
+                    }
+                }
                 setInfluencerList(res.data);
             }
         })
-    }, []);
+    }, [is_paid]);
 
     const handlePay = (item) => {
-        if (item.paid_status === true) {
-        
+        if (item.paid_status) {
+
             navigate(`/new-campaign/`, { state: { influencer_id: item?.influencerid_id, id: item?.id } })
         } else {
             setOpenModal({ toggle: true, value: { name: item?.fullname, cost: item?.influencerid_id__fee || "40" }, id: item?.influencerid_id })
@@ -46,7 +53,7 @@ const Influencers = () => {
     const handlePrev = () => {
         navigate(-1)
     }
-console.log('influencer_list =======>>>>>>>>>>>>>>' , influencer_list)
+    console.log('influencer_list =======>>>>>>>>>>>>>>', influencer_list)
 
     // -------- Return --------
     return (
@@ -83,33 +90,12 @@ console.log('influencer_list =======>>>>>>>>>>>>>>' , influencer_list)
                                                     </>
                                                 ) : (
                                                     <>
-                                                     {item.paid_status === true ? (
-                                                        <>
-                                                            <button className='btn btn-dark' onClick={() => { handlePay(item) }}>
+                                                        <button className='btn btn-dark' onClick={() => { handlePay(item) }} disabled={item?.influencerid_id !== disabled && disabled!== null}>
                                                             {item.paid_status ? "Continue" : "Pay"}
-                                                            </button>
-                                                        </>
-                                                        ) : (
-                                                        <>
-                                                        {item.paid_status === false || item.paid_status == true ? (
-                                                            <>
-                                                                <button className='btn btn-dark' onClick={() => { handlePay(item) }}>
-                                                                {item.paid_status ? "Continue" : "Pay"}
-                                                                </button>
-                                                            </>
-                                                        ) : (
-                                                            <>
-                                                               
-                                                         <button className='btn btn-dark' disabled>
-                                                                    Pay
-                                                                </button>
-                                                            </>
-                                                        )}
-                                                        </>
-                                                     )}
+                                                        </button>
                                                     </>
                                                 )}
-                                               
+
                                             </div>
                                         </div>
                                     ))}

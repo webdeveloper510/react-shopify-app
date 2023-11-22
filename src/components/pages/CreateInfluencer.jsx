@@ -125,7 +125,7 @@ const CreateInfluencer = () => {
                         product_discount[i].amount.push(selected_coupons[j].amount)
                         product_discount[i].coupon_name.push(selected_coupons[j].coupon_name)
                         product_discount[i].coupon_id.push(selected_coupons[j].coupon_id)
-                        product_discount[i].discout_type.push(selected_coupons[j].discout_type)
+                        product_discount[i].discout_type.push(selected_coupons[j].discount_type)
                     }
                 }
             }
