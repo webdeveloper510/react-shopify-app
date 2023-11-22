@@ -210,6 +210,8 @@ const CampaignManage = () => {
     }
   };
 
+  
+
   useEffect(() => {
 
     fetchData();
@@ -270,6 +272,32 @@ const CampaignManage = () => {
       })
   }, [token])
 
+
+  const fetchMarketList12 = async () => {
+    try {
+        const response = await axios.get(API.BASE_URL + 'allcampaign/',{
+            headers: {
+                Authorization: `Token ${token}`
+            }
+        })
+        
+        console.log("Market camperrrrr List ==============>>>>>>",response.data.data);
+        const actives = Object.values(response.data.data).filter(data => data.expiry_status == true);
+        const Expire = Object.values(response.data.data).filter(data => data.expiry_status == false);
+        const activeCampaigns = Object.values(actives).filter(data => data.status == '2');
+        const awaitingCampaigns = Object.values(actives).filter(data => data.status == '1');
+        const inactiveCampaigns = Object.values(actives).filter(data => data.status == '0');
+        // setCampApproval12(activeCampaigns);
+        // setActive(activeCampaigns);
+        // setPending(inactiveCampaigns);
+        // setExpire(Expire);
+        // setAwaiting(awaitingCampaigns);
+        console.log("activeCampaigns ------ 2" , activeCampaigns)
+        console.log("inactiveCampaigns ------ 0" , inactiveCampaigns)
+            console.log("Market camperrrrr List ==============>>>>>>");
+       } catch (error) {
+        console.error('Error fetching data:', error);
+} };
   function deleteCampaign(value) {
     setLoading(true);
     axios.delete(API.BASE_URL + 'delete/' + value + '/', {
@@ -647,6 +675,8 @@ const CampaignManage = () => {
 
   console.log("campListPending", campListPending)
 
+  
+
   return (
     <>
       <div className="campaign-manage-container p-4 page">
@@ -899,6 +929,9 @@ const CampaignManage = () => {
         </Tab.Container>
 
       </div>
+
+
+      
     </>
   );
 }

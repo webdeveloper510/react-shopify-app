@@ -1,16 +1,20 @@
 import { faChevronLeft, faChevronRight, faEye, faPenToSquare } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Delete from '../../assests/img/delete.svg';
 import { useNavigate } from 'react-router-dom';
-import { Modal } from 'react-bootstrap';
+import { Button , Modal } from 'react-bootstrap';
 import axios from 'axios';
+import { getInfluencerList, payInfluencer } from '../../config/Api';
+import { loadStripe } from '@stripe/stripe-js';
 import { toast } from 'react-toastify';
+import { CardElement, Elements, useElements, useStripe } from '@stripe/react-stripe-js';
+import { API } from '../../config/Api';
 
 const CampTable = ({ list, additionalProp,name }) => {
 console.log('list',list)
   console.log('name',additionalProp);
- 
+  const token = localStorage.getItem("Token");
   const [currentPage, setCurrentPage] = useState(1);
   const ITEMS_PER_PAGE = 8;
   const currentItems = list.reverse();
@@ -19,15 +23,17 @@ console.log('list',list)
   const totalPages = Math.ceil(list?.length / ITEMS_PER_PAGE);
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
   const navigate = useNavigate()
+  const [is_paid, setIsPaid] = useState(false)
   const [delete_modal, setDeleteModal] = useState({ toggle: false, value: null })
   const [view_modal, setViewModal] = useState({ toggle: false, value: null })
-
+  const [open_modal, setOpenModal] = useState({ toggle: null,user_id: null, camp_id: null, id: null, amount : null });
   const handlePreviousPage = () => {
     if (currentPage > 1) {
       setCurrentPage(currentPage - 1);
     }
   };
 
+  
   
   console.log("currentItems ======>>>>>>>" , currentItems)
 
@@ -36,6 +42,25 @@ console.log('list',list)
       setCurrentPage(currentPage + 1);
     }
   };
+
+  const handleReject =(e) => {
+    // console.log(token)
+    axios.post(API.BASE_URL + 'marketplacedecline/' + e.camp_id + '/' + e.id + '/', {
+  }, {
+      headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Token ${token}`
+      }
+  })
+        .then(function (response) {
+          console.log("Single Market Data", response.data.data)
+        })
+        .catch(function (error) {
+          console.log(error);
+        })
+    
+    // console.log(e);
+  }
 
   const productsListing = (list) => {
     let text = "";
@@ -47,7 +72,35 @@ console.log('list',list)
     return text !== "" && text !== null ? text : "None"
   }
 
- 
+  const PaymentModal = ({ data, handler, setIsPaid }) => {
+    console.log("--------------->>>>>>>",data)
+    const payRef = useRef(null)
+    const stripePromise = loadStripe(`${process.env.REACT_APP_STRIPE_KEY}`)
+    // handleAccept(data);
+    return (
+        <Modal className="modal-card" show={data?.toggle} onHide={() => handler({ toggle: false, user_id: null, amount: null , camp_id: null, id: null })} centered backdrop="static">
+            <Modal.Header>
+                <Modal.Title className='fs-5'>Payment </Modal.Title>
+            </Modal.Header>
+            <Modal.Body >
+
+                <div className='my-4'>
+                    <Elements stripe={stripePromise}>
+                        <InputElement payRef={payRef} handler={handler} data={data} setIsPaid={setIsPaid} />
+                    </Elements>
+                </div>
+            </Modal.Body>
+            <Modal.Footer>
+                <Button variant="danger" onClick={() => handler({ toggle: false, user_id: null, amount: null , camp_id: null, id: null })} >
+                    Cancel
+                </Button>
+                <Button type="submit" variant="primary" onClick={() => payRef.current.click()}>
+                    Pay
+                </Button>
+            </Modal.Footer>
+        </Modal>
+    )
+}
 
   const couponListing = (list, field) => {
     let coupontext = "";
@@ -100,9 +153,22 @@ console.log('list',list)
     } else if (additionalProp == "declined") {
       return (
         <tr className='headings'>
-          <th>Campaign Name</th>
-          <th>Influencer</th>
+           <th>Campaign Name</th>
+          <th>Products</th>
+          <th>Coupons</th>
+          <th>Discount </th>
         </tr>
+      )
+    } else if (additionalProp == "awaiting") {
+      return (
+        <tr className='headings'>
+        <th>Campaign Name</th>
+        <th>Products</th>
+        <th>Coupons</th>
+        <th>Discount</th>
+        <th>Total Pay</th>
+        <th>Action</th>
+      </tr>
       )
     } else {
       return (
@@ -195,14 +261,57 @@ console.log('list',list)
               return (
                 <tr key={index} className='campaign-inputs'>
                   <td>{item?.campaign_name}</td>
-                  <td>{item?.influencer_name}</td>
+                  <td>{productsListing(item?.product)}</td>
+                  <td> { couponListing(item?.product, "coupons")}</td>
+                  <td>{couponListing(item?.product, "discount")}</td>
                 </tr>
               )
             })
           }
         </>
       )
-    } else {
+    } else if (additionalProp == "awaiting") {
+      return (
+        <>
+          {
+            currentItems?.length > 0 && currentItems?.map((item, index) => {
+              return (
+                <tr key={index} className='campaign-inputs'>
+                  <td>{item?.campaign_name}</td>
+                  <td>{productsListing(item?.product)}</td>
+                  <td>
+                    {couponListing(item?.product, "coupons")}
+                  </td>
+                  <td>
+                    {couponListing(item?.product, "discount")}
+                  </td>
+                  <td>{item?.influencer_fee || "null"}</td>
+                  <td>
+                    {item?.influencer_fee !==  null ? (
+                      <>
+                       <button className='bg-black text-white me-3' onClick={() => { setOpenModal({ toggle: true, camp_id: item?.campaignid_id ,user_id :item?.user_influencer, amount: item?.influencer_fee, id : item?.influencer_id }) }}>
+                      Pay
+                        </button>
+                        <button className='bg-black text-white' onClick={() => { handleReject({camp_id: item?.campaignid_id , id :item?.influencer_id }) }}>
+                          Reject
+                        </button>
+                      </>
+                    ) : (
+                      <>
+                      </>
+                    )}
+                 
+                    <PaymentModal data={open_modal} handler={(value) => { setOpenModal(value) }} setIsPaid={setIsPaid} />
+                  </td>
+                </tr>
+              )
+            })
+          }
+        </>
+      )
+    }
+    else 
+    {
       return (
         <>
           {
@@ -295,7 +404,61 @@ const DeleteModal = ({ data, handler }) => {
     </Modal>
   )
 }
+const InputElement = ({ payRef, handler, data, setIsPaid }) => {
 
+  const stripe = useStripe();
+  const elements = useElements();
+
+  const handleSubmit = async (event) => {
+      event.preventDefault();
+      if (elements == null) {
+          return;
+      }
+      const token = await stripe.createToken(elements.getElement(CardElement))
+      if (token.token) {
+          payInfluencer({ token: token?.token?.id, influencerid_id:data.user_influencer , campaignid_id:data.camp_id, user_id: data.id, influencerid_id__fee: data?.amount }).then(res => {
+              setIsPaid(data?.id)
+              console.log(data?.id)
+              // setPaidId(data?.id)
+              toast.success('Payment Success', { autoClose: 1000 })
+              handleAccept(data)
+          })
+          handler({ toggle: false, value: null, id: null , user_id:null, camp_id:null, amount:null})
+      } else if (token.error.code === "card_declined") {
+          toast.error("Card Declined")
+      } else {
+          toast.error("Enter card details to continue")
+      }
+
+  };
+
+  const handleAccept =(data) => {
+    console.log(data)
+      axios.post(API.BASE_URL + 'marketplaceaccept/' + data.camp_id + '/' + data.id + '/', {
+      },
+        {headers: {
+          Authorization: `Token ${localStorage.getItem("Token")}`
+        }})
+        .then(function (response) {
+          console.log("Single Market Data", response.data.data)
+        })
+        .catch(function (error) {
+          console.log(error);
+        })
+    
+  }
+
+
+  return (
+      <form onSubmit={handleSubmit}>
+          <CardElement options={{ hidePostalCode: true }} />
+
+          <button type="submit" ref={payRef} style={{ display: "none" }} disabled={!stripe || !elements}>
+              Pay
+          </button>
+      </form>
+  )
+}
 const ViewModal = ({ data, handler, productsListing, couponListing }) => {
   return (
     <Modal show={data.toggle} backdrop={"static"} centered onHide={() => handler()}>

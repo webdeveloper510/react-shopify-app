@@ -27,9 +27,10 @@ const CreateInfluencer = () => {
     const [product_list, setProductList] = useState([])
     const [coupon_list, setCouponList] = useState({ coupons: [], product_id: [] })
     const [url_list, setUrlList] = useState([])
-    const [coupon_name, setCoupon_name] = useState([])
+    const [selected_coupon_ids, setCoupon_ids] = useState([])
     const [selected_products, setSelectedProducts] = useState([])
     const [selected_coupons, setSelectedCoupon] = useState([])
+
 
 
     //-------Handlers--------
@@ -87,23 +88,31 @@ const CreateInfluencer = () => {
     const updateCampaign = () => {
         console.log("update")
     }
+
+    console.log('------------->>>>>>>>>', coupon_list.coupons)
     const handleClick = (e) => {
         if (selected_coupons.length > 0) {
             let arr = selected_coupons
-            let isExist = false
+            let ids = selected_coupon_ids
+            let isExist = null
             for (let i = 0; i < selected_coupons.length; i++) {
                 if (selected_coupons[i].coupon_id === e.coupon_id) {
+                    console.log(e.coupon_name, selected_coupons[i].coupon_name)
                     isExist = i
                 }
             }
-            if (isExist) {
+            if (isExist !== null) {
                 arr.splice(isExist, 1)
+                ids.splice(isExist, 1)
             } else {
                 arr.push(e)
+                ids.push(e.coupon_id)
             }
-            setSelectedCoupon(arr)
+            setSelectedCoupon([...arr])
+            setCoupon_ids([...ids])
         } else {
             setSelectedCoupon([e])
+            setCoupon_ids([e.coupon_id])
         }
     };
 
@@ -114,14 +123,14 @@ const CreateInfluencer = () => {
             let product_discount = [];
             for (let i = 0; i < selected_products.length; i++) {
                 product_discount.push({
-                    product_name:selected_products[i],
-                    amount:[],
-                    discout_type:[],
-                    coupon_name:[],
-                    coupon_id:[]
+                    product_name: selected_products[i],
+                    amount: [],
+                    discout_type: [],
+                    coupon_name: [],
+                    coupon_id: []
                 })
                 for (let j = 0; j < selected_coupons.length; j++) {
-                    if(selected_coupons[j].product_name === product_discount[i].product_name){
+                    if (selected_coupons[j].product_name === product_discount[i].product_name) {
                         product_discount[i].amount.push(selected_coupons[j].amount)
                         product_discount[i].coupon_name.push(selected_coupons[j].coupon_name)
                         product_discount[i].coupon_id.push(selected_coupons[j].coupon_id)
@@ -226,6 +235,51 @@ const CreateInfluencer = () => {
         })
     }
 
+    const showCoupons = (item) => {
+        let doesExist = null;
+        console.log("show coupons----------", selected_coupons, item)
+        if (selected_coupons.length > 1) {
+            for (let i = 0; i < selected_coupons.length; i++) {
+                if (item.coupon_id === selected_coupons[i].coupon_id) {
+                    doesExist = true
+                    break;
+                }
+            }
+            if (doesExist) {
+                console.log(doesExist, selected_coupons)
+                return (
+                    <p
+                        className={`d-flex flex-column mb-0 selected`}
+                        onClick={() => handleClick(item)}
+                    >
+                        {item?.coupon_name} - {Math.abs(parseInt(item?.amount))}
+                        {item?.discount_type !== 'fixed_amount' ? "%" : "د.إ"}
+                    </p>
+                )
+            } else {
+                return (
+                    <p
+                        className={`d-flex flex-column mb-0`}
+                        onClick={() => handleClick(item)}
+                    >
+                        {item?.coupon_name} - {Math.abs(parseInt(item?.amount))}
+                        {item?.discount_type !== 'fixed_amount' ? "%" : "د.إ"}
+                    </p>
+                )
+            }
+        } else {
+            return (
+                <p
+                    className={`d-flex flex-column mb-0`}
+                    onClick={() => handleClick(item)}
+                >
+                    {item?.coupon_name} - {Math.abs(parseInt(item?.amount))}
+                    {item?.discount_type !== 'fixed_amount' ? "%" : "د.إ"}
+                </p>
+            )
+        }
+    }
+
     return (
         <>
             <div className="campaign-new p-4 page">
@@ -323,30 +377,30 @@ const CreateInfluencer = () => {
                                                     <span>{title}:- </span>
                                                     <div className='d-flex align-items-center'>
                                                         {coupon_list?.coupons?.length > 0 ? coupon_list?.coupons?.map((item, i) => {
-                                                                if (title === item?.product_name) {
-                                                                    return (
-                                                                        <div key={i} className={`d-flex flex-column justify-content-center align-items-center `}>
-                                                                            {/* <span className='text-center' style={{ margin: '0 10px' }}>{influencer?.fullname}</span> */}
-                                                                            <p
-                                                                                className={`d-flex flex-column mb-0 ${item.coupon_name == selected_coupons.coupon_name ? 'selected' : ''}`}
-                                                                                onClick={() => handleClick(item)}
-                                                                            >
-                                                                                {item?.coupon_name} - {Math.abs(parseInt(item?.amount))}
-                                                                                {item?.discount_type !== 'fixed_amount' ? "%" : "د.إ"}
-                                                                            </p>
-                                                                        </div>
-                                                                    )
-                                                                }
-                                                            }) : (
-                                                                <div className='d-flex flex-column justify-content-center align-items-center'>
-                                                                    {/* <span className='text-center' style={{ margin: '0 10px' }}>{influencer?.fullname}</span> */}
-                                                                    <p
-                                                                        className={`d-flex flex-column mb-0 `}
-                                                                    >
-                                                                        No Coupon Available
-                                                                    </p>
-                                                                </div>
-                                                            )
+                                                            if (title === item?.product_name) {
+                                                                return (
+                                                                    <div key={i} className={`d-flex flex-column justify-content-center align-items-center `}>
+                                                                        {/* <span className='text-center' style={{ margin: '0 10px' }}>{influencer?.fullname}</span> */}
+                                                                        <p
+                                                                            className={`d-flex flex-column mb-0 ${selected_coupon_ids?.includes(item?.coupon_id)? "selected":""}`}
+                                                                            onClick={() => handleClick(item)}
+                                                                        >
+                                                                            {item?.coupon_name} - {Math.abs(parseInt(item?.amount))}
+                                                                            {item?.discount_type !== 'fixed_amount' ? "%" : "د.إ"}
+                                                                        </p>
+                                                                    </div>
+                                                                )
+                                                            }
+                                                        }) : (
+                                                            <div className='d-flex flex-column justify-content-center align-items-center'>
+                                                                {/* <span className='text-center' style={{ margin: '0 10px' }}>{influencer?.fullname}</span> */}
+                                                                <p
+                                                                    className={`d-flex flex-column mb-0 `}
+                                                                >
+                                                                    No Coupon Available
+                                                                </p>
+                                                            </div>
+                                                        )
                                                         }
                                                     </div>
                                                 </li>

@@ -169,7 +169,7 @@ const CampaignMarket = () => {
             const actives = Object.values(response.data.data).filter(data => data.expiry_status == true);
             const Expire = Object.values(response.data.data).filter(data => data.expiry_status == false);
             const activeCampaigns = Object.values(actives).filter(data => data.status == '2');
-            const awaitingCampaigns = Object.values(actives).filter(data => data.status == '3');
+            const awaitingCampaigns = Object.values(actives).filter(data => data.status == '1');
             const inactiveCampaigns = Object.values(actives).filter(data => data.status == '0');
             setCampApproval12(activeCampaigns);
             setActive(activeCampaigns);
