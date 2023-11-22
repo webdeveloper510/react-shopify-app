@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useEffect, useRef, useState } from 'react';
 import Delete from '../../assests/img/delete.svg';
 import { useNavigate } from 'react-router-dom';
-import { Button , Modal } from 'react-bootstrap';
+import { Button , Modal, Toast } from 'react-bootstrap';
 import axios from 'axios';
 import { getInfluencerList, payInfluencer } from '../../config/Api';
 import { loadStripe } from '@stripe/stripe-js';
@@ -26,7 +26,7 @@ console.log('list',list)
   const [is_paid, setIsPaid] = useState(false)
   const [delete_modal, setDeleteModal] = useState({ toggle: false, value: null })
   const [view_modal, setViewModal] = useState({ toggle: false, value: null })
-  const [open_modal, setOpenModal] = useState({ toggle: null,user_id: null, camp_id: null, id: null, amount : null });
+  const [open_modal, setOpenModal] = useState({ toggle: null, user_id: null, influencer_id :null, camp_id: null, id: null, amount : null });
   const handlePreviousPage = () => {
     if (currentPage > 1) {
       setCurrentPage(currentPage - 1);
@@ -53,7 +53,9 @@ console.log('list',list)
       }
   })
         .then(function (response) {
-          console.log("Single Market Data", response.data.data)
+          // console.log("Single Market Data", response.data.data)
+         
+          toast.success(response.message, { autoClose: 1000 });
         })
         .catch(function (error) {
           console.log(error);
@@ -78,7 +80,7 @@ console.log('list',list)
     const stripePromise = loadStripe(`${process.env.REACT_APP_STRIPE_KEY}`)
     // handleAccept(data);
     return (
-        <Modal className="modal-card" show={data?.toggle} onHide={() => handler({ toggle: false, user_id: null, amount: null , camp_id: null, id: null })} centered backdrop="static">
+        <Modal className="modal-card" show={data?.toggle} onHide={() => handler({ toggle: false, user_id: null, amount: null , influencer_id :null, camp_id: null, id: null })} centered backdrop="static">
             <Modal.Header>
                 <Modal.Title className='fs-5'>Payment </Modal.Title>
             </Modal.Header>
@@ -91,7 +93,7 @@ console.log('list',list)
                 </div>
             </Modal.Body>
             <Modal.Footer>
-                <Button variant="danger" onClick={() => handler({ toggle: false, user_id: null, amount: null , camp_id: null, id: null })} >
+                <Button variant="danger" onClick={() => handler({ toggle: false, user_id: null, amount: null , influencer_id :null, camp_id: null, id: null })} >
                     Cancel
                 </Button>
                 <Button type="submit" variant="primary" onClick={() => payRef.current.click()}>
@@ -231,7 +233,7 @@ console.log('list',list)
                     {couponListing(item?.product, "discount")}
                   </td>
                   <td>
-                    {/* <button
+                    <button
                       type="button"
                       onClick={() => {
                         editCamp(item?.campaignid_id)
@@ -242,7 +244,7 @@ console.log('list',list)
                         icon={faPenToSquare}
                         style={{ color: "#fff", width: "15px", height: "15px" }}
                       />
-                    </button> */}
+                    </button>
                     <button onClick={() => { setDeleteModal({ toggle: true, value: item?.campaignid_id }) }}>
                       <img src={Delete} alt='delete-icon' />
                     </button>
@@ -289,7 +291,7 @@ console.log('list',list)
                   <td>
                     {item?.influencer_fee !==  null ? (
                       <>
-                       <button className='bg-black text-white me-3' onClick={() => { setOpenModal({ toggle: true, camp_id: item?.campaignid_id ,user_id :item?.user_influencer, amount: item?.influencer_fee, id : item?.influencer_id }) }}>
+                       <button className='bg-black text-white me-3' onClick={() => { setOpenModal({ toggle: true, influencer_id: item?.user_influencer, camp_id: item?.campaignid_id , user_id :item?.user_influencer, amount: item?.influencer_fee, id : item?.influencer_id }) }}>
                       Pay
                         </button>
                         <button className='bg-black text-white' onClick={() => { handleReject({camp_id: item?.campaignid_id , id :item?.influencer_id }) }}>
@@ -416,7 +418,7 @@ const InputElement = ({ payRef, handler, data, setIsPaid }) => {
       }
       const token = await stripe.createToken(elements.getElement(CardElement))
       if (token.token) {
-          payInfluencer({ token: token?.token?.id, influencerid_id:data.user_influencer , campaignid_id:data.camp_id, user_id: data.id, influencerid_id__fee: data?.amount }).then(res => {
+          payInfluencer({ token: token?.token?.id, campaignid_id:data.camp_id, influencerid_id:data.user_influencer, user_id: data.id, influencerid_id__fee: data?.amount }).then(res => {
               setIsPaid(data?.id)
               console.log(data?.id)
               // setPaidId(data?.id)
@@ -440,7 +442,8 @@ const InputElement = ({ payRef, handler, data, setIsPaid }) => {
           Authorization: `Token ${localStorage.getItem("Token")}`
         }})
         .then(function (response) {
-          console.log("Single Market Data", response.data.data)
+          // console.log("Single Market Data", response.data.data)
+          toast.success(response.message, { autoClose: 1000 });
         })
         .catch(function (error) {
           console.log(error);

@@ -317,10 +317,12 @@ const CreateInfluencer = () => {
                                 <label className="mb-3">Campaign end date</label>
                                 <input type="date" name="end_date" min={form_data?.date !== "" ? form_data?.date : today} onChange={handleChange} value={form_data?.end_date} />
                             </div>
+                            {location.pathname === `/edit-campaign/${id}` ? ('') : (
                             <div className="w-full mb-4 col-md-6">
                                 <label className="mb-3">Product</label> <br />
                                 <CheckPicker style={{ height: '52px', width: '470px' }} data={product_list} onChange={(e) => handleProductSelection(e)} />
                             </div>
+                            )}
                             <div className="input-container d-flex flex-column mb-4">
                                 <label className="mb-3">Description</label>
                                 <textarea
@@ -332,7 +334,9 @@ const CreateInfluencer = () => {
                                     style={{ color: '#666' }}
                                 ></textarea>
                             </div>
-                            <div className="input-container d-flex flex-column mb-4 influen-list">
+                            {location.pathname === `/edit-campaign/${id}` ? ('') : (
+                                <>
+                                  <div className="input-container d-flex flex-column mb-4 influen-list">
                                 <label className="mb-3">Influencer</label>
                                 <div className='selected-influencers'>
                                     <ul>
@@ -366,7 +370,7 @@ const CreateInfluencer = () => {
                                     </div>
                                 </div>
                             )}
-                            <div className="input-container d-flex flex-column mb-4 prod-coupons w-100">
+                             <div className="input-container d-flex flex-column mb-4 prod-coupons w-100">
                                 <label className="mb-3">Product coupons</label>
                                 <ul className="coupons coupons-list flex-column">
                                     {
@@ -409,6 +413,10 @@ const CreateInfluencer = () => {
                                     }
                                 </ul>
                             </div>
+                                </>
+                          
+                            )}
+                           
                             <div className="buttons d-flex justify-content-center">
                                 {id?.length > 0 ?
                                     <button className='button button-black' type="button" onClick={(e) => { updateCampaign(e) }}>Update Campaign</button>
