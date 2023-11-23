@@ -39,6 +39,7 @@ const CampaignMarket = () => {
     const [pending, setPending] = useState([]);
     const [expire, setExpire] = useState([]);
     const [awaiting, setAwaiting] = useState([]);
+    const [decline, setDecline] = useState([]);
     const {testing, setTesting, marketData,  marketDraftId, setMarketDraftId, marketDraftList, setMarketDraftList, marketList, setMarketList, marketId, setMarketId, declineInflu, showButtons} = useContext(UserContext);
     const navigate = useNavigate()
     
@@ -158,27 +159,25 @@ const CampaignMarket = () => {
         }
     };
     const fetchMarketList12 = async () => {
+        
         try {
             const response = await axios.get(API.BASE_URL + 'marketcampaign/',{
                 headers: {
                     Authorization: `Token ${token}`
                 }
             })
-            
-            // console.log("Market camperrrrr List ==============>>>>>>",response.data.data);
             const actives = Object.values(response.data.data).filter(data => data.expiry_status == true);
             const Expire = Object.values(response.data.data).filter(data => data.expiry_status == false);
             const activeCampaigns = Object.values(actives).filter(data => data.status == '2');
             const awaitingCampaigns = Object.values(actives).filter(data => data.status == '1');
             const inactiveCampaigns = Object.values(actives).filter(data => data.status == '0');
+            const declineCampaigns = Object.values(actives).filter(data => data.status == '4');
             setCampApproval12(activeCampaigns);
             setActive(activeCampaigns);
             setPending(inactiveCampaigns);
             setExpire(Expire);
             setAwaiting(awaitingCampaigns);
-            // console.log("activeCampaigns ------ 2" , activeCampaigns)
-            // console.log("inactiveCampaigns ------ 0" , inactiveCampaigns)
-            //     console.log("Market camperrrrr List ==============>>>>>>");
+            setDecline(declineCampaigns);
            } catch (error) {
             console.error('Error fetching data:', error);
     } };
@@ -207,12 +206,7 @@ const CampaignMarket = () => {
     useEffect(() => {
         fetchMarketList12();
         fetchMarketList();
-        // fetchMarket_approval();
-        fetchMarket_decline();
-        // fetchMarketcampaignexp();
-        // fetchMarketapproval();
         fetchProductList();
-        // fetchMarkdraftList();
     }, [token])
 
 
@@ -426,9 +420,6 @@ const CampaignMarket = () => {
                     <Nav.Item>
                         <Nav.Link eventKey="second">Pending</Nav.Link>
                     </Nav.Item>
-                    {/* <Nav.Item>
-                        <Nav.Link eventKey="third">Draft</Nav.Link>
-                    </Nav.Item> */}
                     <Nav.Item>
                         <Nav.Link eventKey="four">Awaiting</Nav.Link>
                     </Nav.Item>
@@ -465,8 +456,7 @@ const CampaignMarket = () => {
                                 list={pending}
                                 additionalProp="pending"
                             />
-                            ) :
-                            (
+                            ) : (
                                 <>
                                     <img src={NoData} alt='no-data' style={{width: '100%', maxHeight: 220, marginTop: '4rem', objectFit: 'contain'}} />
                                     <h3 className='mt-4 text-center'>No Pending Campaign</h3>
@@ -475,22 +465,6 @@ const CampaignMarket = () => {
                             )
                         }
                     </Tab.Pane>
-
-                    {/* <Tab.Pane eventKey="third" className='campaign'>
-                        {marketDraftList?.length > 0 ? (
-                            <CampaignTable 
-                                list={marketDraftList}
-                            />
-                            ) :
-                            (
-                                <>
-                                    <img src={NoData} alt='no-data' style={{width: '100%', maxHeight: 220, marginTop: '4rem', objectFit: 'contain'}} />
-                                    <h3 className='mt-4 text-center'>No Draft Campaign</h3>
-                            
-                                </>
-                            )
-                        }
-                    </Tab.Pane> */}
 
                     <Tab.Pane eventKey="four">
                         {awaiting?.length > 0 ? (
@@ -510,10 +484,10 @@ const CampaignMarket = () => {
                     </Tab.Pane>
 
                     <Tab.Pane eventKey="five">
-                        {campDecline?.length > 0 ? (
+                        {decline?.length > 0 ? (
                             <CampaignTable 
-                                list={campDecline}
-                                additionalProp="campDecline"
+                                list={decline}
+                                additionalProp="decline"
 
                             />
                             ) :
@@ -543,6 +517,7 @@ const CampaignMarket = () => {
                             )
                         }
                     </Tab.Pane>
+
                 </Tab.Content>
                 </Col>
             </Tab.Container>

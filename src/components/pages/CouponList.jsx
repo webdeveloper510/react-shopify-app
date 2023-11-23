@@ -43,7 +43,7 @@ const CouponList = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [showProd, setShowProd] = useState(false)
     const [inputValue, setInputValue] = useState(selectedProductNames.join(', '));
-    const ITEMS_PER_PAGE = 5;
+    const ITEMS_PER_PAGE = 8;
     console.log('product List =====>>', prodList);
     const handleCouponDesc = (event) => {
         setCouponDesc(event.target.value);

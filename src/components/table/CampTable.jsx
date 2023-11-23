@@ -12,21 +12,22 @@ import { CardElement, Elements, useElements, useStripe } from '@stripe/react-str
 import { API } from '../../config/Api';
 
 const CampTable = ({ list, additionalProp, name }) => {
-  console.log('list', list)
-  console.log('name', additionalProp);
+  console.log('list -->>', list)
+  console.log('additionalProp -->>', additionalProp);
   const token = localStorage.getItem("Token");
   const [currentPage, setCurrentPage] = useState(1);
-  const ITEMS_PER_PAGE = 8;
-  const currentItems = list.reverse();
+  const ITEMS_PER_PAGE = 10;
+  const currentItems = list;
   const indexOfLastItem = currentPage * ITEMS_PER_PAGE;
   const indexOfFirstItem = indexOfLastItem - ITEMS_PER_PAGE;
   const totalPages = Math.ceil(list?.length / ITEMS_PER_PAGE);
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
   const navigate = useNavigate()
   const [is_paid, setIsPaid] = useState(false)
+  const [loading, setLoading] = useState(false);
   const [delete_modal, setDeleteModal] = useState({ toggle: false, value: null })
   const [view_modal, setViewModal] = useState({ toggle: false, value: null })
-  const [open_modal, setOpenModal] = useState({ toggle: null, user_id: null, influencer_id: null, camp_id: null, id: null, amount: null });
+  const [open_modal, setOpenModal] = useState({ toggle: null, user_id: null, influencer_id: null, camp_id: null, id: null, amount: null , coupom_amount : null , coupon : null});
   const handlePreviousPage = () => {
     if (currentPage > 1) {
       setCurrentPage(currentPage - 1);
@@ -35,7 +36,7 @@ const CampTable = ({ list, additionalProp, name }) => {
 
 
 
-  console.log("currentItems ======>>>>>>>", currentItems)
+  // console.log("currentItems ======>>>>>>>", currentItems)
 
   const handleNextPage = () => {
     if (currentPage < totalPages) {
@@ -139,7 +140,7 @@ const CampTable = ({ list, additionalProp, name }) => {
   const editCamp = (id) => {
     navigate(`/edit-campaign/${id}`)
   }
-  // console.log("================>>>>>>>>>",item?.product)
+  // console.log("================>>>>>>>>>",couponListing)
 
   const headRows = () => {
     if (additionalProp == "active") {
@@ -177,6 +178,7 @@ const CampTable = ({ list, additionalProp, name }) => {
           <th>Products</th>
           <th>Coupons</th>
           <th>Admin Fee</th>
+          <th>Commission</th>
           <th>Influencer Fee</th>
           <th>Action</th>
         </tr>
@@ -194,11 +196,13 @@ const CampTable = ({ list, additionalProp, name }) => {
   }
 
   const contentRows = () => {
+    const indexOfLastItem = currentPage * ITEMS_PER_PAGE;
+    const indexOfFirstItem = indexOfLastItem - ITEMS_PER_PAGE;
+    const currentItemsToDisplay = currentItems.slice(indexOfFirstItem, indexOfLastItem);
     if (additionalProp == "active") {
       return (
         <>
-          {
-            currentItems?.length > 0 && currentItems?.map((item, index) => {
+          {currentItemsToDisplay?.length > 0 && currentItemsToDisplay?.map((item, index) => {
               return (
                 <tr key={index} className='campaign-inputs'>
                   <td>{item?.campaign_name}</td>
@@ -225,8 +229,7 @@ const CampTable = ({ list, additionalProp, name }) => {
     } else if (additionalProp == "pending") {
       return (
         <>
-          {
-            currentItems?.length > 0 && currentItems?.map((item, index) => {
+          {currentItemsToDisplay?.length > 0 && currentItemsToDisplay?.map((item, index) => {
               console.log(item.product)
               return (
                 <tr key={index} className='campaign-inputs'>
@@ -267,8 +270,7 @@ const CampTable = ({ list, additionalProp, name }) => {
     } else if (additionalProp == "declined") {
       return (
         <>
-          {
-            currentItems?.length > 0 && currentItems?.map((item, index) => {
+          {currentItemsToDisplay?.length > 0 && currentItemsToDisplay?.map((item, index) => {
               return (
                 <tr key={index} className='campaign-inputs'>
                   <td>{item?.campaign_name}</td>
@@ -284,8 +286,7 @@ const CampTable = ({ list, additionalProp, name }) => {
     } else if (additionalProp == "awaiting") {
       return (
         <>
-          {
-            currentItems?.length > 0 && currentItems?.map((item, index) => {
+          {currentItemsToDisplay?.length > 0 && currentItemsToDisplay?.map((item, index) => {
               return (
                 <tr key={index} className='campaign-inputs'>
                   <td>{item?.campaign_name}</td>
@@ -294,13 +295,27 @@ const CampTable = ({ list, additionalProp, name }) => {
                     {couponListing(item?.product, "coupons")}
                   </td>
                   <td>
-                    {couponListing(item?.product, "discount")}
+                    {item?.admin_fee}
+                  </td>
+                  <td>
+                    {item?.commission}%
                   </td>
                   <td>{item?.influencer_fee || "null"}</td>
                   <td>
                     {item?.influencer_fee !== null ? (
                       <>
-                        <button className='bg-black text-white me-3' onClick={() => { setOpenModal({ toggle: true, influencer_id: item?.user_influencer, camp_id: item?.campaignid_id, user_id: item?.vendor_campaign, amount: item?.influencer_fee, id: item?.influencer_id }) }}>
+             <button className='bg-black text-white me-3' onClick={() => {
+                            setOpenModal({
+                              toggle: true,
+                              influencer_id: item?.user_influencer,
+                              camp_id: item?.campaignid_id,
+                              user_id: item?.vendor_campaign,
+                              amount: item?.influencer_fee,
+                              id: item?.influencer_id,
+                              coupon: item?.product[0].coupon_name,
+                              coupom_amount:item?.product[0].amount,
+                            })
+                          }}>
                           Pay
                         </button>
                         <button className='bg-black text-white' onClick={() => { handleReject({ camp_id: item?.campaignid_id, id: item?.influencer_id }) }}>
@@ -324,8 +339,7 @@ const CampTable = ({ list, additionalProp, name }) => {
     else {
       return (
         <>
-          {
-            currentItems?.length > 0 && currentItems?.map((item, index) => {
+          {currentItemsToDisplay?.length > 0 && currentItemsToDisplay?.map((item, index) => {
               return (
                 <tr key={index} className='campaign-inputs'>
                   <td>{item?.campaign_name}</td>
@@ -347,6 +361,7 @@ const CampTable = ({ list, additionalProp, name }) => {
 
   return (
     <>
+    
       <table className='w-100 campaign'>
         <thead className='w-100'>
           {headRows()}
@@ -426,14 +441,15 @@ const InputElement = ({ payRef, handler, data, setIsPaid }) => {
     }
     const token = await stripe.createToken(elements.getElement(CardElement))
     if (token.token) {
-      payInfluencer({ token: token?.token?.id, campaignid_id: data.user_id, influencerid_id: data.user_influencer, user_id: data.influencer_id, influencerid_id__fee: data?.amount }).then(res => {
+      payInfluencer({ token: token?.token?.id, campaignid_id: data.user_id, influencerid_id: data.user_influencer, user_id: data.influencer_id,coupom_amount: data.coupom_amount ,   coupon: data.coupon, influencerid_id__fee: data?.amount }).then(res => {
         setIsPaid(data?.id)
         console.log(data?.id)
         // setPaidId(data?.id)
+        console.log('<<<<<<====>>>>>',data)
         toast.success('Payment Success', { autoClose: 1000 })
         handleAccept(data)
       })
-      handler({ toggle: false, value: null, id: null, user_id: null, camp_id: null, amount: null })
+      handler({ toggle: false, value: null, id: null, user_id: null, coupom_amount : null , coupon : null, camp_id: null, amount: null })
     } else if (token.error.code === "card_declined") {
       toast.error("Card Declined")
     } else {
@@ -443,9 +459,12 @@ const InputElement = ({ payRef, handler, data, setIsPaid }) => {
   };
 
   const handleAccept = (data) => {
-    console.log(data)
-    axios.post(API.BASE_URL + 'marketplaceaccept/' + data.camp_id + '/' + data.id + '/', {
-    },
+    let newData={
+      coupon: data?.coupon,
+      coupon_amount: data?.coupom_amount,
+    }
+    console.log("<<<<<<<<<<<<<<<<<<<<<<<",data)
+    axios.post(API.BASE_URL + 'marketplaceaccept/' + data.camp_id + '/' + data.id + '/',newData,
       {
         headers: {
           Authorization: `Token ${localStorage.getItem("Token")}`

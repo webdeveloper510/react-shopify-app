@@ -294,13 +294,14 @@ const CampaignManage = () => {
         const actives = Object.values(response.data.data).filter(data => data.expiry_status == true);
         const Expire = Object.values(response.data.data).filter(data => data.expiry_status == false);
         const activeCampaigns = Object.values(actives).filter(data => data.status == '2');
-        const awaitingCampaigns = Object.values(actives).filter(data => data.status == '1');
+        const declineCampaigns = Object.values(actives).filter(data => data.status == '4');
+        // const awaitingCampaigns = Object.values(actives).filter(data => data.status == '1');
         const inactiveCampaigns = Object.values(actives).filter(data => data.status == '0');
         // setCampApproval12(activeCampaigns);
         setActive(activeCampaigns);
         setPending(inactiveCampaigns);
         setExpire(Expire);
-        setDecline(awaitingCampaigns);
+        setDecline(declineCampaigns);
        } catch (error) {
         console.error('Error fetching data:', error);
 } };
@@ -794,8 +795,8 @@ const CampaignManage = () => {
                     getSingleMarket={getSingleMarket}
                     deleteConfirm={deleteConfirm}
                     getDeleteConfirm={getDeleteConfirm}
-                    getMarket={getMarket}
-                    influencerSale={true}
+                    getMar
+                    rSale={true}
                     couponCross={couponCross}
                     getMarketInfo={getMarketInfo}
                     handleProdDiscount={handleProdDiscount}
