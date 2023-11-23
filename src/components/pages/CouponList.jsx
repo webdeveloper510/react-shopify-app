@@ -163,6 +163,7 @@ const CouponList = () => {
                 console.log("Coupon List", response);
                 setCouponData(couponData.filter(coupon => coupon.id !== value));
                 toast.success("Coupon Deleted Successfully", { autoClose: 1000 })
+                fetchCoupon()
             })
             .catch(function (error) {
                 console.log(error);
@@ -186,26 +187,14 @@ const CouponList = () => {
         })
             .then(function (response) {
                 console.log("Coupon Created", response);
+                // fetchCoupon()
                 setCouponData([...couponData, response.data]);
-                toast.success("Coupon Created Successfully", { autoClose: 1000 });
-                fetchCoupon();
-                axios.get(API.SHOPIFY_URL + 'coupon/list/', {
-                    headers: {
-                        Authorization: `Token ${token}`
-                    }
-                })
-                    .then(function (response) {
-                        console.log("Coupon List", response);
-                        setCouponData(response.data.coupon)
-                    fetchCoupon();
-                    })
-                    .catch(function (error) {
-                        console.log(error);
-                    })
                 setCouponDesc('')
                 setDiscountType('')
                 setCouponAmount('')
                 couponCross()
+            
+                toast.success(response.message, { autoClose: 1000 });
             })
             .catch(function (error) {
                 console.log(error);
@@ -259,10 +248,10 @@ const CouponList = () => {
                 console.log("Coupon Edited", response);
                 toast.success("Coupon Edited Successfully", { autoClose: 1000 });
                 setCouponDesc('')
+                fetchCoupon()
                 setDiscountType('')
                 setCouponAmount('')
                 couponCross()
-                fetchCoupon();
             })
             .catch(function (error) {
                 console.log(error);

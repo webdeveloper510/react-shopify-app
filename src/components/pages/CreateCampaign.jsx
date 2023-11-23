@@ -86,7 +86,7 @@ const CreateCampaign = () => {
                 headers: {
                     Authorization: `Token ${token}`
                 }
-            })
+            })  
                 .then(function (response) {
                     console.log("Product List", response);
                     setProdList(response.data.success.products)
@@ -138,95 +138,6 @@ const CreateCampaign = () => {
             .catch(function (error) {
                 console.log(error);
             })
-    }
-
-    const createNewCampaignDraft = (e) => {
-        setLoading(true);
-        e.preventDefault();
-        axios.post(API.BASE_URL + 'create/', {
-            product: productIds,
-            campaign_name: campaignName,
-            date: selectedDate,
-            coupon: selectedCouponNames.toString(),
-            offer: influenceOffer,
-            product_name: [productName],
-            product_discount: selectedCouponAmounts,
-            influencer_visit: influencerVisit,
-            influencer_fee: influenceFee,
-            description: campaignDesc,
-            end_date: endDate,
-            coupon_id: selectedInfluencer?.id
-        }, {
-            headers: {
-                Authorization: `Token ${token}`
-            }
-        })
-            .then(function (response) {
-                console.log("Campaign Saved in Draft", response);
-                toast.success("Campaign Saved in Draft!", { autoClose: 1000 });
-                setProductName([]);
-                setCampaignName('');
-                setSelectedDate('');
-                setInfluenceOffer('');
-                setInfluencerVisit('');
-                setCampaignDesc('')
-                setProductIds([]);
-                setSelectedCoupon('')
-                setProductDetails([])
-                setProductUrl([])
-                setSelectedCoupons([])
-                countList()
-                setIsVisitChecked(false);
-                setIsOfferChecked(false);
-                navigate('/market')
-            })
-            .catch(function (error) {
-                console.log(error);
-                if (error.response.data.campaign_name) {
-                    toast.warn("Campaign Name may not be blank.", { autoClose: 1000 });
-                }
-                else if (error.response.data.influencer_visit) {
-                    toast.warn("Influencer Visit may not be blank.", { autoClose: 1000 });
-                }
-                else if (error.response.data.date) {
-                    toast.warn("Date may not be blank.", { autoClose: 1000 });
-                }
-                else if (error.response.data.offer) {
-                    toast.warn("Offer may not be blank.", { autoClose: 1000 });
-                }
-                else if (error.response.data.product) {
-                    toast.warn("Please selecta any Product.", { autoClose: 1000 });
-                }
-                else if (error.response.data.influencer_fee == "Influencer fee must be in positive.") {
-                    toast.warn("Influencer fee must be in positive.", { autoClose: 1000 });
-                }
-                else if (error.response.data.influencer_fee) {
-                    toast.warn("Please add a fee for Influencer.", { autoClose: 1000 });
-                }
-                else if (error.response.data.product_discount) {
-                    toast.warn("Please select any value of Product Discount.", { autoClose: 1000 });
-                }
-                else if (error.response.data.error == "Product field may not be blank.") {
-                    toast.warn("Product field may not be blank.", { autoClose: 1000 });
-                }
-                else if (error.response.data.error == "Coupon field may not be blank.") {
-                    toast.warn("Coupon field may not be blank.", { autoClose: 1000 });
-                }
-                else if (error.response.data.coupon) {
-                    toast.warn("Coupon may not be blank.", { autoClose: 1000 });
-                }
-                else if (error.response.data.error) {
-                    toast.warn(`Campaign with ${error.response.data.error[0]} already exists`, { autoClose: 1000 });
-                }
-                else if (error.response.data.description) {
-                    toast.warn("Description may not be blank.", { autoClose: 1000 });
-                }
-
-                else {
-                    toast.warn("Request failed. Please try again later", { autoClose: 1000 });
-                }
-            })
-            .finally(() => setLoading(false));
     }
 
     const createNewCampaign = (e) => {
@@ -298,9 +209,9 @@ const CreateCampaign = () => {
                 else if (error.response.data.error == "Product field may not be blank.") {
                     toast.warn("Product field may not be blank.", { autoClose: 1000 });
                 }
-                // else if (error.response.data.error == "Coupon field may not be blank.") {
-                //     toast.warn("Coupon field may not be blank.", { autoClose: 1000 });
-                // }
+                else if (error.response.data.error == "Coupon field may not be blank.") {
+                    toast.warn("Coupon field may not be blank.", { autoClose: 1000 });
+                }
                 else if (error.response.data.coupon) {
                     toast.warn("Coupon may not be blank.", { autoClose: 1000 });
                 }
@@ -450,9 +361,9 @@ const CreateCampaign = () => {
         setPrevCouponClicked(couponClicked);
     }, [couponClicked, selectedCoupon]);
 
-    const editCampaign = (event) => {
-        console.log("Product ID:");
-        event.preventDefault();
+    const editCampaign = (e) => {
+        console.log("Product ID:", e) ;
+        // e.preventDefault();
         setLoading(true);
         axios.put(API.BASE_URL + 'update/' + id + '/', {
             campaign_name: campaignName,

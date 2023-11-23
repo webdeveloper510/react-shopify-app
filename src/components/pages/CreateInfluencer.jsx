@@ -85,8 +85,68 @@ const CreateInfluencer = () => {
         setFormData({ ...form_data, [event.target.name]: event.target.value })
     }
 
-    const updateCampaign = () => {
-        console.log("update")
+    const updateCampaign = (e) => {
+        console.log("Product ID:", e) ;
+        axios.put(API.BASE_URL + 'update/' + id + '/', {
+            campaign_name: form_data.campaign_name,
+            description: form_data.description,
+            date: form_data.date,
+            end_date: form_data.end_date,
+        }, {
+            headers: {
+                Authorization: `Token ${token}`
+            }
+        })
+            .then(function (response) {
+                console.log("EDITED MARKET", response)
+                toast.success("Campaign Edited Successfully", { autoClose: 1000 });
+                navigate('/market')
+            })
+            .catch(function (error) {
+                console.log(error);
+                if (error.response.data.campaign_name) {
+                    toast.warn("Campaign Name may not be blank.", { autoClose: 1000 });
+                }
+                else if (error.response.data.influencer_visit) {
+                    toast.warn("Influencer Visit may not be blank.", { autoClose: 1000 });
+                }
+                else if (error.response.data.date) {
+                    toast.warn("Date may not be blank.", { autoClose: 1000 });
+                }
+                else if (error.response.data.offer) {
+                    toast.warn("Offer may not be blank.", { autoClose: 1000 });
+                }
+                else if (error.response.data.product) {
+                    toast.warn("Please selecta any Product.", { autoClose: 1000 });
+                }
+                else if (error.response.data.influencer_fee == "Influencer fee must be in positive.") {
+                    toast.warn("Influencer fee must be in positive.", { autoClose: 1000 });
+                }
+                else if (error.response.data.influencer_fee) {
+                    toast.warn("Please add a fee for Influencer.", { autoClose: 1000 });
+                }
+                else if (error.response.data.product_discount) {
+                    toast.warn("Please select any value of Product Discount.", { autoClose: 1000 });
+                }
+                else if (error.response.data.error == "Product field may not be blank.") {
+                    toast.warn("Product field may not be blank.", { autoClose: 1000 });
+                }
+                else if (error.response.data.error == "Coupon field may not be blank.") {
+                    toast.warn("Coupon field may not be blank.", { autoClose: 1000 });
+                }
+                else if (error.response.data.coupon) {
+                    toast.warn("Coupon may not be blank.", { autoClose: 1000 });
+                }
+                else if (error.response.data.error) {
+                    toast.warn(`Campaign with ${error.response.data.error[0]} already exists`, { autoClose: 1000 });
+                }
+                else if (error.response.data.description) {
+                    toast.warn("Description may not be blank.", { autoClose: 1000 });
+                }
+                else {
+                    toast.warn("Request failed. Please try again later", { autoClose: 1000 });
+                }
+            })
     }
 
     console.log('------------->>>>>>>>>', coupon_list.coupons)
@@ -187,9 +247,9 @@ const CreateInfluencer = () => {
                     else if (error.response.data.error == "Product field may not be blank.") {
                         toast.warn("Product field may not be blank.", { autoClose: 1000 });
                     }
-                    // else if (error.response.data.error == "Coupon field may not be blank.") {
-                    //     toast.warn("Coupon field may not be blank.", { autoClose: 1000 });
-                    // }
+                    else if (error.response.data.error == "Coupon field may not be blank.") {
+                        toast.warn("Coupon field may not be blank.", { autoClose: 1000 });
+                    }
                     else if (error.response.data.coupon) {
                         toast.warn("Coupon may not be blank.", { autoClose: 1000 });
                     }
@@ -289,12 +349,14 @@ const CreateInfluencer = () => {
                         Back
                     </button>
                     <div className='w-100'>
-                        {location.pathname === `/edit-campaign/${id}` ? (<h3>Edit Campaign for Influencer</h3>) : <h3>Create Campaign for Influencer</h3>}
+                    {location.pathname === `/edit-campaign/${id}` ? (<h3>Edit Campaign for Marketplace</h3>) : <h3>Create Campaign for Influencer</h3>}
                         <form className='d-flex flex-wrap justify-content-between mt-5 w-100'>
                             <div className="input-container d-flex flex-column mb-4">
                                 <label className="mb-3">Campaign name</label>
                                 <input type="text" name="campaign_name" maxLength='30' onChange={handleChange} value={form_data?.campaign_name} />
                             </div>
+                            {location.pathname === `/edit-campaign/${id}` ? ('') : (
+                                <>
                             <div className="input-container d-flex flex-column mb-4">
                                 <label className="mb-3">Influencer need to visit you</label>
                                 <div className="input d-flex align-items-center">
@@ -309,6 +371,7 @@ const CreateInfluencer = () => {
                                 </div>
 
                             </div>
+                            </>)}
                             <div className="input-container d-flex flex-column mb-4">
                                 <label className="mb-3">Campaign start date</label>
                                 <input type="date" name="date" min={today} onChange={handleChange} value={form_data?.date} />
