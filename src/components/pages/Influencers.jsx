@@ -17,7 +17,7 @@ const Influencers = () => {
 
     //-------States----------
     const [loading, setLoading] = useState(false);
-    const [paidId, setPaidId] = useState('');
+    const [paidId, setPaidId] = useState(false);
     const [open_modal, setOpenModal] = useState({ toggle: null, value: { name: null, cost: null }, id: null });
     const [influencer_list, setInfluencerList] = useState(null);
     const [is_paid, setIsPaid] = useState(false)
@@ -36,6 +36,7 @@ const Influencers = () => {
                         break;
                     }
                 }
+               
                 setInfluencerList(res.data);
             }
         })
@@ -90,8 +91,8 @@ const Influencers = () => {
                                                     </>
                                                 ) : (
                                                     <>
-                                                        <button className='btn btn-dark' onClick={() => { handlePay(item) }} disabled={item?.influencerid_id !== disabled && disabled!== null}>
-                                                            {item.paid_status ? "Continue" : "Pay"}
+                                                        <button className='btn btn-dark' onClick={() => { handlePay(item) }} disabled={item?.influencerid_id !== disabled && disabled !== null}>
+                                                            {item.paid_status == true ? "Continue" : "Pay"}
                                                         </button>
                                                     </>
                                                 )}
@@ -150,12 +151,12 @@ const InputElement = ({ payRef, handler, data, setIsPaid }) => {
         if (elements == null) {
             return;
         }
-        const token = await stripe.createToken(elements.getElement(CardElement))
+        const token = await stripe.createToken(elements.getElement(CardElement))    
         if (token.token) {
-            payInfluencer({ token: token?.token?.id, influencerid_id: data.id, influencerid_id__fee: data?.value?.cost }).then(res => {
+            payInfluencer({ token: token?.token?.id, user_id: data.id, influencerid_id__fee: data?.value?.cost }).then(res => {
                 setIsPaid(data?.id)
                 console.log(data?.id)
-                // setPaidId(data?.id)
+                
                 toast.success('Payment Success', { autoClose: 1000 })
             })
             handler({ toggle: false, value: null, id: null })

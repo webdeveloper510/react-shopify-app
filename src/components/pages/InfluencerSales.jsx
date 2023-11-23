@@ -46,6 +46,7 @@ function InfluencerSales() {
                 }
             })
                 .then(function (response) {
+                    console.log(response.data)
                     setInfluSales(response.data.sale_details)
                 })
                 .catch(function (error) {
@@ -128,22 +129,16 @@ function InfluencerSales() {
                             <th>Influencer</th>
                             <th>Influencer Fee</th>
                             <th>Sales</th>
-                            <th>Amount</th>
-                            <th>Amount Paid</th>
-                            <th>Transfer</th>
                         </tr>
                         {influSales.map((name, i) => {
                             return (
                                 <>
                                     <tr className='campaign-inputs'>
                                         <td>{name.campaing_id}</td>
-                                        <td>{matchingFullnames[i]}</td>
+                                        <td>{name.influencer_name}</td>
                                         <td>{name.offer == 'commission' && "د.إ"}{name.influener_fee}{name.offer == 'percentage' && '%'}</td>
                                         <td>{name.sales}</td>
-                                        <td>{name.amount.toFixed(2)}د.إ</td>
-                                        <td>{name.amount_paid ? name.amount_paid : 0} د.إ</td>
-                                        <td><button type='button' onClick={(e) => { handleTransferShow(e, i, name.amount) }}>Transfer</button></td>
-                                    </tr>
+                                      </tr>
                                     {transferShow && selectedTransferIndex === i && (
                                         <div className="transfer-form">
                                             <form action="">

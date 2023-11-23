@@ -39,6 +39,10 @@ const CampaignManage = () => {
   const [vendorDeclineList, setVendorDeclineList] = useState([]);
   const [getId, setGetId] = useState('');
   const token = localStorage.getItem('Token');
+  const [active, setActive] = useState([]);
+  const [pending, setPending] = useState([]);
+  const [expire, setExpire] = useState([]);
+  const [decline, setDecline] = useState([]);
 
   const navigate = useNavigate();
 
@@ -214,10 +218,11 @@ const CampaignManage = () => {
 
   useEffect(() => {
 
+    fetchMarketList12();
     fetchData();
-    fetchActiveData();
-    fetchDeclineData();
-    fetchUpdatedDeclineData();
+    // fetchActiveData();
+    // fetchDeclineData();
+    // fetchUpdatedDeclineData();
 
     axios.get(API.BASE_URL + 'pending/', {
       headers: {
@@ -251,7 +256,7 @@ const CampaignManage = () => {
       }
     })
       .then(function (response) {
-        console.log("Draft List", response);
+        // console.log("Draft List", response);
         setDraftList(response.data.data);
       })
       .catch(function (error) {
@@ -264,7 +269,7 @@ const CampaignManage = () => {
       }
     })
       .then(function (response) {
-        console.log("Expired List", response.data.data);
+        // console.log("Expired List", response.data.data);
         setExpiredList(response.data.data);
       })
       .catch(function (error) {
@@ -272,6 +277,10 @@ const CampaignManage = () => {
       })
   }, [token])
 
+  console.log("activeCampaigns ------ 2" , active)
+  console.log("inactiveCampaigns ------ 0" , pending)
+      console.log("Market camperrrrr List ==============>>>>>>",expire);
+      console.log("awaitingCampaigns List ==============>>>>>>",awaiting);
 
   const fetchMarketList12 = async () => {
     try {
@@ -281,20 +290,17 @@ const CampaignManage = () => {
             }
         })
         
-        console.log("Market camperrrrr List ==============>>>>>>",response.data.data);
+        console.log("Manage camperrrrr List123 ==============>>>>>>",response.data.data);
         const actives = Object.values(response.data.data).filter(data => data.expiry_status == true);
         const Expire = Object.values(response.data.data).filter(data => data.expiry_status == false);
         const activeCampaigns = Object.values(actives).filter(data => data.status == '2');
         const awaitingCampaigns = Object.values(actives).filter(data => data.status == '1');
         const inactiveCampaigns = Object.values(actives).filter(data => data.status == '0');
         // setCampApproval12(activeCampaigns);
-        // setActive(activeCampaigns);
-        // setPending(inactiveCampaigns);
-        // setExpire(Expire);
-        // setAwaiting(awaitingCampaigns);
-        console.log("activeCampaigns ------ 2" , activeCampaigns)
-        console.log("inactiveCampaigns ------ 0" , inactiveCampaigns)
-            console.log("Market camperrrrr List ==============>>>>>>");
+        setActive(activeCampaigns);
+        setPending(inactiveCampaigns);
+        setExpire(Expire);
+        setDecline(awaitingCampaigns);
        } catch (error) {
         console.error('Error fetching data:', error);
 } };
@@ -694,9 +700,9 @@ const CampaignManage = () => {
               {/* <Nav.Item>
                 <Nav.Link eventKey="third">Draft</Nav.Link>
               </Nav.Item> */}
-              <Nav.Item>
+              {/* <Nav.Item>
                 <Nav.Link eventKey="four">Awaiting</Nav.Link>
-              </Nav.Item>
+              </Nav.Item> */}
               <Nav.Item>
                 <Nav.Link eventKey="five">Declined</Nav.Link>
               </Nav.Item>
@@ -708,32 +714,32 @@ const CampaignManage = () => {
           <Col sm={12}>
             <Tab.Content>
               <Tab.Pane eventKey="first">
-                {campList?.length > 0 ? (
+                {active?.length > 0 ? (
                   <CampaignTable 
-                    list={campList}
+                    list={active}
                     additionalProp="active"
-                    campList={campList}
-                    showMarket={showMarketCampaign}
-                    getDeleteConfirm={getDeleteConfirm}
-                    getMarket={getMarket}
-                    influencerSale={true}
-                    couponCross={couponCross}
-                    getMarketInfo={getMarketInfo}
-                    handleProdDiscount={handleProdDiscount}
-                    prodDiscount={prodDiscount}
-                    handleInfluenceVisit={handleInfluenceVisit}
-                    influenceVisit={influenceVisit}
-                    approved={true}
-                    declineInflu={false}
-                    campEdit={true}
-                    approvedButtons={true}
-                    editCampaign={editCampaign}
-                    deleteCampaign={deleteCampaign}
-                    getId={getId}
-                    handleCampName={handleCampName}
-                    campName={campName}
-                    handleProdOffer={handleProdOffer}
-                    showEdit={false}
+                    // campList={campList}
+                    // showMarket={showMarketCampaign}
+                    // getDeleteConfirm={getDeleteConfirm}
+                    // getMarket={getMarket}
+                    // influencerSale={true}
+                    // couponCross={couponCross}
+                    // getMarketInfo={getMarketInfo}
+                    // handleProdDiscount={handleProdDiscount}
+                    // prodDiscount={prodDiscount}
+                    // handleInfluenceVisit={handleInfluenceVisit}
+                    // influenceVisit={influenceVisit}
+                    // approved={true}
+                    // declineInflu={false}
+                    // campEdit={true}
+                    // approvedButtons={true}
+                    // editCampaign={editCampaign}
+                    // deleteCampaign={deleteCampaign}
+                    // getId={getId}
+                    // handleCampName={handleCampName}
+                    // campName={campName}
+                    // handleProdOffer={handleProdOffer}
+                    // showEdit={false}
                   />
                 )
                   :
@@ -745,30 +751,30 @@ const CampaignManage = () => {
                   )}
               </Tab.Pane>
               <Tab.Pane eventKey="second" className='campaign'>
-                {campListPending?.length > 0 ? (
+                {pending?.length > 0 ? (
                   <CampaignTable
-                  list={campListPending}
-                  additionalProp="pending"
-                    campList={campListPending}
-                    getSingleMarket={getSingleMarket}
-                    deleteConfirm={deleteConfirm}
-                    getDeleteConfirm={getDeleteConfirm}
-                    getMarket={getMarket}
-                    influencerSale={true}
-                    couponCross={couponCross}
-                    getMarketInfo={getMarketInfo}
-                    handleProdDiscount={handleProdDiscount}
-                    prodDiscount={prodDiscount}
-                    handleInfluenceVisit={handleInfluenceVisit}
-                    influenceVisit={influenceVisit}
-                    approved={false}
-                    approvedButtons={false}
-                    editCampaign={editCampaign}
-                    deleteCampaign={deleteCampaign}
-                    getId={getId}
-                    handleCampName={handleCampName}
-                    campName={campName}
-                    handleProdOffer={handleProdOffer}
+                    list={pending}
+                    additionalProp="pending"
+                    // campList={campListPending}
+                    // getSingleMarket={getSingleMarket}
+                    // deleteConfirm={deleteConfirm}
+                    // getDeleteConfirm={getDeleteConfirm}
+                    // getMarket={getMarket}
+                    // influencerSale={true}
+                    // couponCross={couponCross}
+                    // getMarketInfo={getMarketInfo}
+                    // handleProdDiscount={handleProdDiscount}
+                    // prodDiscount={prodDiscount}
+                    // handleInfluenceVisit={handleInfluenceVisit}
+                    // influenceVisit={influenceVisit}
+                    // approved={false}
+                    // approvedButtons={false}
+                    // editCampaign={editCampaign}
+                    // deleteCampaign={deleteCampaign}
+                    // getId={getId}
+                    // handleCampName={handleCampName}
+                    // campName={campName}
+                    // handleProdOffer={handleProdOffer}
                   />
                 )
                   :
@@ -814,10 +820,10 @@ const CampaignManage = () => {
                     </>
                   )}
               </Tab.Pane> */}
-              <Tab.Pane eventKey="four" className='campaign'>
+              {/* <Tab.Pane eventKey="four" className='campaign'>
                 {approvedList?.length > 0 ? (
                   <CampaignTable
-                  list={approvedList}
+                  list={decline}
                   additionalProp="await"
                     campList={approvedList}
                     getSingleMarket={getSingleMarket}
@@ -849,34 +855,34 @@ const CampaignManage = () => {
                       <h5 className='mt-4 text-center'>No Campaigns in Approved right now</h5>
                     </>
                   )}
-              </Tab.Pane>
+              </Tab.Pane> */}
               <Tab.Pane eventKey="five" className='campaign'>
-                {vendorDeclineList?.length > 0 ? (
+                {vendorDecldeclineineList?.length > 0 ? (
                   <CampaignTable
                   additionalProp="declined"
-                  list={vendorDeclineList}
-                    campList={vendorDeclineList}
-                    declineInflu={false}
-                    getSingleMarket={getSingleMarket}
-                    deleteConfirm={deleteConfirm}
-                    getDeleteConfirm={getDeleteConfirm}
-                    getMarket={getMarket}
-                    couponCross={couponCross}
-                    influencerSale={true}
-                    getMarketInfo={getMarketInfo}
-                    handleProdDiscount={handleProdDiscount}
-                    prodDiscount={prodDiscount}
-                    handleInfluenceVisit={handleInfluenceVisit}
-                    influenceVisit={influenceVisit}
-                    editCampaign={editCampaign}
-                    deleteCampaign={deleteCampaign}
-                    getId={getId}
-                    handleCampName={handleCampName}
-                    campName={campName}
-                    handleProdOffer={handleProdOffer}
-                    showButtons={false}
-                    handleVendorAccept={handleVendorAccept}
-                    handleVendorDecline={handleVendorDecline}
+                  list={decline}
+                    // campList={vendorDeclineList}
+                    // declineInflu={false}
+                    // getSingleMarket={getSingleMarket}
+                    // deleteConfirm={deleteConfirm}
+                    // getDeleteConfirm={getDeleteConfirm}
+                    // getMarket={getMarket}
+                    // couponCross={couponCross}
+                    // influencerSale={true}
+                    // getMarketInfo={getMarketInfo}
+                    // handleProdDiscount={handleProdDiscount}
+                    // prodDiscount={prodDiscount}
+                    // handleInfluenceVisit={handleInfluenceVisit}
+                    // influenceVisit={influenceVisit}
+                    // editCampaign={editCampaign}
+                    // deleteCampaign={deleteCampaign}
+                    // getId={getId}
+                    // handleCampName={handleCampName}
+                    // campName={campName}
+                    // handleProdOffer={handleProdOffer}
+                    // showButtons={false}
+                    // handleVendorAccept={handleVendorAccept}
+                    // handleVendorDecline={handleVendorDecline}
                   />
                 )
                   :
@@ -888,31 +894,31 @@ const CampaignManage = () => {
                   )}
               </Tab.Pane>
               <Tab.Pane eventKey="six" className='campaign'>
-                {expiredList?.length > 0 ? (
+                {expire?.length > 0 ? (
                   <CampaignTable
                   additionalProp="expire"
-                  list={expiredList}
-                    campList={expiredList}
-                    getSingleMarket={getSingleMarket}
-                    declineInflu={false}
-                    deleteConfirm={deleteConfirm}
-                    getDeleteConfirm={getDeleteConfirm}
-                    getMarket={getMarket}
-                    influencerSale={true}
-                    couponCross={couponCross}
-                    getMarketInfo={getMarketInfo}
-                    handleProdDiscount={handleProdDiscount}
-                    prodDiscount={prodDiscount}
-                    handleInfluenceVisit={handleInfluenceVisit}
-                    influenceVisit={influenceVisit}
-                    approved={false}
-                    approvedButtons={false}
-                    editCampaign={editCampaign}
-                    deleteCampaign={deleteCampaign}
-                    getId={getId}
-                    handleCampName={handleCampName}
-                    campName={campName}
-                    handleProdOffer={handleProdOffer}
+                  list={expire}
+                    // campList={expiredList}
+                    // getSingleMarket={getSingleMarket}
+                    // declineInflu={false}
+                    // deleteConfirm={deleteConfirm}
+                    // getDeleteConfirm={getDeleteConfirm}
+                    // getMarket={getMarket}
+                    // influencerSale={true}
+                    // couponCross={couponCross}
+                    // getMarketInfo={getMarketInfo}
+                    // handleProdDiscount={handleProdDiscount}
+                    // prodDiscount={prodDiscount}
+                    // handleInfluenceVisit={handleInfluenceVisit}
+                    // influenceVisit={influenceVisit}
+                    // approved={false}
+                    // approvedButtons={false}
+                    // editCampaign={editCampaign}
+                    // deleteCampaign={deleteCampaign}
+                    // getId={getId}
+                    // handleCampName={handleCampName}
+                    // campName={campName}
+                    // handleProdOffer={handleProdOffer}
                   />
                 )
                   :

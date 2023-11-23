@@ -176,8 +176,8 @@ const CampTable = ({ list, additionalProp, name }) => {
           <th>Campaign Name</th>
           <th>Products</th>
           <th>Coupons</th>
-          <th>Discount</th>
-          <th>Total Pay</th>
+          <th>Admin Fee</th>
+          <th>Influencer Fee</th>
           <th>Action</th>
         </tr>
       )

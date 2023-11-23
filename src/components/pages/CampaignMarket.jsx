@@ -119,25 +119,25 @@ const CampaignMarket = () => {
         }
     };
 
-    const fetchMarketapproval = async () => {
-        try {
-            axios.get(API.BASE_URL + 'marketapproval/',{
-                headers: {
-                    Authorization: `Token ${token}`
-                }
-            })
-            .then(function (response) {
-                console.log("Market Approval List",response.data);
-                setCampActive(response.data.data);
-                setCampApproval(response.data.data);
-            })
-            .catch(function (error) {
-                console.log(error);
-            })
-        } catch (error) {
-            console.error("Error:", error);
-        }
-    };
+    // const fetchMarketapproval = async () => {
+    //     try {
+    //         axios.get(API.BASE_URL + 'marketapproval/',{
+    //             headers: {
+    //                 Authorization: `Token ${token}`
+    //             }
+    //         })
+    //         .then(function (response) {
+    //             console.log("Market Approval List",response.data);
+    //             setCampActive(response.data.data);
+    //             setCampApproval(response.data.data);
+    //         })
+    //         .catch(function (error) {
+    //             console.log(error);
+    //         })
+    //     } catch (error) {
+    //         console.error("Error:", error);
+    //     }
+    // };
     
     const fetchMarket_decline = async () => {
         try {
@@ -165,7 +165,7 @@ const CampaignMarket = () => {
                 }
             })
             
-            console.log("Market camperrrrr List ==============>>>>>>",response.data.data);
+            // console.log("Market camperrrrr List ==============>>>>>>",response.data.data);
             const actives = Object.values(response.data.data).filter(data => data.expiry_status == true);
             const Expire = Object.values(response.data.data).filter(data => data.expiry_status == false);
             const activeCampaigns = Object.values(actives).filter(data => data.status == '2');
@@ -176,9 +176,9 @@ const CampaignMarket = () => {
             setPending(inactiveCampaigns);
             setExpire(Expire);
             setAwaiting(awaitingCampaigns);
-            console.log("activeCampaigns ------ 2" , activeCampaigns)
-            console.log("inactiveCampaigns ------ 0" , inactiveCampaigns)
-                console.log("Market camperrrrr List ==============>>>>>>");
+            // console.log("activeCampaigns ------ 2" , activeCampaigns)
+            // console.log("inactiveCampaigns ------ 0" , inactiveCampaigns)
+            //     console.log("Market camperrrrr List ==============>>>>>>");
            } catch (error) {
             console.error('Error fetching data:', error);
     } };
@@ -207,12 +207,12 @@ const CampaignMarket = () => {
     useEffect(() => {
         fetchMarketList12();
         fetchMarketList();
-        fetchMarket_approval();
+        // fetchMarket_approval();
         fetchMarket_decline();
-        fetchMarketcampaignexp();
-        fetchMarketapproval();
+        // fetchMarketcampaignexp();
+        // fetchMarketapproval();
         fetchProductList();
-        fetchMarkdraftList();
+        // fetchMarkdraftList();
     }, [token])
 
 
