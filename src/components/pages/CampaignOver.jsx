@@ -1,6 +1,6 @@
 import { useEffect, useState, useContext } from 'react';
 import UserContext from '../context/UserContext';
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import MenuBar from '../navbar/Navbar';
 import './pages.scss';
 import axios from 'axios';
@@ -17,6 +17,7 @@ import Date from '../../assests/img/date.png';
 import Chat from '../../assests/img/chat.png';
 import Join from '../../assests/img/join.png';
 import Question from '../../assests/img/question.png';
+// import { NavLink } from 'react-bootstrap';
 
 const CampaignOver = () => {
     const { setUserToken, setInfluenceList, countCamp, setCountCamp, setName, setuserName } = useContext(UserContext);
@@ -105,34 +106,34 @@ const CampaignOver = () => {
                     <div className="overview-container w-100 p-4">
                         <h3 className='mb-3'>Overview</h3>
                         <div className="overview-list d-flex flex-wrap justify-content-between align-items-center">
-                            <div className="overview-box d-flex align-items-center justify-content-center mb-4">
+                            <NavLink to='/campaigns-influencer' className="text-black text-decoration-none overview-box d-flex align-items-center justify-content-center mb-4">
                                 <div className="overview-content d-flex align-items-center">
                                     <span><img src={Active} alt='campaign-img' /></span>
                                     <h5>Active Campaigns</h5>
                                     <h3 className="mb-0">{countCamp.active_campaign ? countCamp.active_campaign : 0}</h3>
                                 </div>
-                            </div>
-                            <div className="overview-box d-flex align-items-center justify-content-center mb-4">
+                            </NavLink>
+                            <NavLink to='/campaigns-influencer'  className="text-black text-decoration-none overview-box d-flex align-items-center justify-content-center mb-4">
                                 <div className="overview-content d-flex align-items-center">
                                     <span><img src={Pending} alt='campaign-img' /></span>
                                     <h5>Pending Campaigns</h5>
                                     <h3 className="mb-0">{countCamp.pending_campaign ? countCamp.pending_campaign : 0}</h3>
                                 </div>
-                            </div>
-                            <div className="overview-box d-flex align-items-center justify-content-center mb-4">
+                            </NavLink>
+                            <NavLink to='/campaigns-influencer'  className="text-black text-decoration-none overview-box d-flex align-items-center justify-content-center mb-4">
                                 <div className="overview-content d-flex align-items-center">
                                     <span><img src={Total} alt='campaign-img' /></span>
                                     <h5>Total Campaigns</h5>
                                     <h3 className="mb-0">{countCamp.total ? countCamp.total : 0}</h3>
                                 </div>
-                            </div>
-                            <div className="overview-box d-flex align-items-center justify-content-center mb-4">
+                            </NavLink>
+                            <NavLink to='/campaigns-influencer' className="text-black text-decoration-none overview-box d-flex align-items-center justify-content-center mb-4">
                                 <div className="overview-content d-flex align-items-center">
                                     <span><img src={Sales} alt='campaign-img' /></span>
                                     <h5>Sales Campaigns</h5>
                                     <h3 className="mb-0">0</h3>
                                 </div>
-                            </div>
+                            </NavLink>
                         </div>
                     </div>
 

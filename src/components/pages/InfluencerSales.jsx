@@ -39,7 +39,7 @@ function InfluencerSales() {
 
     const fetchInfluencerSale = async () => {
         try {
-            // setLoading(true);
+            setLoading(true);
             axios.get(API.BASE_URL + 'influecercamsale/', {
                 headers: {
                     Authorization: `Token ${token}`
@@ -51,7 +51,7 @@ function InfluencerSales() {
                 })
                 .catch(function (error) {
                 })
-                // .finally(() => setLoading(false));
+                .finally(() => setLoading(false));
 
         } catch (error) {
             console.error("Error:", error);
@@ -59,10 +59,7 @@ function InfluencerSales() {
     };
 
     useEffect(() => {
-        setLoading(true)
-        fetchInfluencerSale().then(()=> 
-            setLoading(false)
-        );
+        fetchInfluencerSale();
         fetchInfluencer();
     }, []);
 
@@ -124,7 +121,8 @@ function InfluencerSales() {
             <div className="heading">
                 <h2 className='mb-5'>Influencer Sales </h2>
             </div>
-            {loading == false && influSales?.length > 0 ? (
+
+            {influSales?.length > 0 ? (
                 <table className='w-100 campaign'>
                     <tbody className='w-100'>
                         <tr className='headings'>
@@ -171,13 +169,13 @@ function InfluencerSales() {
 
                     </tbody>
                 </table>
-                ) : (
+                ) : loading === false ? (
                     <>
                         <h5 className='mt-4 text-center'>No Sales</h5>
                         <img src={NoData} alt='no-data' style={{ width: '100%', maxHeight: 220, marginTop: '4rem', objectFit: 'contain' }} />
                         <h3 className='text-center'>No Data Found</h3>
                     </>
-                )
+                ) : (<></>)
             }
 
 

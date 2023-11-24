@@ -42,6 +42,7 @@ const CampaignList = () => {
     setLoading(true)
     try {
       fetchInfluencerCamp();
+
     } catch (error) {
       console.error(error);
     }
@@ -53,48 +54,51 @@ const CampaignList = () => {
       <div className="campaign-manage-container p-4 page">
         {loading && <div className='d-flex loader-container flex-column'><div className='loader'><span></span></div> <p className='text-white'>Processing...</p></div>}
         <h2 className='my-5'>Manage Campaign</h2>
-       {tabs?.length > 0 ? (
-         <Tab.Container id="left-tabs-example" defaultActiveKey="active">
-         <Col sm={12}>
-           <Nav variant="pills" className="flex-row mb-2 tab-header">
-             {
-               tabs?.map((tab, index) => {
-                 return (
-                   <Nav.Item key={index}>
-                     <Nav.Link className="text-capitalize" eventKey={tab?.name}>{tab?.name}</Nav.Link>
-                   </Nav.Item>
-                 )
-               })
-             }
-           </Nav>
-         </Col>
-         <Col sm={12}>
-           <Tab.Content>
-             {
-               tabs?.map((tab, index) => {
-                 return (
-                   <Tab.Pane key={index} eventKey={tab?.name}>
-                     {tab?.list?.length > 0 ? (
-                       <>
-                         <CampTable list={tab?.list} name={tab?.name} />
-                       </>
-                     )
-                       :
-                       (
-                         <>
-                           <img src={NoData} alt='no-data' style={{ width: '100%', maxHeight: 220, marginTop: '4rem', objectFit: 'contain' }} />
-                           <h5 className='mt-4 text-center'>No Active Campaigns right now</h5>
-                         </>
-                       )}
-                   </Tab.Pane>
-                 )
-               })
-             }
-           </Tab.Content>
-         </Col>
-       </Tab.Container>
-       ) : (<></>) }
-       
+        {tabs?.length > 0 ? (
+          <Tab.Container id="left-tabs-example" defaultActiveKey="active">
+            <Col sm={12}>
+              <Nav variant="pills" className="flex-row mb-2 tab-header">
+                {
+                  tabs?.map((tab, index) => {
+                    return (
+                      <Nav.Item key={index}>
+                        <Nav.Link className="text-capitalize" eventKey={tab?.name}>{tab?.name}</Nav.Link>
+                      </Nav.Item>
+                    )
+                  })
+                }
+              </Nav>
+            </Col>
+            <Col sm={12}>
+              {loading === false ? (
+                <Tab.Content>
+                  {
+                    tabs?.map((tab, index) => {
+                      return (
+                        <Tab.Pane key={index} eventKey={tab?.name}>
+                          {tab?.list?.length > 0 ? (
+                            <>
+                              <CampTable list={tab?.list} name={tab?.name} />
+                            </>
+                          )
+                            :
+                            (
+                              <>
+                                <img src={NoData} alt='no-data' style={{ width: '100%', maxHeight: 220, marginTop: '4rem', objectFit: 'contain' }} />
+                                <h5 className='mt-4 text-center'>No Active Campaigns right now</h5>
+                              </>
+                            )}
+                        </Tab.Pane>
+                      )
+                    })
+                  }
+                </Tab.Content>
+              ) : (<> </>)}
+
+            </Col>
+          </Tab.Container>
+        ) : (<></>)}
+
 
       </div>
     </>
