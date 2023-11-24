@@ -204,9 +204,13 @@ const CampaignMarket = () => {
 
 
     useEffect(() => {
-        fetchMarketList12();
+        setLoading(true)
+        fetchMarketList12().then(()=> {
+            setLoading(false)
+        });
         fetchMarketList();
         fetchProductList();
+
     }, [token])
 
 
@@ -434,19 +438,19 @@ const CampaignMarket = () => {
                 <Col sm={12}>
                 <Tab.Content>
                     <Tab.Pane eventKey="first">
-                        {active?.length > 0 ? (
+                        { active?.length > 0 ? (
                             <CampaignTable 
                                 list={active}
                                 additionalProp="active"
                             />
-                            ) :
+                            ) : loading== false ?
                             (
                                 <>
                                     <img src={NoData} alt='no-data' style={{width: '100%', maxHeight: 220, marginTop: '4rem', objectFit: 'contain'}} />
                                     <h3 className='mt-4 text-center'>No Active Campaign</h3>
                                     
                                 </>
-                            )
+                            ) :( <></>)
                         }
                     </Tab.Pane>
 

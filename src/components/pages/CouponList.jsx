@@ -164,6 +164,7 @@ const CouponList = () => {
                 setCouponData(couponData.filter(coupon => coupon.id !== value));
                 toast.success("Coupon Deleted Successfully", { autoClose: 1000 })
                 fetchCoupon()
+               
             })
             .catch(function (error) {
                 console.log(error);
@@ -187,13 +188,14 @@ const CouponList = () => {
         })
             .then(function (response) {
                 console.log("Coupon Created", response);
-                // fetchCoupon()
-                setCouponData([...couponData, response.data]);
+                
+                setCouponData([...couponData, response.data])
                 setCouponDesc('')
                 setDiscountType('')
                 setCouponAmount('')
                 couponCross()
-            
+                fetchCoupon()
+                window.location.reload()
                 toast.success(response.message, { autoClose: 1000 });
             })
             .catch(function (error) {
@@ -412,6 +414,7 @@ const CouponList = () => {
                 setCouponAmount('')
                 setSelectedInfluencer('')
                 couponCross()
+                fetchCoupon();
             })
             .catch(function (error) {
                 console.log(error);

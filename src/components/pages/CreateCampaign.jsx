@@ -899,7 +899,7 @@ const CreateCampaign = () => {
                                 </ul>
                             </div>
                         ) : (
-                            <label>Please Select a Product</label>
+                            <label>Please Select a Coupon</label>
                         )}
 
                     </div>

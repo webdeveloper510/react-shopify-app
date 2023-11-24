@@ -156,8 +156,7 @@ const CreateInfluencer = () => {
             let ids = selected_coupon_ids
             let isExist = null
             for (let i = 0; i < selected_coupons.length; i++) {
-                if (selected_coupons[i].coupon_id === e.coupon_id) {
-                    console.log(e.coupon_name, selected_coupons[i].coupon_name)
+                if (selected_coupons[i] === e) {
                     isExist = i
                 }
             }
@@ -436,8 +435,7 @@ const CreateInfluencer = () => {
                              <div className="input-container d-flex flex-column mb-4 prod-coupons w-100">
                                 <label className="mb-3">Product coupons</label>
                                 <ul className="coupons coupons-list flex-column">
-                                    {
-                                        coupon_list?.product_titles?.length > 0 ? coupon_list.product_titles.map((title, index) => {
+                                    {coupon_list?.product_titles?.length > 0 ? coupon_list.product_titles.map((title, index) => {
                                             console.log(title)
                                             return (
                                                 <li key={index} className='d-flex flex-row align-items-center mb-2'>
@@ -449,7 +447,7 @@ const CreateInfluencer = () => {
                                                                     <div key={i} className={`d-flex flex-column justify-content-center align-items-center `}>
                                                                         {/* <span className='text-center' style={{ margin: '0 10px' }}>{influencer?.fullname}</span> */}
                                                                         <p
-                                                                            className={`d-flex flex-column mb-0 ${selected_coupon_ids?.includes(item?.coupon_id)? "selected":""}`}
+                                                                            className={`d-flex flex-column mb-0 ${selected_coupons?.includes(item)? "selected":""}`}
                                                                             onClick={() => handleClick(item)}
                                                                         >
                                                                             {item?.coupon_name} - {Math.abs(parseInt(item?.amount))}

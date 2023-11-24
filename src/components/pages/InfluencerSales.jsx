@@ -9,12 +9,12 @@ import NoData from '../../assests/img/no-data.png';
 import './pages.scss'
 
 function InfluencerSales() {
+    const [loading, setLoading] = useState(false);
     const [influSales, setInfluSales] = useState([]);
     const [influList, setInfluList] = useState([]);
     const [matchingFullnames, setMatchingFullnames] = useState([]);
     const [transferShow, setTransferShow] = useState(false);
     const [selectedTransferIndex, setSelectedTransferIndex] = useState(null);
-    const [loading, setLoading] = useState(false);
     const token = localStorage.getItem("Token");
 
 
@@ -40,6 +40,7 @@ function InfluencerSales() {
 
     const fetchInfluencerSale = async () => {
         try {
+            // setLoading(true);
             axios.get(API.BASE_URL + 'influecercamsale/', {
                 headers: {
                     Authorization: `Token ${token}`
@@ -51,7 +52,7 @@ function InfluencerSales() {
                 })
                 .catch(function (error) {
                 })
-                .finally(() => setLoading(false));
+                // .finally(() => setLoading(false));
 
         } catch (error) {
             console.error("Error:", error);
@@ -60,7 +61,10 @@ function InfluencerSales() {
 
     useEffect(() => {
         fetchInfluencer();
-        fetchInfluencerSale();
+        setLoading(true)
+          fetchInfluencerSale().then(()=> {
+            setLoading(false)
+        });
     }, []);
 
 
@@ -117,11 +121,11 @@ function InfluencerSales() {
 
     return (
         <div className='p-4 page'>
-            {loading && <div className='d-flex loader-container flex-column'><div className='loader'><span></span></div> <p className='text-white'>Processing...</p></div>}
+             {loading && <div className='d-flex loader-container flex-column'><div className='loader'><span></span></div> <p className='text-white'>Processing...</p></div>}
             <div className="heading">
-                <h2 className='mb-5'>Influencer Sales</h2>
+                <h2 className='mb-5'>Influencer Sales </h2>
             </div>
-            {influSales?.length > 0 ? (
+            {loading == false ? (
                 <table className='w-100 campaign'>
                     <tbody className='w-100'>
                         <tr className='headings'>
@@ -168,7 +172,7 @@ function InfluencerSales() {
 
                     </tbody>
                 </table>
-            ) :
+                ) :
                 (
                     <>
                         <h5 className='mt-4 text-center'>No Sales</h5>

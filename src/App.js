@@ -16,10 +16,10 @@ function App() {
 
   useEffect(() => {
     const url = window.location.href;
-    const queryString = url.split('?')[1];
+    const queryString = url?.split('?')[1];
     const urlParams = new URLSearchParams(queryString);
-    const searchString = (urlParams.get('shop')).split("#");
-    const token = searchString[0]
+    const searchString = (urlParams.get('shop'))?.split("#");
+    const token = searchString?.length> 0 ? searchString[0] : null
     localStorage.setItem('shop_url', token)
     setLoading(true)
     getToken({ shop_name: token }).then(res => {
@@ -42,7 +42,7 @@ function App() {
 
   return (
     <div className="App">
-      {loading && <div className='d-flex loader-container flex-column'><div className='loader'><span></span></div> <p className='text-white'>Processing...</p></div>}
+      {loading && <div className='d-flex loader-container flex-column'><div className='loader'><span></span></div> <p className='text-bold text-white'>Processing...</p></div>}
       <Routing />
       <GoToTop />
       <ToastContainer autoclose={2000} />

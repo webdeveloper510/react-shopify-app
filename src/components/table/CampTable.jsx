@@ -116,7 +116,7 @@ const CampTable = ({ list, additionalProp, name }) => {
     for (let i = 0; i < list?.length; i++) {
       if (list[i]?.product_name !== null) {
         for (let j = 0; j < list[i]?.coupon_name?.length; j++) {
-          if (list[1]?.coupon_name.length > 1 && j !== list[i].coupon_name.length - 1) {
+          if (list[i]?.coupon_name.length > 1 && j !== list[i].coupon_name.length - 1) {
             coupontext = coupontext + list[i]?.coupon_name[j] + ","
           } else {
             coupontext = coupontext + list[i]?.coupon_name[j] 
@@ -444,7 +444,6 @@ const InputElement = ({ payRef, handler, data, setIsPaid }) => {
       payInfluencer({ token: token?.token?.id, campaignid_id: data.user_id, influencerid_id: data.user_influencer, user_id: data.influencer_id,coupom_amount: data.coupom_amount ,   coupon: data.coupon, influencerid_id__fee: data?.amount }).then(res => {
         setIsPaid(data?.id)
         console.log(data?.id)
-        // setPaidId(data?.id)
         console.log('<<<<<<====>>>>>',data)
         toast.success('Payment Success', { autoClose: 1000 })
         handleAccept(data)
@@ -510,6 +509,8 @@ const ViewModal = ({ data, handler, productsListing, couponListing }) => {
           <li className="my-2">Discount: <span className="fw-bold text-capitalize">{couponListing(data?.value?.product, "discount")}</span></li>
           <li className="my-2">Description: <span className="fw-bold text-capitalize">{data?.value?.description}</span></li>
         </ul>
+
+        
       </Modal.Body>
     </Modal>
   )

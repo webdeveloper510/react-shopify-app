@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { API, verifySubscription } from '../../config/Api';
+import { toast } from 'react-toastify';
 
 
 const plan_list = [
@@ -32,7 +33,7 @@ const plan_list = [
 ]
 
 const Subscription = () => {
-  const token = localStorage.getItem("Token");
+  // const token = localStorage.getItem("Token");
   const navigate = useNavigate();
   const location = useLocation();
   const [loading, setLoading] = useState(false);
@@ -43,7 +44,7 @@ const Subscription = () => {
       plan: plan
     }, {
       headers: {
-        Authorization: `Token ${token}`
+        Authorization: `Token ${localStorage.getItem("Token")}`
       }
     })
       .then(function (response) {
@@ -51,25 +52,26 @@ const Subscription = () => {
         window.open(response.data.session_url, '_blank');
       })
       .catch(function (error) {
+        toast.error("Shop name not found")
       })
       .finally(() => setLoading(false));
   }
 
-  useEffect(() => {
-    setLoading(true)
-    let session_id = localStorage.getItem("session_id");
-    if (session_id === undefined || null || "null") {
-      verifySubscription().then((res) => {
-        setLoading(false)
-        if (res.message === "Subscription already buyed") {
-          navigate('/overview');
-        }
-      })
-    } else {
-      setLoading(false)
-      navigate('/overview');
-    }
-  }, [navigate]);
+  // useEffect(() => {
+  //   setLoading(true)
+  //   let session_id = localStorage.getItem("session_id");
+  //   if (session_id === undefined || null || "null") {
+  //     verifySubscription().then((res) => {
+  //       setLoading(false)
+  //       if (res.message === "Subscription already buyed") {
+  //         navigate('/overview');
+  //       }
+  //     })
+  //   } else {
+  //     setLoading(false)
+  //     navigate('/overview');
+  //   }
+  // }, [navigate]);
 
   return (
     <>
@@ -81,7 +83,7 @@ const Subscription = () => {
               <div className='loader'>
                 <span></span>
               </div>
-              <p className='text-white'>Processing...</p>
+              <p className='text-bold text-white'>Processing...</p>
             </div>
           ) : (
             <>

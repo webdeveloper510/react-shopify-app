@@ -217,8 +217,12 @@ const CampaignManage = () => {
   
 
   useEffect(() => {
-
-    fetchMarketList12();
+   
+    setLoading(true)
+    fetchMarketList12().then(()=> {
+        setLoading(false)
+    });
+    
     fetchData();
     // fetchActiveData();
     // fetchDeclineData();
@@ -743,13 +747,13 @@ const CampaignManage = () => {
                     // showEdit={false}
                   />
                 )
-                  :
+                  : loading == false ?
                   (
                     <>
                       <img src={NoData} alt='no-data' style={{ width: '100%', maxHeight: 220, marginTop: '4rem', objectFit: 'contain' }} />
                       <h5 className='mt-4 text-center'>No Active Campaigns right now</h5>
                     </>
-                  )}
+                  ) : (<></>)}
               </Tab.Pane>
               <Tab.Pane eventKey="second" className='campaign'>
                 {pending?.length > 0 ? (
@@ -778,13 +782,13 @@ const CampaignManage = () => {
                     // handleProdOffer={handleProdOffer}
                   />
                 )
-                  :
+                  : loading == false ?
                   (
                     <>
                       <img src={NoData} alt='no-data' style={{ width: '100%', maxHeight: 220, marginTop: '4rem', objectFit: 'contain' }} />
                       <h5 className='mt-4 text-center'>No Pending Campaigns right now</h5>
                     </>
-                  )}
+                  ) : (<></>)}
               </Tab.Pane>
               {/* <Tab.Pane eventKey="third" className='campaign'>
                 {draftList?.length > 0 ? (
@@ -858,7 +862,7 @@ const CampaignManage = () => {
                   )}
               </Tab.Pane> */}
               <Tab.Pane eventKey="five" className='campaign'>
-                {vendorDecldeclineineList?.length > 0 ? (
+                {decline?.length > 0 ? (
                   <CampaignTable
                   additionalProp="declined"
                   list={decline}
@@ -886,13 +890,13 @@ const CampaignManage = () => {
                     // handleVendorDecline={handleVendorDecline}
                   />
                 )
-                  :
+                  : loading == false ?
                   (
                     <>
                       <img src={NoData} alt='no-data' style={{ width: '100%', maxHeight: 220, marginTop: '4rem', objectFit: 'contain' }} />
                       <h5 className='mt-4 text-center'>No Campaigns in Decline right now</h5>
                     </>
-                  )}
+                  ) : (<></>)}
               </Tab.Pane>
               <Tab.Pane eventKey="six" className='campaign'>
                 {expire?.length > 0 ? (
@@ -922,14 +926,14 @@ const CampaignManage = () => {
                     // handleProdOffer={handleProdOffer}
                   />
                 )
-                  :
+                  : loading == false ?
                   (
                     <>
                       <img src={NoData} alt='no-data' style={{ width: '100%', maxHeight: 220, marginTop: '4rem', objectFit: 'contain' }} />
                       <h5 className='mt-4 text-center'>No Expired Campaigns right now</h5>
 
                     </>
-                  )}
+                  ) : (<></>)}
               </Tab.Pane>
             </Tab.Content>
           </Col>
