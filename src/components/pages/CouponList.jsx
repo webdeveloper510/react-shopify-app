@@ -188,6 +188,7 @@ const CouponList = () => {
         })
             .then(function (response) {
                 console.log("Coupon Created", response);
+                toast.success(response.data.message, { autoClose: 1000 });
                 
                 setCouponData([...couponData, response.data])
                 setCouponDesc('')
@@ -195,7 +196,6 @@ const CouponList = () => {
                 setCouponAmount('')
                 couponCross()
                 fetchCoupon()
-                toast.success(response.message, { autoClose: 1000 });
             })
             .catch(function (error) {
                 console.log(error);
