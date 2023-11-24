@@ -222,7 +222,7 @@ const CampaignManage = () => {
     fetchMarketList12().then(()=> {
         setLoading(false)
     });
-    
+
     fetchData();
     // fetchActiveData();
     // fetchDeclineData();
@@ -693,6 +693,7 @@ const CampaignManage = () => {
       <div className="campaign-manage-container p-4 page">
         {loading && <div className='d-flex loader-container flex-column'><div className='loader'><span></span></div> <p className='text-white'>Processing...</p></div>}
         <h2 className='my-5'>Manage Campaign</h2>
+        {active?.length > 0 ? (
         <Tab.Container id="left-tabs-example" defaultActiveKey="first">
           <Col sm={12}>
             <Nav variant="pills" className="flex-row mb-2 tab-header">
@@ -719,6 +720,7 @@ const CampaignManage = () => {
           <Col sm={12}>
             <Tab.Content>
               <Tab.Pane eventKey="first">
+
                 {active?.length > 0 ? (
                   <CampaignTable 
                     list={active}
@@ -747,13 +749,13 @@ const CampaignManage = () => {
                     // showEdit={false}
                   />
                 )
-                  : loading == false ?
+                  : 
                   (
                     <>
                       <img src={NoData} alt='no-data' style={{ width: '100%', maxHeight: 220, marginTop: '4rem', objectFit: 'contain' }} />
                       <h5 className='mt-4 text-center'>No Active Campaigns right now</h5>
                     </>
-                  ) : (<></>)}
+                  )}
               </Tab.Pane>
               <Tab.Pane eventKey="second" className='campaign'>
                 {pending?.length > 0 ? (
@@ -782,7 +784,7 @@ const CampaignManage = () => {
                     // handleProdOffer={handleProdOffer}
                   />
                 )
-                  : loading == false ?
+                  : loading === false ?
                   (
                     <>
                       <img src={NoData} alt='no-data' style={{ width: '100%', maxHeight: 220, marginTop: '4rem', objectFit: 'contain' }} />
@@ -890,7 +892,7 @@ const CampaignManage = () => {
                     // handleVendorDecline={handleVendorDecline}
                   />
                 )
-                  : loading == false ?
+                  : loading === false ?
                   (
                     <>
                       <img src={NoData} alt='no-data' style={{ width: '100%', maxHeight: 220, marginTop: '4rem', objectFit: 'contain' }} />
@@ -938,6 +940,10 @@ const CampaignManage = () => {
             </Tab.Content>
           </Col>
         </Tab.Container>
+        ) : (
+          <></>
+        )}
+
 
       </div>
 

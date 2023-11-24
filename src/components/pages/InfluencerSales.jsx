@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { API } from '../../config/Api';
-import './pages.scss';
+// import './pages.scss';
 import { toast } from 'react-toastify';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faClose } from '@fortawesome/free-solid-svg-icons';
 import NoData from '../../assests/img/no-data.png';
-import './pages.scss'
+// import './pages.scss'
 
 function InfluencerSales() {
     const [loading, setLoading] = useState(false);
@@ -30,7 +30,6 @@ function InfluencerSales() {
                 })
                 .catch(function (error) {
                 })
-                .finally(() => setLoading(false));
 
 
         } catch (error) {
@@ -60,11 +59,11 @@ function InfluencerSales() {
     };
 
     useEffect(() => {
-        fetchInfluencer();
         setLoading(true)
-          fetchInfluencerSale().then(()=> {
+        fetchInfluencerSale().then(()=> 
             setLoading(false)
-        });
+        );
+        fetchInfluencer();
     }, []);
 
 
@@ -125,7 +124,7 @@ function InfluencerSales() {
             <div className="heading">
                 <h2 className='mb-5'>Influencer Sales </h2>
             </div>
-            {loading == false ? (
+            {loading == false && influSales?.length > 0 ? (
                 <table className='w-100 campaign'>
                     <tbody className='w-100'>
                         <tr className='headings'>
@@ -172,8 +171,7 @@ function InfluencerSales() {
 
                     </tbody>
                 </table>
-                ) :
-                (
+                ) : (
                     <>
                         <h5 className='mt-4 text-center'>No Sales</h5>
                         <img src={NoData} alt='no-data' style={{ width: '100%', maxHeight: 220, marginTop: '4rem', objectFit: 'contain' }} />

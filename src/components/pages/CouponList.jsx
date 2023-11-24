@@ -195,7 +195,6 @@ const CouponList = () => {
                 setCouponAmount('')
                 couponCross()
                 fetchCoupon()
-                window.location.reload()
                 toast.success(response.message, { autoClose: 1000 });
             })
             .catch(function (error) {

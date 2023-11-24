@@ -136,7 +136,7 @@ const SideBar = () => {
                             </NavLink>
                             <NavLink to='/campaigns-influencer' className='text-black py-2'>
                                 <img src={Manage} className="me-2" alt='menu-img' />
-                                Campaign Influencer
+                                Manage Influencer Campaign 
                             </NavLink>
                             <NavLink to='/create' className='text-black py-2' exact>
                                 <img src={CampNew} className="me-2" alt='menu-img' />

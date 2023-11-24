@@ -70,7 +70,7 @@ const CampTable = ({ list, additionalProp, name }) => {
     for (let i = 0; i < list?.length; i++) {
       if (list[i]?.product_name !== null) {
         if (list?.length > 1 && i !== list?.length - 1) {
-          text = text + list[i]?.product_name + ","
+          text = text + list[i]?.product_name + ",\n"
         } else {
           text = text + list[i]?.product_name
         }
@@ -116,8 +116,8 @@ const CampTable = ({ list, additionalProp, name }) => {
     for (let i = 0; i < list?.length; i++) {
       if (list[i]?.product_name !== null) {
         for (let j = 0; j < list[i]?.coupon_name?.length; j++) {
-          if (list[i]?.coupon_name.length > 1 && j !== list[i].coupon_name.length - 1) {
-            coupontext = coupontext + list[i]?.coupon_name[j] + ","
+          if (list[i]?.coupon_name.length > 0 && j !== list[i].coupon_name.length - 1 ) {
+            coupontext = coupontext + list[i]?.coupon_name[j] + ",\n"
           } else {
             coupontext = coupontext + list[i]?.coupon_name[j] 
           }
@@ -126,6 +126,9 @@ const CampTable = ({ list, additionalProp, name }) => {
           } else if (list[i]?.discount_type[j] === "fixed_amount") {
             fixed = fixed + Number(list[i]?.amount[j])
           }
+        }
+        if(i !== list?.length-1 && coupontext !== ""){
+          coupontext = coupontext+",\n"
         }
       }
     }
@@ -510,7 +513,7 @@ const ViewModal = ({ data, handler, productsListing, couponListing }) => {
           <li className="my-2">Description: <span className="fw-bold text-capitalize">{data?.value?.description}</span></li>
         </ul>
 
-        
+
       </Modal.Body>
     </Modal>
   )
