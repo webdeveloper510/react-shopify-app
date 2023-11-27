@@ -603,7 +603,7 @@ const CreateCampaign = () => {
                         <input type="date" min={selectedDate} onChange={handleEndDate} value={endDate} />
                     </div>
 
-                    {/* <div className="input-container d-flex flex-column mb-4">
+                    <div className="input-container d-flex flex-column mb-4">
                         <label className="mb-3">Offer to influencers</label>
                         <div className="input d-flex align-items-center">
                             <span className='d-flex align-items-center justify-content-center me-4'>
@@ -615,7 +615,7 @@ const CreateCampaign = () => {
                                 <label htmlFor="commission">Fixed Fee</label>
                             </span>
                         </div>
-                    </div> */}
+                    </div>
 
                     <div className="input-container test d-flex flex-column mb-4 drop">
                         <label className="mb-3">Product</label>
@@ -658,12 +658,12 @@ const CreateCampaign = () => {
                         )}
                     </div>
 
-                    {/* {influenceOffer.length > 0 ? (
+                    {influenceOffer.length > 0 ? (
                         <div className="input-container d-flex flex-column mb-4">
                             <label className="mb-3">{influenceOffer === "percentage" ? "Commission (%)" : "Fixed Fee"}</label>
                             <input type="number" onWheel={(e) => e.target.blur()} value={influenceFee} onChange={(e) => { setInfluenceFee(e.target.value) }} />
                         </div>
-                    ) : ""} */}
+                    ) : ""}
 
 
                     <div className="input-container d-flex flex-column mb-4">
