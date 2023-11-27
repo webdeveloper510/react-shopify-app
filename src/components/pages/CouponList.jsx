@@ -522,7 +522,7 @@ const CouponList = () => {
                         <>
                         {couponData.length > 0 ? (
                         <div>
-                            <table className="coupon-table w-100">
+                            <table className="coupon-table w-100  table-striped">
                                 <thead>
                                     <tr className="table-heading">
                                         <th>Coupons</th>

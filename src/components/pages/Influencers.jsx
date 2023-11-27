@@ -43,18 +43,18 @@ const Influencers = () => {
     }, [is_paid]);
 
     const handlePay = (item) => {
-        if (item.paid_status) {
-
-            navigate(`/new-campaign/`, { state: { influencer_id: item?.influencerid_id, id: item?.id } })
-        } else {
-            setOpenModal({ toggle: true, value: { name: item?.fullname, cost: item?.influencerid_id__fee || "40" }, id: item?.influencerid_id })
-        }
+    // console.log("===============>>>>",  item )
+            navigate(`/new-campaign/`, { state: { influencer_id: item?.influencerid_id, name: item?.fullname, cost: item?.influencerid_id__fee, id: item?.influencerid_id } })
+        // } else {
+        //     setOpenModal({ toggle: true, value: { influencer_id: item?.influencerid_id, id: item?.id  }, id: item?.influencerid_id })
+        // }
     }
 
     const handlePrev = () => {
         navigate(-1)
     }
-    console.log('influencer_list =======>>>>>>>>>>>>>>', influencer_list)
+
+    // console.log('influencer_list =======>>>>>>>>>>>>>>', influencer_list)
 
     // -------- Return --------
     return (
@@ -86,17 +86,9 @@ const Influencers = () => {
                                             <div className='d-flex flex-column align-items-end col-md-2'>
                                                 <strong>AED {item?.influencerid_id__fee || "N/A"}</strong>
 
-                                                {item?.influencerid_id__fee == null ? (
-                                                    <>
-                                                    </>
-                                                ) : (
-                                                    <>
                                                         <button className='btn btn-dark' onClick={() => { handlePay(item) }} disabled={item?.influencerid_id !== disabled && disabled !== null}>
-                                                            {item.paid_status == true ? "Continue" : "Pay"}
+                                                            Select
                                                         </button>
-                                                    </>
-                                                )}
-
                                             </div>
                                         </div>
                                     ))}

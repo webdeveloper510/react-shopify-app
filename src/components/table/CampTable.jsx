@@ -365,7 +365,7 @@ const CampTable = ({ list, additionalProp, name }) => {
   return (
     <>
     
-      <table className='w-100 campaign'>
+      <table className='w-100 campaign table-striped'>
         <thead className='w-100'>
           {headRows()}
         </thead>

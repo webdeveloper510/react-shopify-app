@@ -22,6 +22,7 @@ const CreateInfluencer = () => {
     const token = localStorage.getItem("Token");
 
     //-------States----------
+    
     const [form_data, setFormData] = useState({ campaign_name: '', influencer_visit: '', date: '', end_date: '', product: [], description: '', product_name: [], influencer_name: '', coupon: [] })
     const [influencer, setInfluencer] = useState(null)
     const [product_list, setProductList] = useState([])
@@ -30,8 +31,6 @@ const CreateInfluencer = () => {
     const [selected_coupon_ids, setCoupon_ids] = useState([])
     const [selected_products, setSelectedProducts] = useState([])
     const [selected_coupons, setSelectedCoupon] = useState([])
-
-
 
     //-------Handlers--------
 
@@ -482,7 +481,7 @@ const CreateInfluencer = () => {
                                 {id?.length > 0 ?
                                     <button className='button button-black' type="button" onClick={(e) => { updateCampaign(e) }}>Update Campaign</button>
                                     :
-                                    <button className='button ms-4' type='button' onClick={(e) => createRequest(e)}>Send Request</button>
+                                    <button className='button ms-4' type='button' onClick={(e) => createRequest(e)}>Send Request & Pay</button>
                                 }
                             </div>
                         </form>
