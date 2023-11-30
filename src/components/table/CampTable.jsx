@@ -17,6 +17,7 @@ const CampTable = ({ list, additionalProp, name }) => {
   const token = localStorage.getItem("Token");
   const [currentPage, setCurrentPage] = useState(1);
   const ITEMS_PER_PAGE = 10;
+  const [paystat, setPaystat] = useState(false);
   const currentItems = list;
   const indexOfLastItem = currentPage * ITEMS_PER_PAGE;
   const indexOfFirstItem = indexOfLastItem - ITEMS_PER_PAGE;
@@ -25,6 +26,7 @@ const CampTable = ({ list, additionalProp, name }) => {
   const navigate = useNavigate()
   const [is_paid, setIsPaid] = useState(false)
   const [loading, setLoading] = useState(false);
+  const [commission, setCommission] = useState();
   const [delete_modal, setDeleteModal] = useState({ toggle: false, value: null })
   const [view_modal, setViewModal] = useState({ toggle: false, value: null })
   const [open_modal, setOpenModal] = useState({ toggle: null, user_id: null, influencer_id: null, camp_id: null, id: null, amount: null , coupom_amount : null , coupon : null});
@@ -33,8 +35,12 @@ const CampTable = ({ list, additionalProp, name }) => {
       setCurrentPage(currentPage - 1);
     }
   };
-
-
+  
+  const calculateCommission = () => {
+    const commissionAmount = (list.commission * list.influencer_fee) / 100;
+    setCommission(commissionAmount);
+  };
+  console.log(commission)
 
   // console.log("currentItems ======>>>>>>>", currentItems)
 
@@ -90,24 +96,80 @@ const CampTable = ({ list, additionalProp, name }) => {
           <Modal.Title className='fs-5'>Payment </Modal.Title>
         </Modal.Header>
         <Modal.Body >
-
-          <div className='my-4'>
-            <Elements stripe={stripePromise}>
-              <InputElement payRef={payRef} handler={handler} data={data} setIsPaid={setIsPaid} />
-            </Elements>
-          </div>
+          {paystat == true ? (
+            <>
+             <div className='my-4'>
+              <Elements stripe={stripePromise}>
+                <InputElement payRef={payRef} handler={handler} data={data} setIsPaid={setIsPaid} />
+              </Elements>
+            </div>
+            </>
+          ) : (
+            <>
+            <table className='coupon-table w-100  table-striped'>
+                <tr className='table-heading'>
+                  <th className='border rounded-4 rounded-bottom' colSpan={2}>Payment Details : -</th>
+                </tr>
+              <tr>
+                <td>Influncer fee : </td>
+                <td>{data?.amount} AUD</td>
+              </tr>
+              <tr>
+                <td>Admin Fee : </td>
+                <td>{data?.admin_fee} AUD</td>
+              </tr>
+              <tr>
+                <td>Total Pay : </td>
+                <td>{data?.admin_fee + data?.amount} AUD</td>
+              </tr>
+            </table>
+            <div className='text-center mt-4'> 
+            <Button type="submit" variant="primary" onClick={() => setPaystat(true)}>
+            Contine
+          </Button>
+            </div>
+            </>
+          ) }
+            
+           
         </Modal.Body>
-        <Modal.Footer>
-          <Button variant="danger" onClick={() => handler({ toggle: false, user_id: null, amount: null, influencer_id: null, camp_id: null, id: null })} >
+        {paystat == true ? (<Modal.Footer>
+          <Button
+            variant="danger"
+            onClick={() => {
+              setPaystat(false); 
+              handler({
+                toggle: false,
+                user_id: null,
+                amount: null,
+                influencer_id: null,
+                camp_id: null,
+                id: null
+              });
+            }}
+          >
             Cancel
           </Button>
-          <Button type="submit" variant="primary" onClick={() => payRef.current.click()}>
+          <Button
+            type="submit"
+            variant="primary"
+            onClick={() => {
+              setPaystat(false);
+              payRef.current.click();
+            }}
+          >
             Pay
           </Button>
-        </Modal.Footer>
+        </Modal.Footer> ) : (<>
+        </>) }
       </Modal>
     )
   }
+ 
+  const percentageCalculator = () => {
+
+  }
+
 
   const couponListing = (list, field) => {
     let coupontext = "";
@@ -139,6 +201,11 @@ const CampTable = ({ list, additionalProp, name }) => {
       return <>{fixed !== 0 ? fixed + "د.إ" : ""} {fixed !== 0 && percentage !== 0 ? "and" : fixed === 0 && percentage === 0 ? "none" : ""} {percentage !== 0 ? percentage + "%" : ""}</>
     }
   }
+
+
+  useEffect(() => {
+    calculateCommission();
+  }, [list]);
 
   const editCamp = (id) => {
     navigate(`/edit-campaign/${id}`)
@@ -307,12 +374,13 @@ const CampTable = ({ list, additionalProp, name }) => {
                   <td>
                     {item?.influencer_fee !== null ? (
                       <>
-             <button className='bg-black text-white me-3' onClick={() => {
+                        <button className='bg-black text-white me-3' onClick={() => {
                             setOpenModal({
                               toggle: true,
                               influencer_id: item?.user_influencer,
                               camp_id: item?.campaignid_id,
                               user_id: item?.vendor_campaign,
+                              admin_fee: item?.admin_fee,
                               amount: item?.influencer_fee,
                               id: item?.influencer_id,
                               coupon: item?.product[0].coupon_name,

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useRef } from 'react';
 import UserContext from '../context/UserContext';
 import './pages.scss';
 import axios from 'axios';
@@ -8,9 +8,11 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronRight, faChevronLeft, faSearch } from '@fortawesome/free-solid-svg-icons';
 
+
 const CreateCampaign = () => {
     const [productName, setProductName] = useState([]);
     const [productIds, setProductIds] = useState([]);
+   
     const [influencerList, setInfluencerList] = useState([]);
     const [campaignName, setCampaignName] = useState('');
     const [selectedDate, setSelectedDate] = useState("");
@@ -24,6 +26,7 @@ const CreateCampaign = () => {
     const [prodList, setProdList] = useState('')
     const [loading, setLoading] = useState(false);
     const [productUrl, setProductUrl] = useState([]);
+    
     const [marketCoupons, setMarketCoupns] = useState([])
     const [showInfluencerDropdown, setShowInfluencerDropdown] = useState(false);
     const [selectedInfluencer, setSelectedInfluencer] = useState([]);
@@ -42,6 +45,7 @@ const CreateCampaign = () => {
     const [selectedProductIds, setSelectedProductIds] = useState([]);
     const { setMarketId, setMarketList, setMarketDraftId, setMarketDraftList, countCamp, setCountCamp } = useContext(UserContext);
     const token = localStorage.getItem("Token");
+    
     const [productDetails, setProductDetails] = useState([]);
     const [selectedProd, setSelectedProd] = useState([])
 
@@ -257,6 +261,9 @@ const CreateCampaign = () => {
             setShowInfluencerDropdown(false);
         }
     };
+
+
+
 
     const handleProductSelection = (selectedProduct) => {
         setLoading(true);
@@ -921,8 +928,11 @@ const CreateCampaign = () => {
                                 <button className='button ms-4' onClick={createNewCampaign}>Send to MarketPlace</button>
                             </>}
                     </div>
+
                 </form>
             </div>
+      
+         
         </div>
     );
 }

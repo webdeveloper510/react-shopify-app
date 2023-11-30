@@ -1,14 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { faChevronLeft, faSearch } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useEffect } from 'react';
-import { getDataByProduct, getInfluencer, getProductList } from '../../config/Api';
+import { getDataByProduct, getInfluencer, getProductList ,payInfluencer} from '../../config/Api';
 import { CheckPicker } from "rsuite"
 import "rsuite/dist/rsuite.css";
 import axios from 'axios';
 import { API } from '../../config/Api';
 import { toast } from 'react-toastify';
+import { Button, Modal } from 'react-bootstrap';
+import { loadStripe } from '@stripe/stripe-js';
+import { CardElement, Elements, useElements, useStripe } from '@stripe/react-stripe-js';
+// import { getInfluencerList,  } from '../../config/Api';
 
 const CreateInfluencer = () => {
 
@@ -20,9 +24,10 @@ const CreateInfluencer = () => {
     const navigate = useNavigate();
     const today = new Date().toISOString().substr(0, 10);
     const token = localStorage.getItem("Token");
-
+    const [open_modal, setOpenModal] = useState({ toggle: null, value: { name: null, cost: null }, id: null });
+    const [is_paid, setIsPaid] = useState(false)
     //-------States----------
-    
+    const [paystat, setPaystat] = useState(false);
     const [form_data, setFormData] = useState({ campaign_name: '', influencer_visit: '', date: '', end_date: '', product: [], description: '', product_name: [], influencer_name: '', coupon: [] })
     const [influencer, setInfluencer] = useState(null)
     const [product_list, setProductList] = useState([])
@@ -33,6 +38,131 @@ const CreateInfluencer = () => {
     const [selected_coupons, setSelectedCoupon] = useState([])
 
     //-------Handlers--------
+
+
+ const PaymentModal = ({ data, handler, setIsPaid }) => {
+        const payRef = useRef(null)
+  const stripePromise = loadStripe(`${process.env.REACT_APP_STRIPE_KEY}`)
+
+return (
+<Modal className="modal-card" show={data?.toggle} onHide={() => handler({ toggle: false, value: null, id: null })} centered backdrop="static">
+<Modal.Header>
+<Modal.Title className='fs-5'>Payment </Modal.Title>
+</Modal.Header>
+<Modal.Body >
+          {paystat == true ? (
+            <>
+             <div className='my-4'>
+              <Elements stripe={stripePromise}>
+                <InputElement payRef={payRef} handler={handler} data={data} setIsPaid={setIsPaid} />
+              </Elements>
+            </div>
+            </>
+          ) : (
+            <>
+            <table className='coupon-table w-100  table-striped'>
+                <tr className='table-heading'>
+                  <th className='border rounded-4 rounded-bottom' colSpan={2}>Payment Details : -</th>
+                </tr>
+              <tr>
+                <td>Influncer fee : </td>
+                <td>{data?.amount} AUD</td>
+              </tr>
+              <tr>
+                <td>Admin Fee : </td>
+                <td>{data?.admin_fee} AUD</td>
+              </tr>
+              <tr>
+                <td>Total Pay : </td>
+                <td>{data?.admin_fee + data?.amount} AUD</td>
+              </tr>
+            </table>
+            <div className='text-center mt-4'> 
+            <Button type="submit" variant="primary" onClick={() => setPaystat(true)}>
+            Contine
+          </Button>
+            </div>
+            </>
+          ) }
+            
+           
+        </Modal.Body>
+        {paystat == true ? (<Modal.Footer>
+          <Button
+            variant="danger"
+            onClick={() => {
+              setPaystat(false); 
+              handler({
+                toggle: false,
+                user_id: null,
+                amount: null,
+                influencer_id: null,
+                camp_id: null,
+                id: null
+              });
+            }}
+          >
+            Cancel
+          </Button>
+          <Button
+            type="submit"
+            variant="primary"
+            onClick={() => {
+              setPaystat(false);
+              payRef.current.click();
+            }}
+          >
+            Pay
+          </Button>
+        </Modal.Footer> ) : (<>
+        </>) }
+</Modal>
+)
+}
+
+
+const handlePay = (item) => {
+            setOpenModal({ toggle: true, value: { influencer_id: item?.influencerid_id, id: item?.id  }, id: item?.influencerid_id })
+    }
+
+const InputElement = ({ payRef, handler, data, setIsPaid }) => {
+
+    const stripe = useStripe();
+    const elements = useElements();
+
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+        if (elements == null) {
+            return;
+        }
+        const token = await stripe.createToken(elements.getElement(CardElement))    
+        if (token.token) {
+            payInfluencer({ token: token?.token?.id, user_id: data.id, influencerid_id__fee: data?.value?.cost }).then(res => {
+                setIsPaid(data?.id)
+                console.log(data?.id)
+                
+                toast.success('Payment Success', { autoClose: 1000 })
+                navigate('/market')
+            })
+            handler({ toggle: false, value: null, id: null })
+        } else if (token.error.code === "card_declined") {
+            toast.error("Card Declined")
+        } else {
+            toast.error("Enter card details to continue")
+        }
+
+    };
+
+    return (
+        <form onSubmit={handleSubmit}>
+            <CardElement options={{ hidePostalCode: true }} />
+
+            <button type="submit" ref={payRef} style={{ display: "none" }} disabled={!stripe || !elements}>
+                Pay
+            </button>
+        </form>
+    )
+}
 
     useEffect(() => {
         getProductList().then(res => {
@@ -215,7 +345,9 @@ const CreateInfluencer = () => {
             })
                 .then(function (response) {
                     toast.success(response.data.success, { autoClose: 1000 })
-                    navigate('/campaigns-influencer')
+                    handlePay(response.data) 
+
+                    // navigate('/campaigns-influencer')
                 })
                 .catch(function (error) {
                     if (error.response.data.campaign_name) {
@@ -486,6 +618,8 @@ const CreateInfluencer = () => {
                             </div>
                         </form>
                     </div>
+            <PaymentModal data={open_modal} handler={(value) => { setOpenModal(value) }} setIsPaid={setIsPaid} />
+
                 </div>
             </div>
         </>

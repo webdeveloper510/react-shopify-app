@@ -5,9 +5,8 @@ import { getInfluencerList, payInfluencer } from '../../config/Api';
 import { useNavigate } from 'react-router-dom';
 import { faChevronLeft } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { CardElement, Elements, useElements, useStripe } from '@stripe/react-stripe-js';
-import { Button, Modal } from 'react-bootstrap';
-import { loadStripe } from '@stripe/stripe-js';
+
+
 import { toast } from 'react-toastify';
 
 const Influencers = () => {
@@ -18,7 +17,6 @@ const Influencers = () => {
     //-------States----------
     const [loading, setLoading] = useState(false);
     const [paidId, setPaidId] = useState(false);
-    const [open_modal, setOpenModal] = useState({ toggle: null, value: { name: null, cost: null }, id: null });
     const [influencer_list, setInfluencerList] = useState(null);
     const [is_paid, setIsPaid] = useState(false)
     const [disabled, setDisabled] = useState(null)
@@ -86,7 +84,7 @@ const Influencers = () => {
                                             <div className='d-flex flex-column align-items-end col-md-2'>
                                                 <strong>AED {item?.influencerid_id__fee || "N/A"}</strong>
 
-                                                        <button className='btn btn-dark' onClick={() => { handlePay(item) }} disabled={item?.influencerid_id !== disabled && disabled !== null}>
+                                                        <button className='btn btn-dark' onClick={() => { handlePay(item) }}>
                                                             Select
                                                         </button>
                                             </div>
@@ -99,76 +97,11 @@ const Influencers = () => {
                     </div>
                 </div>
             </div>
-            <PaymentModal data={open_modal} handler={(value) => { setOpenModal(value) }} setIsPaid={setIsPaid} />
         </>
     )
 }
 
-const PaymentModal = ({ data, handler, setIsPaid }) => {
-    const payRef = useRef(null)
-    const stripePromise = loadStripe(`${process.env.REACT_APP_STRIPE_KEY}`)
 
-    return (
-        <Modal className="modal-card" show={data?.toggle} onHide={() => handler({ toggle: false, value: null, id: null })} centered backdrop="static">
-            <Modal.Header>
-                <Modal.Title className='fs-5'>Payment </Modal.Title>
-            </Modal.Header>
-            <Modal.Body >
 
-                <div className='my-4'>
-                    <Elements stripe={stripePromise}>
-                        <InputElement payRef={payRef} handler={handler} data={data} setIsPaid={setIsPaid} />
-                    </Elements>
-                </div>
-            </Modal.Body>
-            <Modal.Footer>
-                <Button variant="danger" onClick={() => handler({ toggle: false, value: null, id: null })} >
-                    Cancel
-                </Button>
-                <Button type="submit" variant="primary" onClick={() => payRef.current.click()}>
-                    Pay
-                </Button>
-            </Modal.Footer>
-        </Modal>
-    )
-}
-
-const InputElement = ({ payRef, handler, data, setIsPaid }) => {
-
-    const stripe = useStripe();
-    const elements = useElements();
-
-    const handleSubmit = async (event) => {
-        event.preventDefault();
-        if (elements == null) {
-            return;
-        }
-        const token = await stripe.createToken(elements.getElement(CardElement))    
-        if (token.token) {
-            payInfluencer({ token: token?.token?.id, user_id: data.id, influencerid_id__fee: data?.value?.cost }).then(res => {
-                setIsPaid(data?.id)
-                console.log(data?.id)
-                
-                toast.success('Payment Success', { autoClose: 1000 })
-            })
-            handler({ toggle: false, value: null, id: null })
-        } else if (token.error.code === "card_declined") {
-            toast.error("Card Declined")
-        } else {
-            toast.error("Enter card details to continue")
-        }
-
-    };
-
-    return (
-        <form onSubmit={handleSubmit}>
-            <CardElement options={{ hidePostalCode: true }} />
-
-            <button type="submit" ref={payRef} style={{ display: "none" }} disabled={!stripe || !elements}>
-                Pay
-            </button>
-        </form>
-    )
-}
 
 export default Influencers

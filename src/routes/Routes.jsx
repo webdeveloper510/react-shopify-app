@@ -19,6 +19,7 @@ import Thankyou from '../components/pages/Thankyou';
 import PaymentFailed from '../components/pages/PaymentFailed';
 import Influencers from '../components/pages/Influencers';
 
+
 const Routing = () => {
   const location = useLocation();
   const shouldShowSideBar = location.pathname !== '/' && location.pathname !== '/dashboard' && location.pathname !== '/thankyou' && location.pathname !== '/payment-failed';
