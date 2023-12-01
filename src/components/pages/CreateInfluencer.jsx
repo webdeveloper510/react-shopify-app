@@ -40,7 +40,7 @@ const CreateInfluencer = () => {
     const [selected_coupons, setSelectedCoupon] = useState([])
     const [errors, setErrors] = useState({});
 
-console.log('id=================>>>>>>',location.state)
+// console.log('id=================>>>>>>',location.state)
     //-------Handlers--------
 
 
@@ -542,25 +542,20 @@ console.log('id=================>>>>>>',location.state)
                                                 <label htmlFor="no">No</label>
                                             </span>
                                         </div>
-                                        {/* {errors.influencer_visit && <span className="error-text text-bg-danger p-1 mt-2">{errors.influencer_visit}</span>} */}
-
                                     </div>
                                 </>)}
                             <div className="input-container d-flex flex-column mb-4">
                                 <label className="mb-3">Campaign start date</label>
                                 <input type="date" name="date" min={today} onChange={handleChange} value={form_data?.date} />
-                                {/* {errors.date && <span className="error-text text-bg-danger p-1 mt-2">{errors.date}</span>} */}
                             </div>
                             <div className="input-container d-flex flex-column mb-4">
                                 <label className="mb-3">Campaign end date</label>
                                 <input type="date" name="end_date" min={form_data?.date !== "" ? form_data?.date : today} onChange={handleChange} value={form_data?.end_date} />
-                                {/* {errors.end_date && <span className="error-text text-bg-danger p-1 mt-2">{errors.end_date}</span>} */}
                             </div>
                             {location.pathname === `/edit-campaign/${id}` ? ('') : (
                                 <div className="w-full mb-4 col-md-6">
                                     <label className="mb-3">Product</label> <br />
                                     <CheckPicker style={{ height: '52px', width: '470px' }} data={product_list} onChange={(e) => handleProductSelection(e)} />
-                                    {/* {errors.product_list && <span className="error-text text-bg-danger p-1 mt-2">{errors.product_list}</span>} */}
                                 </div>
                             )}
                             <div className="input-container d-flex flex-column mb-4">
@@ -573,7 +568,6 @@ console.log('id=================>>>>>>',location.state)
                                     value={form_data?.description}
                                     style={{ color: '#666' }}
                                 ></textarea>
-                                 {/* {errors.description && <span className="error-text text-bg-danger p-1 mt-2">{errors.description}</span>} */}
                             </div>
                             {location.pathname === `/edit-campaign/${id}` ? ('') : (
                                 <>
@@ -637,7 +631,6 @@ console.log('id=================>>>>>>',location.state)
                                                                 }
                                                             }) : (
                                                                 <div className='d-flex flex-column justify-content-center align-items-center'>
-                                                                    {/* <span className='text-center' style={{ margin: '0 10px' }}>{influencer?.fullname}</span> */}
                                                                     <p
                                                                         className={`d-flex flex-column mb-0 `}
                                                                     >
