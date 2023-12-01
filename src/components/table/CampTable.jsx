@@ -14,6 +14,8 @@ import { API } from '../../config/Api';
 const CampTable = ({ list, additionalProp, name }) => {
   console.log('list -->>', list)
   console.log('additionalProp -->>', additionalProp);
+  const stripePromise = loadStripe(`${process.env.REACT_APP_STRIPE_KEY}`);
+
   const token = localStorage.getItem("Token");
   const [currentPage, setCurrentPage] = useState(1);
   const ITEMS_PER_PAGE = 10;
@@ -99,7 +101,7 @@ const CampTable = ({ list, additionalProp, name }) => {
           {paystat == true ? (
             <>
              <div className='my-4'>
-              <Elements stripe={stripePromise}>
+             <Elements stripe={stripePromise}>
                 <InputElement payRef={payRef} handler={handler} data={data} setIsPaid={setIsPaid} />
               </Elements>
             </div>
@@ -154,7 +156,6 @@ const CampTable = ({ list, additionalProp, name }) => {
             type="submit"
             variant="primary"
             onClick={() => {
-              setPaystat(false);
               payRef.current.click();
             }}
           >
@@ -164,10 +165,6 @@ const CampTable = ({ list, additionalProp, name }) => {
         </>) }
       </Modal>
     )
-  }
- 
-  const percentageCalculator = () => {
-
   }
 
 
@@ -202,7 +199,68 @@ const CampTable = ({ list, additionalProp, name }) => {
     }
   }
 
+  const InputElement = ({ payRef, handler, data, setIsPaid }) => {
 
+    const stripe = useStripe();
+    const elements = useElements();
+  
+    const handleSubmit = async (event) => {
+      event.preventDefault();
+      if (elements == null) {
+        return;
+      }
+      
+      const token = await stripe.createToken(elements.getElement(CardElement))
+      if (token.token) {
+        payInfluencer({ token: token?.token?.id, campaignid_id: data.user_id, influencerid_id: data.user_influencer, user_id: data.influencer_id,coupom_amount: data.coupom_amount ,   coupon: data.coupon, influencerid_id__fee: data?.amount }).then(res => {
+          setIsPaid(data?.id)
+          console.log(data?.id)
+          console.log('<<<<<<====>>>>>',data)
+          toast.success('Payment Success', { autoClose: 1000 })
+        })
+        Accepts(event)
+        setPaystat(false);
+        handler({ toggle: false, value: null, id: null, user_id: null, coupom_amount : null , coupon : null, camp_id: null, amount: null })
+      } else if (token.error.code === "card_declined") {
+        toast.error("Card Declined")
+      } else {
+        toast.error("Enter card details to continue")
+      }
+    };
+  
+    const Accepts = (data) => {
+      let newData={
+        coupon: data?.coupon,
+        coupon_amount: data?.coupom_amount,
+      }
+      console.log("<<<<<<<<<<<<<<<<<<<<<<<",data)
+      axios.post(API.BASE_URL + 'marketplaceaccept/' + data.camp_id + '/' + data.id + '/',newData,
+        {
+          headers: {
+            Authorization: `Token ${localStorage.getItem("Token")}`
+          }
+        })
+        .then(function (response) {
+          // console.log("Single Market Data", response.data.data)
+          toast.success(response.message, { autoClose: 1000 });
+        })
+        .catch(function (error) {
+          console.log(error);
+        })
+  
+    }
+  
+  
+    return (
+      <form onSubmit={handleSubmit}>
+        <CardElement options={{ hidePostalCode: true }} />
+  
+        <button type="submit" ref={payRef} style={{ display: "none" }} disabled={!stripe || !elements}>
+          Pay
+        </button>
+      </form>
+    )
+  }
   useEffect(() => {
     calculateCommission();
   }, [list]);
@@ -500,67 +558,7 @@ const DeleteModal = ({ data, handler }) => {
     </Modal>
   )
 }
-const InputElement = ({ payRef, handler, data, setIsPaid }) => {
 
-  const stripe = useStripe();
-  const elements = useElements();
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    if (elements == null) {
-      return;
-    }
-    const token = await stripe.createToken(elements.getElement(CardElement))
-    if (token.token) {
-      payInfluencer({ token: token?.token?.id, campaignid_id: data.user_id, influencerid_id: data.user_influencer, user_id: data.influencer_id,coupom_amount: data.coupom_amount ,   coupon: data.coupon, influencerid_id__fee: data?.amount }).then(res => {
-        setIsPaid(data?.id)
-        console.log(data?.id)
-        console.log('<<<<<<====>>>>>',data)
-        toast.success('Payment Success', { autoClose: 1000 })
-        handleAccept(data)
-      })
-      handler({ toggle: false, value: null, id: null, user_id: null, coupom_amount : null , coupon : null, camp_id: null, amount: null })
-    } else if (token.error.code === "card_declined") {
-      toast.error("Card Declined")
-    } else {
-      toast.error("Enter card details to continue")
-    }
-
-  };
-
-  const handleAccept = (data) => {
-    let newData={
-      coupon: data?.coupon,
-      coupon_amount: data?.coupom_amount,
-    }
-    console.log("<<<<<<<<<<<<<<<<<<<<<<<",data)
-    axios.post(API.BASE_URL + 'marketplaceaccept/' + data.camp_id + '/' + data.id + '/',newData,
-      {
-        headers: {
-          Authorization: `Token ${localStorage.getItem("Token")}`
-        }
-      })
-      .then(function (response) {
-        // console.log("Single Market Data", response.data.data)
-        toast.success(response.message, { autoClose: 1000 });
-      })
-      .catch(function (error) {
-        console.log(error);
-      })
-
-  }
-
-
-  return (
-    <form onSubmit={handleSubmit}>
-      <CardElement options={{ hidePostalCode: true }} />
-
-      <button type="submit" ref={payRef} style={{ display: "none" }} disabled={!stripe || !elements}>
-        Pay
-      </button>
-    </form>
-  )
-}
 const ViewModal = ({ data, handler, productsListing, couponListing }) => {
   return (
     <Modal show={data.toggle} backdrop={"static"} centered onHide={() => handler()}>
