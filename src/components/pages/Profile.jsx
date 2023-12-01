@@ -9,6 +9,7 @@ function Profile() {
     const [userName, setUserName] = useState('');
     const [password, setPassword] = useState('');
     const [shopifyUrl, setShopifyUrl] = useState('');
+    const [phoneNo, setPhoneNo] = useState('');
     const [instagramUrl, setInstagramUrl] = useState('');
     const [email, setEmail] = useState('');
     const [userDetails, setUserDetails] = useState([]);
@@ -42,6 +43,7 @@ function Profile() {
                 setEmail(response.data.email)
                 setInstagramUrl(response.data.Instagram_url)
                 setShopifyUrl(response.data.shop_url)
+                setPhoneNo(response.data.phoneNo)
                 setImagePath(response.data.url)
             })
             .catch(function (error) {
@@ -136,32 +138,38 @@ function Profile() {
         <div className="profile p-4 page">
             {loading && <div className='d-flex loader-container flex-column'><div className='loader'><span></span></div> <p className='text-white'>Processing...</p></div>}
             <form className="profile-form d-flex flex-wrap justify-content-between mt-4">
-                <div className="input-container d-flex flex-column mb-4">
+                <div className='row'>
+                <div className="col-md-6 mb-4">
                     <label>Username</label>
-                    <input type="text" value={userName} onChange={(e) => { setUserName(e.target.value) }} />
+                    <input type="text" value={userName} className='form-control' onChange={(e) => { setUserName(e.target.value) }} />
                 </div>
-                <div className="input-container d-flex flex-column mb-4">
+                <div className="col-md-6 mb-4">
                     <label>Email</label>
-                    <input type="email" value={email} onChange={(e) => { setEmail(e.target.value) }} />
+                    <input type="email" value={email} className='form-control' onChange={(e) => { setEmail(e.target.value) }} />
                 </div>
-                <div className="input-container d-flex flex-column mb-4">
+                <div className="col-md-6 mb-4">
                     <label>Password</label>
-                    <input type="password" value={password} onChange={(e) => { setPassword(e.target.value) }} />
+                    <input type="password" value={password} className='form-control' onChange={(e) => { setPassword(e.target.value) }} />
                 </div>
-                <div className="input-container d-flex flex-column mb-4">
+                <div className="col-md-6 mb-4">
                     <label>Image</label>
                     <div className='d-flex align-items-center'>
                         <input type="file" onChange={onFileChange} />
                         <img src={"https://" + imagePath} alt='profile' className='ms-2' style={{ width: 55, height: 55, borderRadius: '50%' }} />
                     </div>
                 </div>
-                <div className="input-container d-flex flex-column mb-4">
-                    <label>Instagram URL</label>
-                    <input type="text" value={instagramUrl} onChange={(e) => { setInstagramUrl(e.target.value) }} />
+                <div className="col-md-6 mb-4">
+                    <label>Phone Number</label>
+                    <input type="number" maxLength={10} className='form-control' value={phoneNo} onChange={(e) => { setPhoneNo(e.target.value) }} />
                 </div>
-                <div className="input-container d-flex flex-column mb-4">
+                <div className="col-md-6 mb-4">
+                    <label>Instagram URL</label>
+                    <input type="text" className='form-control' value={instagramUrl} onChange={(e) => { setInstagramUrl(e.target.value) }} />
+                </div>
+                <div className="col-md-12 mb-4">
                     <label>Shopify URL</label>
-                    <input type="text" value={shopifyUrl} onChange={(e) => { setShopifyUrl(e.target.value) }} />
+                    <input type="text" className='form-control' value={shopifyUrl} onChange={(e) => { setShopifyUrl(e.target.value) }} />
+                </div>
                 </div>
             </form>
             <div className="buttons d-flex justify-content-center align-items-center">

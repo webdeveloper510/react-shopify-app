@@ -96,6 +96,7 @@ function Sales() {
         },
       })
         .then(function (response) {
+          console.log('sale_coup===========>>>>>',response)
           const campaignSalesData = response.data.campaign_sales;
           const labels = [];
           const data = [];
@@ -128,6 +129,7 @@ function Sales() {
           ];
 
           setChartPieData(updatedPieData);
+          console.log(updatedPieData)
         })
         .catch(function (error) {
         })
