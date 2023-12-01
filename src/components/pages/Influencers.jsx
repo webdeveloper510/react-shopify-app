@@ -41,18 +41,13 @@ const Influencers = () => {
     }, [is_paid]);
 
     const handlePay = (item) => {
-    // console.log("===============>>>>",  item )
-            navigate(`/new-campaign/`, { state: { influencer_id: item?.influencerid_id, name: item?.fullname, cost: item?.influencerid_id__fee, id: item?.influencerid_id } })
-        // } else {
-        //     setOpenModal({ toggle: true, value: { influencer_id: item?.influencerid_id, id: item?.id  }, id: item?.influencerid_id })
-        // }
+            navigate(`/new-campaign/`, { state: { influencer_id: item?.influencerid_id, name: item?.fullname, cost: item?.influencerid_id__fee, id: item?.id, adminFee : item?.influencerid_id__commission } })
     }
 
     const handlePrev = () => {
         navigate(-1)
     }
 
-    // console.log('influencer_list =======>>>>>>>>>>>>>>', influencer_list)
 
     // -------- Return --------
     return (

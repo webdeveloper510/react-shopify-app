@@ -3,7 +3,7 @@ import { faChevronLeft, faSearch } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useEffect } from 'react';
-import { getDataByProduct, getInfluencer, getProductList ,payInfluencer} from '../../config/Api';
+import { getDataByProduct, getInfluencer, getProductList, payInfluencer } from '../../config/Api';
 import { CheckPicker } from "rsuite"
 import "rsuite/dist/rsuite.css";
 import axios from 'axios';
@@ -20,6 +20,8 @@ const CreateInfluencer = () => {
     const { id } = useParams()
     const location = useLocation()
     const influencer_id = location.state !== null ? location?.state?.influencer_id : null;
+    const adminFee = (location.state.cost * location.state.adminFee) / 100;;
+    const cost = location.state.cost;
     const ids = location.state !== null ? location?.state?.id : null;
     const navigate = useNavigate();
     const today = new Date().toISOString().substr(0, 10);
@@ -36,133 +38,143 @@ const CreateInfluencer = () => {
     const [selected_coupon_ids, setCoupon_ids] = useState([])
     const [selected_products, setSelectedProducts] = useState([])
     const [selected_coupons, setSelectedCoupon] = useState([])
+    const [errors, setErrors] = useState({});
 
+console.log('id=================>>>>>>',location.state)
     //-------Handlers--------
 
 
- const PaymentModal = ({ data, handler, setIsPaid }) => {
+    const PaymentModal = ({ data, handler, setIsPaid }) => {
         const payRef = useRef(null)
-  const stripePromise = loadStripe(`${process.env.REACT_APP_STRIPE_KEY}`)
+        const stripePromise = loadStripe(`${process.env.REACT_APP_STRIPE_KEY}`)
 
-return (
-<Modal className="modal-card" show={data?.toggle} onHide={() => handler({ toggle: false, value: null, id: null })} centered backdrop="static">
-<Modal.Header>
-<Modal.Title className='fs-5'>Payment </Modal.Title>
-</Modal.Header>
-<Modal.Body >
-          {paystat == true ? (
-            <>
-             <div className='my-4'>
-              <Elements stripe={stripePromise}>
-                <InputElement payRef={payRef} handler={handler} data={data} setIsPaid={setIsPaid} />
-              </Elements>
-            </div>
-            </>
-          ) : (
-            <>
-            <table className='coupon-table w-100  table-striped'>
-                <tr className='table-heading'>
-                  <th className='border rounded-4 rounded-bottom' colSpan={2}>Payment Details : -</th>
-                </tr>
-              <tr>
-                <td>Influncer fee : </td>
-                <td>{data?.amount} AUD</td>
-              </tr>
-              <tr>
-                <td>Admin Fee : </td>
-                <td>{data?.admin_fee} AUD</td>
-              </tr>
-              <tr>
-                <td>Total Pay : </td>
-                <td>{data?.admin_fee + data?.amount} AUD</td>
-              </tr>
-            </table>
-            <div className='text-center mt-4'> 
-            <Button type="submit" variant="primary" onClick={() => setPaystat(true)}>
-            Contine
-          </Button>
-            </div>
-            </>
-          ) }
-            
-           
-        </Modal.Body>
-        {paystat == true ? (<Modal.Footer>
-          <Button
-            variant="danger"
-            onClick={() => {
-              setPaystat(false); 
-              handler({
-                toggle: false,
-                user_id: null,
-                amount: null,
-                influencer_id: null,
-                camp_id: null,
-                id: null
-              });
-            }}
-          >
-            Cancel
-          </Button>
-          <Button
-            type="submit"
-            variant="primary"
-            onClick={() => {
-              setPaystat(false);
-              payRef.current.click();
-            }}
-          >
-            Pay
-          </Button>
-        </Modal.Footer> ) : (<>
-        </>) }
-</Modal>
-)
-}
+        return (
+            <Modal className="modal-card" show={data?.toggle} onHide={() => handler({ toggle: false, value: null, id: null })} centered backdrop="static">
+                <Modal.Header>
+                    <Modal.Title className='fs-5'>Payment </Modal.Title>
+                </Modal.Header>
+                <Modal.Body >
+                    {paystat == true ? (
+                        <>
+                            <div className='my-4'>
+                                <Elements stripe={stripePromise}>
+                                    <InputElement payRef={payRef} handler={handler} data={data} setIsPaid={setIsPaid} />
+                                </Elements>
+                            </div>
+                        </>
+                    ) : (
+                        <>
+                            <table className='coupon-table w-100  table-striped'>
+                                <tr className='table-heading'>
+                                    <th className='border rounded-4 rounded-bottom' colSpan={2}>Payment Details : -</th>
+                                </tr>
+                                <tr>
+                                    <td>Influncer fee : </td>
+                                    <td>{cost} AUD</td>
+                                </tr>
+                                <tr>
+                                    <td>Admin Fee : </td>
+                                    <td>{adminFee} AUD</td>
+                                </tr>
+                                <tr>
+                                    <td>Total Pay : </td>
+                                    <td>{cost + adminFee} AUD</td>
+                                </tr>
+                            </table>
+                            <div className='text-center mt-4'>
+                                <Button type="submit" variant="primary" onClick={() => setPaystat(true)}>
+                                    Contine
+                                </Button>
+                            </div>
+                        </>
+                    )}
 
 
-const handlePay = (item) => {
-            setOpenModal({ toggle: true, value: { influencer_id: item?.influencerid_id, id: item?.id  }, id: item?.influencerid_id })
+                </Modal.Body>
+                {paystat == true ? (<Modal.Footer>
+                    <Button
+                        variant="danger"
+                        onClick={() => {
+                            setPaystat(false);
+                            handler({
+                                toggle: false,
+                                user_id: null,
+                                amount: null,
+                                influencer_id: null,
+                                camp_id: null,
+                                id: null
+                            });
+                        }}
+                    >
+                        Cancel
+                    </Button>
+                    <Button
+                        type="submit"
+                        variant="primary"
+                        onClick={() => {
+                            payRef.current.click();
+                        }}
+                    >
+                        Pay
+                    </Button>
+                </Modal.Footer>) : (<>
+                </>)}
+            </Modal>
+        )
     }
 
-const InputElement = ({ payRef, handler, data, setIsPaid }) => {
 
-    const stripe = useStripe();
-    const elements = useElements();
+    const handlePay = (item) => {
+        // e.preventDefault();
 
-    const handleSubmit = async (event) => {
-        event.preventDefault();
-        if (elements == null) {
-            return;
-        }
-        const token = await stripe.createToken(elements.getElement(CardElement))    
-        if (token.token) {
-            payInfluencer({ token: token?.token?.id, user_id: data.id, influencerid_id__fee: data?.value?.cost }).then(res => {
-                setIsPaid(data?.id)
-                console.log(data?.id)
-                
-                toast.success('Payment Success', { autoClose: 1000 })
-                navigate('/market')
-            })
-            handler({ toggle: false, value: null, id: null })
-        } else if (token.error.code === "card_declined") {
-            toast.error("Card Declined")
+        if (handleValidation()) {
+          // Proceed with form submission
+        // console.log('Form is valid:', form_data);
+          setOpenModal({ toggle: true, value: { influencer_id: item?.influencerid_id, id: item?.id }, id: item?.influencerid_id  })
+
         } else {
-            toast.error("Enter card details to continue")
+          console.log('Form validation failed');
         }
+      };
 
-    };
+    const InputElement = ({ payRef, handler, data, setIsPaid }) => {
 
-    return (
-        <form onSubmit={handleSubmit}>
-            <CardElement options={{ hidePostalCode: true }} />
+        const stripe = useStripe();
+        const elements = useElements();
 
-            <button type="submit" ref={payRef} style={{ display: "none" }} disabled={!stripe || !elements}>
-                Pay
-            </button>
-        </form>
-    )
-}
+        const handleSubmit = async (event) => {
+            event.preventDefault();
+            if (elements == null) {
+                return;
+            }
+            const token = await stripe.createToken(elements.getElement(CardElement))
+            if (token.token) {
+                payInfluencer({ token: token?.token?.id, user_id: data.id, influencerid_id__fee: data?.value?.cost }).then(res => {
+                    setIsPaid(data?.id)
+                    console.log(data?.id)
+                    toast.success('Payment Success', { autoClose: 1000 })
+                    setPaystat(false);
+                })
+                createRequest(event)
+                handler({ toggle: false, value: null, id: null })
+            } else if (token.error.code === "card_declined") {
+                toast.error("Card Declined")
+            } else {
+                toast.error("Enter card details to continue")
+            }
+
+        };
+
+        return (
+            <form onSubmit={handleSubmit}>
+                <CardElement options={{ hidePostalCode: true }} />
+
+                <button type="submit" ref={payRef} style={{ display: "none" }} disabled={!stripe || !elements}>
+                    Pay
+                </button>
+            </form>
+        )
+    }
 
     useEffect(() => {
         getProductList().then(res => {
@@ -176,8 +188,6 @@ const InputElement = ({ payRef, handler, data, setIsPaid }) => {
             }
         })
     }, [])
-
-
 
     useEffect(() => {
 
@@ -214,8 +224,40 @@ const InputElement = ({ payRef, handler, data, setIsPaid }) => {
         setFormData({ ...form_data, [event.target.name]: event.target.value })
     }
 
+    const handleValidation = () => {
+        const newErrors = {};
+    
+        // Validate Campaign name
+        if (!form_data.campaign_name.trim()) {
+          newErrors.campaign_name = 'Campaign name is required';
+          toast.warn("Campaign name is required", { autoClose: 1000 });
+        }else if(!form_data.influencer_visit.trim()) {
+            newErrors.influencer_visit = 'Influencer Visit is required';
+            toast.warn("Influencer Visit is required", { autoClose: 1000 });
+          }else if(!form_data.date.trim()) {
+            newErrors.date = 'Date is required';
+            toast.warn("Date is required", { autoClose: 1000 });
+          }else if(!form_data.end_date.trim()) {
+            newErrors.end_date = 'End Date name is required';
+            toast.warn("End Date name is required", { autoClose: 1000 });
+          }else if (!form_data.product || form_data.product.length  === 0) {
+            newErrors.product = 'Product is required';
+            toast.warn("Product is required", { autoClose: 1000 });
+        }else if(!form_data.description.trim()) {
+            newErrors.description = 'Description is required';
+            toast.warn("Description is required", { autoClose: 1000 });
+          }else if(selected_coupons.length ===0) {
+            newErrors.Coupon = 'Coupon is required';
+            toast.warn("Coupon is required", { autoClose: 1000 });
+          }
+
+    
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0; // Return true if no errors
+      };
+
     const updateCampaign = (e) => {
-        console.log("Product ID:", e) ;
+        console.log("Product ID:", e);
         axios.put(API.BASE_URL + 'update/' + id + '/', {
             campaign_name: form_data.campaign_name,
             description: form_data.description,
@@ -279,6 +321,8 @@ const InputElement = ({ payRef, handler, data, setIsPaid }) => {
     }
 
     console.log('------------->>>>>>>>>', coupon_list.coupons)
+
+
     const handleClick = (e) => {
         if (selected_coupons.length > 0) {
             let arr = selected_coupons
@@ -306,7 +350,6 @@ const InputElement = ({ payRef, handler, data, setIsPaid }) => {
 
     const createRequest = async () => {
         try {
-
             // {amount: [], coupon_id: [],coupon_name: [], discout_type: [], product_name:''}
             let product_discount = [];
             for (let i = 0; i < selected_products.length; i++) {
@@ -326,7 +369,6 @@ const InputElement = ({ payRef, handler, data, setIsPaid }) => {
                     }
                 }
             }
-
             axios.post(API.BASE_URL + 'request/', {
                 campaign_name: form_data.campaign_name,
                 date: form_data.date,
@@ -345,7 +387,7 @@ const InputElement = ({ payRef, handler, data, setIsPaid }) => {
             })
                 .then(function (response) {
                     toast.success(response.data.success, { autoClose: 1000 })
-                    handlePay(response.data) 
+                    
 
                     // navigate('/campaigns-influencer')
                 })
@@ -479,42 +521,47 @@ const InputElement = ({ payRef, handler, data, setIsPaid }) => {
                         Back
                     </button>
                     <div className='w-100'>
-                    {location.pathname === `/edit-campaign/${id}` ? (<h3>Edit Campaign for Marketplace</h3>) : <h3>Create Campaign for Influencer</h3>}
+                        {location.pathname === `/edit-campaign/${id}` ? (<h3>Edit Campaign for Marketplace</h3>) : <h3>Create Campaign for Influencer</h3>}
                         <form className='d-flex flex-wrap justify-content-between mt-5 w-100'>
                             <div className="input-container d-flex flex-column mb-4">
                                 <label className="mb-3">Campaign name</label>
                                 <input type="text" name="campaign_name" maxLength='30' onChange={handleChange} value={form_data?.campaign_name} />
+
                             </div>
                             {location.pathname === `/edit-campaign/${id}` ? ('') : (
                                 <>
-                            <div className="input-container d-flex flex-column mb-4">
-                                <label className="mb-3">Influencer need to visit you</label>
-                                <div className="input d-flex align-items-center">
-                                    <span className='d-flex align-items-center justify-content-center me-4'>
-                                        <input type="radio" id="yes" name="influencer_visit" value={"yes"} checked={form_data?.influencer_visit == 'yes'} onChange={handleChange} />
-                                        <label htmlFor="yes">Yes</label>
-                                    </span>
-                                    <span className='d-flex align-items-center justify-content-center'>
-                                        <input type="radio" id="no" name="influencer_visit" value={"no"} checked={form_data?.influencer_visit == 'no'} onChange={handleChange} />
-                                        <label htmlFor="no">No</label>
-                                    </span>
-                                </div>
+                                    <div className="input-container d-flex flex-column mb-4">
+                                        <label className="mb-3">Influencer need to visit you</label>
+                                        <div className="input d-flex align-items-center">
+                                            <span className='d-flex align-items-center justify-content-center me-4'>
+                                                <input type="radio" id="yes" name="influencer_visit" value={"yes"} checked={form_data?.influencer_visit == 'yes'} onChange={handleChange} />
+                                                <label htmlFor="yes">Yes</label>
+                                            </span>
+                                            <span className='d-flex align-items-center justify-content-center'>
+                                                <input type="radio" id="no" name="influencer_visit" value={"no"} checked={form_data?.influencer_visit == 'no'} onChange={handleChange} />
+                                                <label htmlFor="no">No</label>
+                                            </span>
+                                        </div>
+                                        {/* {errors.influencer_visit && <span className="error-text text-bg-danger p-1 mt-2">{errors.influencer_visit}</span>} */}
 
-                            </div>
-                            </>)}
+                                    </div>
+                                </>)}
                             <div className="input-container d-flex flex-column mb-4">
                                 <label className="mb-3">Campaign start date</label>
                                 <input type="date" name="date" min={today} onChange={handleChange} value={form_data?.date} />
+                                {/* {errors.date && <span className="error-text text-bg-danger p-1 mt-2">{errors.date}</span>} */}
                             </div>
                             <div className="input-container d-flex flex-column mb-4">
                                 <label className="mb-3">Campaign end date</label>
                                 <input type="date" name="end_date" min={form_data?.date !== "" ? form_data?.date : today} onChange={handleChange} value={form_data?.end_date} />
+                                {/* {errors.end_date && <span className="error-text text-bg-danger p-1 mt-2">{errors.end_date}</span>} */}
                             </div>
                             {location.pathname === `/edit-campaign/${id}` ? ('') : (
-                            <div className="w-full mb-4 col-md-6">
-                                <label className="mb-3">Product</label> <br />
-                                <CheckPicker style={{ height: '52px', width: '470px' }} data={product_list} onChange={(e) => handleProductSelection(e)} />
-                            </div>
+                                <div className="w-full mb-4 col-md-6">
+                                    <label className="mb-3">Product</label> <br />
+                                    <CheckPicker style={{ height: '52px', width: '470px' }} data={product_list} onChange={(e) => handleProductSelection(e)} />
+                                    {/* {errors.product_list && <span className="error-text text-bg-danger p-1 mt-2">{errors.product_list}</span>} */}
+                                </div>
                             )}
                             <div className="input-container d-flex flex-column mb-4">
                                 <label className="mb-3">Description</label>
@@ -526,99 +573,100 @@ const InputElement = ({ payRef, handler, data, setIsPaid }) => {
                                     value={form_data?.description}
                                     style={{ color: '#666' }}
                                 ></textarea>
+                                 {/* {errors.description && <span className="error-text text-bg-danger p-1 mt-2">{errors.description}</span>} */}
                             </div>
                             {location.pathname === `/edit-campaign/${id}` ? ('') : (
                                 <>
-                                  <div className="input-container d-flex flex-column mb-4 influen-list">
-                                <label className="mb-3">Influencer</label>
-                                <div className='selected-influencers'>
-                                    <ul>
-                                        <li
-                                            className='influencer-box d-flex align-items-center px-4'
-                                            key={influencer?.id}
-                                        >
-                                            <img src={influencer?.image} alt="influencer" />
-                                            <p className="ms-2 d-flex flex-column">
-                                                <span className='text-dark'>{influencer?.fullname}</span>
-                                                <span>@{influencer?.username}</span>
-                                            </p>
-                                            <p className='ms-auto d-flex flex-column'>
-                                                <span className='text-dark'>Followers</span>
-                                                <strong>{(influencer?.follower / 1000000).toFixed(6)} M</strong>
-                                            </p>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            {url_list?.length > 0 && (
-                                <div className="input-container d-flex flex-column mb-4">
-                                    <label className="mb-3">Product URL</label>
-                                    <div className='product-urls'>
-                                        {url_list?.map((url, index) => (
-                                            <a key={index} href={url} target="_blank">
-                                                <FontAwesomeIcon icon={faSearch} style={{ color: "#5172fc", width: "15px", height: "15px", marginRight: 10 }} />
-                                                {url}
-                                            </a>
-                                        ))}
-                                    </div>
-                                </div>
-                            )}
-                             <div className="input-container d-flex flex-column mb-4 prod-coupons w-100">
-                                <label className="mb-3">Product coupons</label>
-                                <ul className="coupons coupons-list flex-column">
-                                    {coupon_list?.product_titles?.length > 0 ? coupon_list.product_titles.map((title, index) => {
-                                            console.log(title)
-                                            return (
-                                                <li key={index} className='d-flex flex-row align-items-center mb-2'>
-                                                    <span>{title}:- </span>
-                                                    <div className='d-flex align-items-center'>
-                                                        {coupon_list?.coupons?.length > 0 ? coupon_list?.coupons?.map((item, i) => {
-                                                            if (title === item?.product_name) {
-                                                                return (
-                                                                    <div key={i} className={`d-flex flex-column justify-content-center align-items-center `}>
-                                                                        {/* <span className='text-center' style={{ margin: '0 10px' }}>{influencer?.fullname}</span> */}
-                                                                        <p
-                                                                            className={`d-flex flex-column mb-0 ${selected_coupons?.includes(item)? "selected":""}`}
-                                                                            onClick={() => handleClick(item)}
-                                                                        >
-                                                                            {item?.coupon_name} - {Math.abs(parseInt(item?.amount))}
-                                                                            {item?.discount_type !== 'fixed_amount' ? "%" : "د.إ"}
-                                                                        </p>
-                                                                    </div>
-                                                                )
-                                                            }
-                                                        }) : (
-                                                            <div className='d-flex flex-column justify-content-center align-items-center'>
-                                                                {/* <span className='text-center' style={{ margin: '0 10px' }}>{influencer?.fullname}</span> */}
-                                                                <p
-                                                                    className={`d-flex flex-column mb-0 `}
-                                                                >
-                                                                    No Coupon Available
-                                                                </p>
-                                                            </div>
-                                                        )
-                                                        }
-                                                    </div>
+                                    <div className="input-container d-flex flex-column mb-4 influen-list">
+                                        <label className="mb-3">Influencer</label>
+                                        <div className='selected-influencers'>
+                                            <ul>
+                                                <li
+                                                    className='influencer-box d-flex align-items-center px-4'
+                                                    key={influencer?.id}
+                                                >
+                                                    <img src={influencer?.image} alt="influencer" />
+                                                    <p className="ms-2 d-flex flex-column">
+                                                        <span className='text-dark'>{influencer?.fullname}</span>
+                                                        <span>@{influencer?.username}</span>
+                                                    </p>
+                                                    <p className='ms-auto d-flex flex-column'>
+                                                        <span className='text-dark'>Followers</span>
+                                                        <strong>{(influencer?.follower / 1000000).toFixed(6)} M</strong>
+                                                    </p>
                                                 </li>
-                                            )
-                                        }) : <></>
-                                    }
-                                </ul>
-                            </div>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    {url_list?.length > 0 && (
+                                        <div className="input-container d-flex flex-column mb-4">
+                                            <label className="mb-3">Product URL</label>
+                                            <div className='product-urls'>
+                                                {url_list?.map((url, index) => (
+                                                    <a key={index} href={url} target="_blank">
+                                                        <FontAwesomeIcon icon={faSearch} style={{ color: "#5172fc", width: "15px", height: "15px", marginRight: 10 }} />
+                                                        {url}
+                                                    </a>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
+                                    <div className="input-container d-flex flex-column mb-4 prod-coupons w-100">
+                                        <label className="mb-3">Product coupons</label>
+                                        <ul className="coupons coupons-list flex-column">
+                                            {coupon_list?.product_titles?.length > 0 ? coupon_list.product_titles.map((title, index) => {
+                                                console.log(title)
+                                                return (
+                                                    <li key={index} className='d-flex flex-row align-items-center mb-2'>
+                                                        <span>{title}:- </span>
+                                                        <div className='d-flex align-items-center'>
+                                                            {coupon_list?.coupons?.length > 0 ? coupon_list?.coupons?.map((item, i) => {
+                                                                if (title === item?.product_name) {
+                                                                    return (
+                                                                        <div key={i} className={`d-flex flex-column justify-content-center align-items-center `}>
+                                                                            {/* <span className='text-center' style={{ margin: '0 10px' }}>{influencer?.fullname}</span> */}
+                                                                            <p
+                                                                                className={`d-flex flex-column mb-0 ${selected_coupons?.includes(item) ? "selected" : ""}`}
+                                                                                onClick={() => handleClick(item)}
+                                                                            >
+                                                                                {item?.coupon_name} - {Math.abs(parseInt(item?.amount))}
+                                                                                {item?.discount_type !== 'fixed_amount' ? "%" : "د.إ"}
+                                                                            </p>
+                                                                        </div>
+                                                                    )
+                                                                }
+                                                            }) : (
+                                                                <div className='d-flex flex-column justify-content-center align-items-center'>
+                                                                    {/* <span className='text-center' style={{ margin: '0 10px' }}>{influencer?.fullname}</span> */}
+                                                                    <p
+                                                                        className={`d-flex flex-column mb-0 `}
+                                                                    >
+                                                                        No Coupon Available
+                                                                    </p>
+                                                                </div>
+                                                            )
+                                                            }
+                                                        </div>
+                                                    </li>
+                                                )
+                                            }) : <></>
+                                            }
+                                        </ul>
+                                    </div>
                                 </>
-                          
+
                             )}
-                           
+
                             <div className="buttons d-flex justify-content-center">
                                 {id?.length > 0 ?
                                     <button className='button button-black' type="button" onClick={(e) => { updateCampaign(e) }}>Update Campaign</button>
                                     :
-                                    <button className='button ms-4' type='button' onClick={(e) => createRequest(e)}>Send Request & Pay</button>
+                                    <button className='button ms-4' type='button' onClick={(e) => handlePay(e)}>Send Request & Pay</button>
                                 }
                             </div>
                         </form>
                     </div>
-            <PaymentModal data={open_modal} handler={(value) => { setOpenModal(value) }} setIsPaid={setIsPaid} />
+                    <PaymentModal data={open_modal} handler={(value) => { setOpenModal(value) }} setIsPaid={setIsPaid} />
 
                 </div>
             </div>
@@ -627,14 +675,3 @@ const InputElement = ({ payRef, handler, data, setIsPaid }) => {
 }
 
 export default CreateInfluencer
-
-
-// import React from 'react'
-
-// const CreateInfluencer = () => {
-//     return (
-//         <div>CreateInfluencer</div>
-//     )
-// }
-
-// export default CreateInfluencer
