@@ -40,7 +40,7 @@ const CreateInfluencer = () => {
     const [selected_coupons, setSelectedCoupon] = useState([])
     const [errors, setErrors] = useState({});
 
-// console.log('id=================>>>>>>',location.state)
+console.log('id=================>>>>>>',url_list)
     //-------Handlers--------
 
 
@@ -389,7 +389,7 @@ const CreateInfluencer = () => {
                     toast.success(response.data.success, { autoClose: 1000 })
                     
 
-                    // navigate('/campaigns-influencer')
+                    navigate('/campaigns-influencer')
                 })
                 .catch(function (error) {
                     if (error.response.data.campaign_name) {
@@ -462,6 +462,7 @@ const CreateInfluencer = () => {
                 setUrlList(res?.product_url)
             }
             if (res?.product_details) {
+                console.log('=======<<<<<<<<<<<<',res)
                 setCouponList({ coupons: res?.product_details?.coupon, product_titles: res?.title_list })
             }
         })
