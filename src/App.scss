@@ -246,7 +246,12 @@ ul {
     }
   }
 }
-
+.flex-row.mb-4.tab-header.nav.nav-pills .nav-link:hover {
+  border-color: black !important;
+}
+a.text-capitalize.nav-link:hover {
+  border-color: black !important;
+}
 .App {
   position: relative;
   overflow: hidden;

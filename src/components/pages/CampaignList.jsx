@@ -53,7 +53,7 @@ const CampaignList = () => {
     <>
       <div className="campaign-manage-container p-4 page">
         {loading && <div className='d-flex loader-container flex-column'><div className='loader'><span></span></div> <p className='text-white'>Processing...</p></div>}
-        <h2 className='my-5'>Manage Campaign</h2>
+        <h2 className='text-left w-100 main-heading mt-3 mb-5'>Manage Campaign</h2>
         {tabs?.length > 0 ? (
           <Tab.Container id="left-tabs-example" defaultActiveKey="active">
             <Col sm={12}>

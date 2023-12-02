@@ -43,7 +43,7 @@ function Profile() {
                 setEmail(response.data.email)
                 setInstagramUrl(response.data.Instagram_url)
                 setShopifyUrl(response.data.shop_url)
-                setPhoneNo(response.data.phoneNo)
+                setPhoneNo(response.data.phone_number)
                 setImagePath(response.data.url)
             })
             .catch(function (error) {
@@ -60,10 +60,11 @@ function Profile() {
         formData.append("password", password)
         formData.append("shopify_url", shopifyUrl)
         formData.append("instagram_url", instagramUrl)
+        formData.append("phone_number", phoneNo)
         formData.append('type', 'normal');
 
         e.preventDefault();
-        axios.put(API.BASE_URL + 'profile/' + userId + '/', formData, {
+        axios.patch(API.BASE_URL + 'profile/' + userId + '/', formData, {
             headers: {
                 Authorization: `Token ${token}`,
                 'Content-Type': 'multipart/form-data'
@@ -160,7 +161,7 @@ function Profile() {
                 </div>
                 <div className="col-md-6 mb-4">
                     <label>Phone Number</label>
-                    <input type="number" maxLength={10} className='form-control' value={phoneNo} onChange={(e) => { setPhoneNo(e.target.value) }} />
+                    <input type="number" name='phone_number' maxLength={10} className='form-control' value={phoneNo} onChange={(e) => { setPhoneNo(e.target.value) }} />
                 </div>
                 <div className="col-md-6 mb-4">
                     <label>Instagram URL</label>

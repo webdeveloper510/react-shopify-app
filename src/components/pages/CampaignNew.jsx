@@ -8,6 +8,7 @@ const CampaignNew = () => {
   return (
     <div className="campaign-new p-4 page">
       <div className="campaign-new-container d-flex flex-column justify-content-center align-items-center">
+      <h2 className='text-left w-100 main-heading mt-3 mb-5'>Create Campaign</h2>
         <div className='links d-flex align-items-center justify-content-center w-100 pt-3 pb-4 influence-buttons'>
           <Link to='/influencers' className={"button button-black me-4"}>
             Create Campaign for Influencer
