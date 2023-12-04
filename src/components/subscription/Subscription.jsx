@@ -86,8 +86,6 @@ const Subscription = () => {
               <p className='text-bold text-white'>Processing...</p>
             </div>
           ) : (
-            <>
-
               <>
                 <div className="container mt-5">
                   <div className="row">
@@ -135,8 +133,6 @@ const Subscription = () => {
                   </div>
                 </div>
               </>
-
-            </>
           )}
 
         </div>

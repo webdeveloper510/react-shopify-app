@@ -5,7 +5,7 @@ import Download from '../../assests/img/download.png';
 import axios from 'axios';
 import { API } from '../../config/Api';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faClose, faChevronLeft, faPenToSquare } from '@fortawesome/free-solid-svg-icons';
+import { faClose, faChevronLeft, faPenToSquare, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import { toast } from 'react-toastify';
 
 // Images
@@ -509,6 +509,9 @@ const CouponList = () => {
                                 <label className='w-100 text-dark mb-3'>Offer & Tracking</label>
                                 <div className="search-button d-flex align-items-center">
                                     <input type="text" maxLength='30' placeholder='Filter Coupons' value={filterValue} onChange={(event) => setFilterValue(event.target.value)} />
+                                    <div>
+                                    <FontAwesomeIcon icon={faMagnifyingGlass}  style={{ color: "#7c7b7b",marginLeft: "-24px" , width: "15px", height: "15px", marginRight: 5 }}/>
+                                        </div>
                                 </div>
                             </div>
                         </div>

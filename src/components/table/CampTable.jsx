@@ -200,7 +200,7 @@ const CampTable = ({ list, additionalProp, name }) => {
   }
 
   const InputElement = ({ payRef, handler, data, setIsPaid }) => {
-
+console.log('handler ------->>', data)
     const stripe = useStripe();
     const elements = useElements();
   
@@ -235,7 +235,7 @@ const CampTable = ({ list, additionalProp, name }) => {
         coupon_amount: data?.coupom_amount,
       }
       console.log("<<<<<<<<<<<<<<<<<<<<<<<",data)
-      axios.post(API.BASE_URL + 'marketplaceaccept/' + data.camp_id + '/' + data.id + '/',newData,
+      axios.post(API.BASE_URL + 'marketplaceaccept/' + data.camp_id + '/' + data.campaignid_id + '/',newData,
         {
           headers: {
             Authorization: `Token ${localStorage.getItem("Token")}`

@@ -161,7 +161,7 @@ function Profile() {
                 </div>
                 <div className="col-md-6 mb-4">
                     <label>Phone Number</label>
-                    <input type="number" name='phone_number' maxLength={10} className='form-control' value={phoneNo} onChange={(e) => { setPhoneNo(e.target.value) }} />
+                    <input type="number" name='phone_number' pattern="[0-9]*" maxLength='10' className='form-control' value={phoneNo} onChange={(e) => { setPhoneNo(e.target.value) }} />
                 </div>
                 <div className="col-md-6 mb-4">
                     <label>Instagram URL</label>
