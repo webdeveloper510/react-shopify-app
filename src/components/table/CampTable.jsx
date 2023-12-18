@@ -216,7 +216,7 @@ console.log('handler ------->>', data)
           setIsPaid(data?.id)
           console.log(data?.id)
           toast.success('Payment Success', { autoClose: 1000 })
-          handlerAccepts({camp_id: data.camp_id, campaignid_id: data.user_id, id: data.influencer_id ,coupom_amount: data.coupom_amount , coupon: data.coupon, influencerid_id__fee: data?.amount})
+          handlerAccepts({camp_id: data.camp_id, campaignid_id: data.user_id, id: data?.id ,coupom_amount: data.coupom_amount , coupon: data.coupon, influencerid_id__fee: data?.amount})
         })
         console.log('<<<<<<====>>>>>',handler)
 
@@ -235,7 +235,7 @@ console.log('handler ------->>', data)
         coupon_amount: data?.coupom_amount,
       }
       console.log("<<<<<<<<<<<<<<<<<<<<<<<",data)
-      axios.post(API.BASE_URL + 'marketplaceaccept/' + data.camp_id + '/' + data.campaignid_id + '/',newData,
+      axios.post(API.BASE_URL + 'marketplaceaccept/' + data.camp_id + '/' + data.id + '/',newData,
         {
           headers: {
             Authorization: `Token ${localStorage.getItem("Token")}`

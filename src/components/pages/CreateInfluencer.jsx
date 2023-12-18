@@ -15,10 +15,14 @@ import { CardElement, Elements, useElements, useStripe } from '@stripe/react-str
 // import { getInfluencerList,  } from '../../config/Api';
 
 const CreateInfluencer = () => {
-
+    const location = useLocation()
+    const state = location.state;
+  
+    // Now, you can access the state properties
+    const influencerId = state?.influencer_id;
+    const name = state?.name;
     //-------Constants ------
     const { id } = useParams()
-    const location = useLocation()
     const influencer_id = location.state !== null ? location?.state?.influencer_id : null;
     const adminFee = (location.state.cost * location.state.adminFee) / 100;;
     const cost = location.state.cost;
@@ -41,6 +45,8 @@ const CreateInfluencer = () => {
     const [errors, setErrors] = useState({});
 
 console.log('id=================>>>>>>',url_list)
+console.log('Form is valid:', state);
+
     //-------Handlers--------
 
 
@@ -126,11 +132,11 @@ console.log('id=================>>>>>>',url_list)
 
     const handlePay = (item) => {
         // e.preventDefault();
-
+       
         if (handleValidation()) {
           // Proceed with form submission
-        // console.log('Form is valid:', form_data);
-          setOpenModal({ toggle: true, value: { influencer_id: item?.influencerid_id, id: item?.id }, id: item?.influencerid_id  })
+          setOpenModal({ toggle: true, value: { influencerid_id__fee: cost, user_id: ids }, id: influencerId  })
+          
 
         } else {
           console.log('Form validation failed');
@@ -138,7 +144,7 @@ console.log('id=================>>>>>>',url_list)
       };
 
     const InputElement = ({ payRef, handler, data, setIsPaid }) => {
-
+        console.log('handler ------->>', data)
         const stripe = useStripe();
         const elements = useElements();
 
@@ -149,7 +155,7 @@ console.log('id=================>>>>>>',url_list)
             }
             const token = await stripe.createToken(elements.getElement(CardElement))
             if (token.token) {
-                payInfluencer({ token: token?.token?.id, user_id: data.id, influencerid_id__fee: data?.value?.cost }).then(res => {
+                payInfluencer({ token: token?.token?.id, user_id: ids, influencerid_id__fee: cost }).then(res => {
                     setIsPaid(data?.id)
                     console.log(data?.id)
                     toast.success('Payment Success', { autoClose: 1000 })
@@ -661,7 +667,6 @@ console.log('id=================>>>>>>',url_list)
                         </form>
                     </div>
                     <PaymentModal data={open_modal} handler={(value) => { setOpenModal(value) }} setIsPaid={setIsPaid} />
-
                 </div>
             </div>
         </>
